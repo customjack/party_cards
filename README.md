@@ -4,6 +4,8 @@ A configurable, host-authoritative, peer-to-peer card party game. All default
 cards are original and included in the repository; no Cards Against Humanity
 card text or artwork is used.
 
+**[Play Party Cards](https://customjack.github.io/party_cards/)**
+
 ## Run locally
 
 ```bash
