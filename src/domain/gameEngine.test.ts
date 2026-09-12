@@ -112,6 +112,40 @@ describe("CardGameEngine", () => {
     expect(game.lockedPlayerIds).toContain(submitter.id);
   });
 
+  it("requires and sanitizes text when a blank card is played", () => {
+    const roster = players(3);
+    const game = CardGameEngine.createStage(
+      defaultGameTemplate.rounds[0],
+      roster,
+      [starterPack],
+    );
+    const submitter = roster.find((player) => player.id !== game.judgeId)!;
+    const blank = { id: "blank", text: "", blank: true };
+    game.blackCard = { id: "single", text: "Why ____?", pick: 1 };
+    game.hands[submitter.id] = [blank];
+    expect(CardGameEngine.submit(game, submitter.id, [blank.id])).toBe(false);
+    expect(
+      CardGameEngine.submit(game, submitter.id, [blank.id], {
+        [blank.id]: "  My custom response  ",
+      }),
+    ).toBe(true);
+    expect(game.submissions[submitter.id][0].text).toBe("My custom response");
+  });
+
+  it("removes blank cards from the stage deck when disabled", () => {
+    const round = {
+      ...defaultGameTemplate.rounds[0],
+      allowBlankCards: false,
+      handSize: 20,
+    };
+    const game = CardGameEngine.createStage(round, players(3), [starterPack]);
+    expect(
+      [...game.whiteDeck, ...Object.values(game.hands).flat()].some(
+        (card) => card.blank,
+      ),
+    ).toBe(false);
+  });
+
   it("rotates judges and replenishes played cards", () => {
     const roster = players(4),
       round = defaultGameTemplate.rounds[0],

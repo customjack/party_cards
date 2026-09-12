@@ -137,7 +137,11 @@ export class HostSession extends GameSession {
     this.setDeadline(round.answerTimeSeconds);
     this.broadcast();
   }
-  submitCards(playerId: string, cardIds: string[]) {
+  submitCards(
+    playerId: string,
+    cardIds: string[],
+    blankAnswers: Record<string, string> = {},
+  ) {
     if (this.state.phase !== "answering" || !this.state.game) return;
     const round = this.currentRound(),
       eligible = CardGameEngine.eligibleSubmitters(
@@ -147,7 +151,7 @@ export class HostSession extends GameSession {
       );
     if (
       !eligible.includes(playerId) ||
-      !CardGameEngine.submit(this.state.game, playerId, cardIds)
+      !CardGameEngine.submit(this.state.game, playerId, cardIds, blankAnswers)
     )
       return;
     if (
@@ -391,7 +395,11 @@ export class HostSession extends GameSession {
         Object.assign(player, this.cleanProfile(command.payload));
       this.broadcast();
     } else if (command.type === "SUBMIT_CARDS")
-      this.submitCards(id, command.payload.cardIds);
+      this.submitCards(
+        id,
+        command.payload.cardIds,
+        command.payload.blankAnswers,
+      );
     else if (command.type === "UNLOCK_CARDS") this.unlockCards(id);
     else if (command.type === "CHOOSE_WINNER")
       this.chooseWinner(id, command.payload.playerId);
@@ -598,8 +606,8 @@ export class ClientSession extends GameSession {
   override get localPlayerId() {
     return this.playerId;
   }
-  submitCards(cardIds: string[]) {
-    this.send({ type: "SUBMIT_CARDS", payload: { cardIds } });
+  submitCards(cardIds: string[], blankAnswers: Record<string, string> = {}) {
+    this.send({ type: "SUBMIT_CARDS", payload: { cardIds, blankAnswers } });
   }
   unlockCards() {
     this.send({ type: "UNLOCK_CARDS" });

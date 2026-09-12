@@ -58,6 +58,9 @@ export class SettingsValidator {
       });
     const available = new Set(packs.map((pack) => pack.id));
     settings.rounds.forEach((round, index) => {
+      const roundPacks = packs.filter(
+        (pack) => !round.packIds.length || round.packIds.includes(pack.id),
+      );
       if (
         round.packIds.length &&
         !round.packIds.some((id) => available.has(id))
@@ -65,6 +68,15 @@ export class SettingsValidator {
         issues.push({
           level: "error",
           message: `Stage ${index + 1} has no available pack.`,
+        });
+      else if (
+        !roundPacks.some((pack) =>
+          pack.whiteCards.some((card) => round.allowBlankCards || !card.blank),
+        )
+      )
+        issues.push({
+          level: "error",
+          message: `Stage ${index + 1} has no usable response cards with blank cards disabled.`,
         });
     });
     return issues;

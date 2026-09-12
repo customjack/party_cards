@@ -2353,6 +2353,45 @@ button.white-card:hover:not(:disabled) {
 .white-card.selected .selection-order {
   color: var(--purple);
 }
+.blank-white-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.blank-white-card > small {
+  color: currentColor;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+.blank-white-card textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: none;
+  padding: 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  color: var(--ink);
+  background: white;
+}
+.blank-card-select {
+  margin-top: auto;
+  padding: 8px 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  color: var(--ink);
+  background: var(--yellow);
+  font-size: 12px;
+  font-weight: 850;
+}
+.blank-card-note {
+  padding: 14px;
+  border: 1.5px dashed var(--purple);
+  border-radius: 8px;
+  color: #554996;
+  background: #eee9ff;
+  font-size: 13px;
+}
 .submission-stack .played-order {
   right: auto;
   left: 10px;

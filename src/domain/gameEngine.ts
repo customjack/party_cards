@@ -29,10 +29,12 @@ export class CardGameEngine {
         })),
       ),
       whitePool = allowedPacks.flatMap((pack) =>
-        pack.whiteCards.map((card) => ({
-          ...card,
-          id: `${pack.id}:${card.id}`,
-        })),
+        pack.whiteCards
+          .filter((card) => round.allowBlankCards || !card.blank)
+          .map((card) => ({
+            ...card,
+            id: `${pack.id}:${card.id}`,
+          })),
       ),
       blackDeck = this.expandedDeck(blackPool, round.hands),
       whiteDeck = this.expandedDeck(
@@ -75,14 +77,30 @@ export class CardGameEngine {
     return game;
   }
 
-  static submit(game: GameRuntime, playerId: string, cardIds: string[]) {
+  static submit(
+    game: GameRuntime,
+    playerId: string,
+    cardIds: string[],
+    blankAnswers: Record<string, string> = {},
+  ) {
     const hand = game.hands[playerId] ?? [],
       unique = [...new Set(cardIds)],
       cards = unique
         .map((id) => hand.find((card) => card.id === id))
         .filter(Boolean) as WhiteCard[];
     if (cards.length !== game.blackCard.pick) return false;
-    game.submissions[playerId] = cards;
+    const resolved = cards.map((card) =>
+      card.blank
+        ? {
+            ...card,
+            text: String(blankAnswers[card.id] ?? "")
+              .trim()
+              .slice(0, 180),
+          }
+        : card,
+    );
+    if (resolved.some((card) => !card.text)) return false;
+    game.submissions[playerId] = resolved;
     if (!game.lockedPlayerIds.includes(playerId))
       game.lockedPlayerIds.push(playerId);
     return true;
@@ -114,14 +132,22 @@ export class CardGameEngine {
     players: Player[],
   ) {
     this.eligibleSubmitters(game, round, players).forEach((id) => {
-      if (!game.lockedPlayerIds.includes(id))
+      if (!game.lockedPlayerIds.includes(id)) {
+        const preferred = [...(game.hands[id] ?? [])].sort(
+          (left, right) => Number(left.blank) - Number(right.blank),
+        );
+        const selected = preferred.slice(0, game.blackCard.pick);
         this.submit(
           game,
           id,
-          (game.hands[id] ?? [])
-            .slice(0, game.blackCard.pick)
-            .map((card) => card.id),
+          selected.map((card) => card.id),
+          Object.fromEntries(
+            selected
+              .filter((card) => card.blank)
+              .map((card) => [card.id, "No response."]),
+          ),
         );
+      }
     });
   }
 
@@ -175,10 +201,13 @@ export class CardGameEngine {
       active = players.filter((player) => !player.spectator),
       ids = active.map((player) => player.id);
     Object.entries(game.submissions).forEach(([playerId, cards]) => {
-      game.hands[playerId] = (game.hands[playerId] ?? []).filter(
+      const hand = game.hands[playerId] ?? [];
+      game.whiteDiscard.push(
+        ...hand.filter((card) => cards.some((played) => played.id === card.id)),
+      );
+      game.hands[playerId] = hand.filter(
         (card) => !cards.some((played) => played.id === card.id),
       );
-      game.whiteDiscard.push(...cards);
     });
     game.blackDiscard.push(game.blackCard);
     game.handIndex += 1;

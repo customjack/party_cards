@@ -368,6 +368,12 @@ function RoundForm({
               onChange={(value) => set("allowJudgeToSubmit", value)}
             />
             <Toggle
+              label="Include blank response cards"
+              hint="Players can type a custom response when they draw one."
+              checked={round.allowBlankCards}
+              onChange={(value) => set("allowBlankCards", value)}
+            />
+            <Toggle
               label="Reveal when everyone submits"
               hint="Turn off to always use the full answer timer."
               checked={round.endAnsweringWhenAllPlayed}

@@ -39,6 +39,7 @@
       "endAnsweringWhenAllPlayed": true,
       "anonymousSubmissions": true,
       "allowJudgeToSubmit": false,
+      "allowBlankCards": true,
       "packIds": []
     }
   ]

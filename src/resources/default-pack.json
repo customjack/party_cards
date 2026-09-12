@@ -171,7 +171,9 @@
     { "id": "w57", "text": "a suspiciously warm briefcase" },
     { "id": "w58", "text": "the confidence to reply-all" },
     { "id": "w59", "text": "an orchestra of microwave beeps" },
-    { "id": "w60", "text": "a coupon for one free consequence" }
+    { "id": "w60", "text": "a coupon for one free consequence" },
+    { "id": "w61", "text": "", "blank": true },
+    { "id": "w62", "text": "", "blank": true }
   ],
   "createdAt": "2026-09-12T00:00:00.000Z",
   "updatedAt": "2026-09-12T00:00:00.000Z"

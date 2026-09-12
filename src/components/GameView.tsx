@@ -58,9 +58,11 @@ export function GameView({
     judge = snapshot.players.find((player) => player.id === game.judgeId),
     seconds = useCountdown(snapshot),
     [selected, setSelected] = useState<string[]>([]),
+    [blankAnswers, setBlankAnswers] = useState<Record<string, string>>({}),
     [reactionMenuTarget, setReactionMenuTarget] = useState<string | null>(null);
   useEffect(() => {
     setSelected([]);
+    setBlankAnswers({});
     setReactionMenuTarget(null);
   }, [game.totalHandIndex]);
   const ranking = Object.entries(game.scores).sort(
@@ -128,6 +130,18 @@ export function GameView({
       !me?.spectator && (round.allowJudgeToSubmit || me?.id !== game.judgeId),
     locked = Boolean(me && game.lockedPlayerIds.includes(me.id)),
     hand = me ? (game.hands[me.id] ?? []) : [];
+  const toggleCard = (cardId: string) =>
+    setSelected((items) =>
+      items.includes(cardId)
+        ? items.filter((id) => id !== cardId)
+        : items.length < game.blackCard.pick
+          ? [...items, cardId]
+          : [...items.slice(1), cardId],
+    );
+  const selectedBlanksAreReady = selected.every((id) => {
+    const card = hand.find((item) => item.id === id);
+    return !card?.blank || Boolean(blankAnswers[id]?.trim());
+  });
   if (snapshot.phase === "answering")
     return (
       <main className="game-page cards-game-page">
@@ -176,20 +190,49 @@ export function GameView({
                     const order = (locked ? submitted : selected).indexOf(
                       card.id,
                     );
+                    if (card.blank) {
+                      const submittedText = game.submissions[me!.id]?.find(
+                        (item) => item.id === card.id,
+                      )?.text;
+                      return (
+                        <div
+                          className={`white-card blank-white-card ${order >= 0 ? "selected" : ""}`}
+                          key={card.id}
+                        >
+                          {order >= 0 && game.blackCard.pick > 1 && (
+                            <span className="selection-order">{order + 1}</span>
+                          )}
+                          <small>BLANK CARD</small>
+                          <textarea
+                            aria-label="Custom blank-card response"
+                            disabled={locked}
+                            maxLength={180}
+                            placeholder="Write anything…"
+                            value={submittedText ?? blankAnswers[card.id] ?? ""}
+                            onChange={(event) =>
+                              setBlankAnswers((answers) => ({
+                                ...answers,
+                                [card.id]: event.target.value,
+                              }))
+                            }
+                          />
+                          {!locked && (
+                            <button
+                              className="blank-card-select"
+                              onClick={() => toggleCard(card.id)}
+                            >
+                              {order >= 0 ? "Remove card" : "Use this card"}
+                            </button>
+                          )}
+                        </div>
+                      );
+                    }
                     return (
                       <button
                         className={`white-card ${order >= 0 ? "selected" : ""}`}
                         disabled={locked}
                         key={card.id}
-                        onClick={() =>
-                          setSelected((items) =>
-                            items.includes(card.id)
-                              ? items.filter((id) => id !== card.id)
-                              : items.length < game.blackCard.pick
-                                ? [...items, card.id]
-                                : [...items.slice(1), card.id],
-                          )
-                        }
+                        onClick={() => toggleCard(card.id)}
                       >
                         {order >= 0 && game.blackCard.pick > 1 && (
                           <span className="selection-order">{order + 1}</span>
@@ -203,11 +246,21 @@ export function GameView({
               {!locked && (
                 <button
                   className="button primary big"
-                  disabled={selected.length !== game.blackCard.pick}
+                  disabled={
+                    selected.length !== game.blackCard.pick ||
+                    !selectedBlanksAreReady
+                  }
                   onClick={() =>
                     isHost
-                      ? (session as HostSession).submitCards("host", selected)
-                      : (session as ClientSession).submitCards(selected)
+                      ? (session as HostSession).submitCards(
+                          "host",
+                          selected,
+                          blankAnswers,
+                        )
+                      : (session as ClientSession).submitCards(
+                          selected,
+                          blankAnswers,
+                        )
                   }
                 >
                   <Lock /> Play {game.blackCard.pick} card

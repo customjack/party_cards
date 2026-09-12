@@ -247,6 +247,8 @@ function CardList({
         ? { id: crypto.randomUUID(), text: "", pick: 1 }
         : { id: crypto.randomUUID(), text: "" },
     ]);
+  const addBlank = () =>
+    onChange([...cards, { id: crypto.randomUUID(), text: "", blank: true }]);
   return (
     <section className={`card-editor-list ${kind}`}>
       <div className="prompt-heading">
@@ -254,9 +256,24 @@ function CardList({
           <h2>{title}</h2>
           <p>{cards.length} in this pack</p>
         </div>
-        <button type="button" className="button primary compact" onClick={add}>
-          <Plus /> Add card
-        </button>
+        <div className="button-row">
+          {kind === "white" && (
+            <button
+              type="button"
+              className="button secondary compact"
+              onClick={addBlank}
+            >
+              <Plus /> Add blank card
+            </button>
+          )}
+          <button
+            type="button"
+            className="button primary compact"
+            onClick={add}
+          >
+            <Plus /> Add card
+          </button>
+        </div>
       </div>
       <div className="prompt-card-list">
         {cards.map((card, index) => (
@@ -272,7 +289,11 @@ function CardList({
           >
             <summary>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <b>{card.text || `New ${kind} card`}</b>
+              <b>
+                {(card as WhiteCard).blank
+                  ? "Blank card · player writes the response"
+                  : card.text || `New ${kind} card`}
+              </b>
               <button
                 type="button"
                 aria-label={`Delete card ${index + 1}`}
@@ -285,34 +306,41 @@ function CardList({
               </button>
             </summary>
             <div>
-              <label className="field">
-                <span>{kind === "black" ? "Prompt" : "Response"}</span>
-                <textarea
-                  placeholder={
-                    kind === "black"
-                      ? "Use ____ for each blank."
-                      : "Response text"
-                  }
-                  value={card.text}
-                  onChange={(event) =>
-                    onChange(
-                      cards.map((item, itemIndex) =>
-                        itemIndex === index
-                          ? (() => {
-                              const text = event.target.value.slice(
-                                0,
-                                kind === "black" ? 300 : 180,
-                              );
-                              return kind === "black"
-                                ? { ...item, text, pick: cardsToPick(text) }
-                                : { ...item, text };
-                            })()
-                          : item,
-                      ),
-                    )
-                  }
-                />
-              </label>
+              {(card as WhiteCard).blank ? (
+                <div className="blank-card-note">
+                  The player who draws this card can type any response before
+                  playing it.
+                </div>
+              ) : (
+                <label className="field">
+                  <span>{kind === "black" ? "Prompt" : "Response"}</span>
+                  <textarea
+                    placeholder={
+                      kind === "black"
+                        ? "Use ____ for each blank."
+                        : "Response text"
+                    }
+                    value={card.text}
+                    onChange={(event) =>
+                      onChange(
+                        cards.map((item, itemIndex) =>
+                          itemIndex === index
+                            ? (() => {
+                                const text = event.target.value.slice(
+                                  0,
+                                  kind === "black" ? 300 : 180,
+                                );
+                                return kind === "black"
+                                  ? { ...item, text, pick: cardsToPick(text) }
+                                  : { ...item, text };
+                              })()
+                            : item,
+                        ),
+                      )
+                    }
+                  />
+                </label>
+              )}
               {kind === "black" && (
                 <small className="inferred-pick">
                   {cardsToPick(card.text)} card

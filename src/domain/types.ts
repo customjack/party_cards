@@ -46,7 +46,7 @@ export type Reaction = { targetPlayerId: string; reaction: ReactionId };
 export type ReactionLimit = number | "unlimited";
 
 export type BlackCard = { id: string; text: string; pick: number };
-export type WhiteCard = { id: string; text: string };
+export type WhiteCard = { id: string; text: string; blank?: boolean };
 export type CardPack = {
   schemaVersion: 1;
   id: string;
@@ -77,6 +77,7 @@ export type RoundSettings = {
   endAnsweringWhenAllPlayed: boolean;
   anonymousSubmissions: boolean;
   allowJudgeToSubmit: boolean;
+  allowBlankCards: boolean;
   packIds: string[];
 };
 export type GameSettings = {
@@ -159,7 +160,10 @@ export type ClientCommand =
     }
   | { type: "UPDATE_PROFILE"; payload: ProfilePayload }
   | { type: "LEAVE" }
-  | { type: "SUBMIT_CARDS"; payload: { cardIds: string[] } }
+  | {
+      type: "SUBMIT_CARDS";
+      payload: { cardIds: string[]; blankAnswers: Record<string, string> };
+    }
   | { type: "UNLOCK_CARDS" }
   | { type: "CHOOSE_WINNER"; payload: { playerId: string } }
   | {

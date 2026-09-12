@@ -39,6 +39,7 @@ const normalizeWhite = (value: Partial<WhiteCard> | string): WhiteCard => ({
       ? crypto.randomUUID()
       : text(value.id, 100) || crypto.randomUUID(),
   text: text(typeof value === "string" ? value : value.text, 180),
+  blank: typeof value === "string" ? false : Boolean(value.blank),
 });
 export const normalizePack = (value: Partial<CardPack>): CardPack => {
   if (value.id === starterPack.id) return structuredClone(starterPack);
@@ -59,7 +60,9 @@ export const normalizePack = (value: Partial<CardPack>): CardPack => {
       ? value.blackCards.map(normalizeBlack).filter((card) => card.text)
       : [],
     whiteCards: Array.isArray(value.whiteCards)
-      ? value.whiteCards.map(normalizeWhite).filter((card) => card.text)
+      ? value.whiteCards
+          .map(normalizeWhite)
+          .filter((card) => card.blank || card.text)
       : [],
     createdAt: value.createdAt || now,
     updatedAt: now,
@@ -106,6 +109,7 @@ export const normalizeSettings = (
           ...structuredClone(fallback),
           ...round,
           id: round.id || crypto.randomUUID(),
+          allowBlankCards: round.allowBlankCards ?? true,
         }))
       : [],
   };
