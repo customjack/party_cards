@@ -121,11 +121,35 @@ function PackEditor({
           locked={locked}
           dirty={dirty}
           file={file}
-          onImport={async (selected) => {
-            const imported = repository.import(await readJson(selected));
-            setDraft(imported);
-            setDirty(false);
-            onSaved();
+          multiple
+          onImport={async (selectedFiles) => {
+            const loaded = await Promise.all(
+              selectedFiles.map(async (selected) => {
+                try {
+                  return { value: await readJson(selected) };
+                } catch {
+                  return { error: selected.name };
+                }
+              }),
+            );
+            const imported = loaded
+              .filter(
+                (result): result is { value: unknown } => "value" in result,
+              )
+              .map(({ value }) => repository.import(value));
+            const failed = loaded
+              .filter(
+                (result): result is { error: string } => "error" in result,
+              )
+              .map(({ error }) => error);
+            const latest = imported.at(-1);
+            if (latest) {
+              setDraft(latest);
+              setDirty(false);
+              onSaved();
+            }
+            if (failed.length)
+              alert(`Could not read: ${failed.join(", ")}`);
           }}
           onExport={() => downloadJson(`${draft.name}.cards.json`, draft)}
           onSave={() => {
@@ -387,7 +411,8 @@ function RulesEditor({
           locked={locked}
           dirty={dirty}
           file={file}
-          onImport={async (selected) => {
+          onImport={async ([selected]) => {
+            if (!selected) return;
             const imported = repository.import(await readJson(selected));
             setDraft(imported);
             setDirty(false);
@@ -473,6 +498,7 @@ function EditorActions({
   locked,
   dirty,
   file,
+  multiple = false,
   onImport,
   onExport,
   onSave,
@@ -480,7 +506,8 @@ function EditorActions({
   locked: boolean;
   dirty: boolean;
   file: React.RefObject<HTMLInputElement | null>;
-  onImport: (file: File) => void;
+  multiple?: boolean;
+  onImport: (files: File[]) => void;
   onExport: () => void;
   onSave: () => void;
 }) {
@@ -491,9 +518,10 @@ function EditorActions({
         hidden
         type="file"
         accept="application/json,.json"
+        multiple={multiple}
         onChange={(event) => {
-          const selected = event.target.files?.[0];
-          if (selected) void onImport(selected);
+          const selected = Array.from(event.target.files ?? []);
+          if (selected.length) void onImport(selected);
           event.target.value = "";
         }}
       />
