@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "id": "88351a63-fb6a-49ce-b075-50e43841b48e",
+  "name": "Cards Against Humanity: Science Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Science Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "science pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "deaece39-1985-425f-8a6e-4f34b9d4635f",
+      "text": "A study published in Nature this week found that ____ is good for you in small doses.",
+      "pick": 1
+    },
+    {
+      "id": "635362f3-19e9-413d-b5a6-348807ff61b7",
+      "text": "Hey there, Young Scientists! Put on your labcoats and strap on your safety goggles, because today we're learning about ____!",
+      "pick": 1
+    },
+    {
+      "id": "d51cae05-8293-4883-906e-f96394fc57f2",
+      "text": "In an attempt to recreate conditions just after the Big Bang, physicists at the LHC are observing collisions between ____ and ____.",
+      "pick": 2
+    },
+    {
+      "id": "f3d5def6-996b-494f-bb1a-3fc82d94e2e9",
+      "text": "In line with our predictions, we find a robust correlation between ____ and ____ (p< .05).",
+      "pick": 2
+    },
+    {
+      "id": "88bd293f-db2c-4730-9c84-b64df41fd061",
+      "text": "In what's being hailed as a major breakthrough, scientists have synthesized ____ in the lab.",
+      "pick": 1
+    },
+    {
+      "id": "a3a71618-d65f-46d2-a3b6-ad81ece9d387",
+      "text": "Today on Mythbusters, we found out how long ____ can withstand ____.",
+      "pick": 2
+    },
+    {
+      "id": "25f567f1-3e6c-4618-9156-09eb4128d6b2",
+      "text": "What really killed the dinosaurs?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "312063cb-1409-474d-a3f4-7b7e7976b47e",
+      "text": "3.7 billion years of evolution."
+    },
+    {
+      "id": "925ed972-df18-4960-9857-1811bfc21fcc",
+      "text": "A 0.7 waist-to-hip ratio."
+    },
+    {
+      "id": "b3a807d9-752b-44f3-895d-ea48157aeae8",
+      "text": "A supermassive black hole."
+    },
+    {
+      "id": "cec7d4e3-5bf5-44dc-b2ca-62f55748416e",
+      "text": "Achieving reproductive success."
+    },
+    {
+      "id": "e23a80fd-7a24-4b4a-9d4a-e0d868e2eff0",
+      "text": "Being knowledgeable in a narrow domain that nobody understands or cares about."
+    },
+    {
+      "id": "5f1e014c-fc25-4ea2-8eb5-ab466d3f179d",
+      "text": "David Attenborough watching us mate."
+    },
+    {
+      "id": "70af0ccd-c6c9-4a09-82bd-5fd7ce1f1786",
+      "text": "Developing secondary sex characteristics."
+    },
+    {
+      "id": "0e340cc6-1a95-48d5-814b-3051a4e17061",
+      "text": "Driving into a tornado to learn about tornadoes."
+    },
+    {
+      "id": "76882aec-5bcb-44f5-93b3-07b5b7140b7c",
+      "text": "Electroejaculating a capuchin monkey."
+    },
+    {
+      "id": "362b9369-5b35-4553-9f6c-7f995101993a",
+      "text": "Evolving a labyrinthine vagina."
+    },
+    {
+      "id": "0234135a-099d-453e-82e0-5ad09aba339f",
+      "text": "Explosive decompression."
+    },
+    {
+      "id": "0b6e98d2-b636-441b-8541-bf43d4d7a210",
+      "text": "Failing the Turing test."
+    },
+    {
+      "id": "822ce23a-f95c-45cc-be75-56535bbebcff",
+      "text": "Fun and interesting facts about rocks."
+    },
+    {
+      "id": "26e0b8ee-b7e7-432c-be2a-b1183f77f29a",
+      "text": "Getting really worried about global warming for a few seconds."
+    },
+    {
+      "id": "f3098a4e-82bd-4408-8568-e3fec8dd5cc4",
+      "text": "Infinity."
+    },
+    {
+      "id": "e8a7e7fe-8e1b-4602-bd28-ef177e1d267e",
+      "text": "Insufficient serotonin."
+    },
+    {
+      "id": "958bf708-4b77-48fd-ba96-aaca9b668230",
+      "text": "Oxytocin release via manual stimulation of the nipples."
+    },
+    {
+      "id": "653351db-1af8-4894-af8f-0a90c44143ff",
+      "text": "Photosynthesis."
+    },
+    {
+      "id": "9a2f2045-594a-47c5-8c4f-0ee744e0fcb9",
+      "text": "Reconciling quantum theory with general relativity."
+    },
+    {
+      "id": "6877e441-7d6c-4728-b299-4cc408be58e5",
+      "text": "Slowly evaporating."
+    },
+    {
+      "id": "50744e12-7fd4-4a1f-9e8a-a2732dfe5bc9",
+      "text": "The quiet majesty of the sea turtle."
+    },
+    {
+      "id": "51188217-302b-451c-9ea3-b3c7316c092f",
+      "text": "The Sun engulfing the Earth."
+    },
+    {
+      "id": "677bb7a0-d492-4fd0-ac86-77db538650a2",
+      "text": "Uranus."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "id": "fbaf76c8-3b66-4aee-99ec-dd8616a25dee",
+  "name": "Cards Against Humanity: Pussy Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Pussy Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "pussy pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "dc0af061-bda2-43fe-a08c-f4f5eef135b9",
+      "text": "____? Bap!",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "dd7722fe-1dfa-4170-b65d-08a6f85563a1",
+      "text": "[picture of Noelle's butt]"
+    },
+    {
+      "id": "09475213-7e46-4243-a2fd-281be9e57edd",
+      "text": "[picture of an angry hariless cat]"
+    },
+    {
+      "id": "00f458b0-de45-491e-a11d-5086866b9193",
+      "text": "A box with a 50% chance of a dead cat in it."
+    },
+    {
+      "id": "d88216b5-8a5a-412e-a3f3-c733cf6326c3",
+      "text": "A gift of a dead chipmunk."
+    },
+    {
+      "id": "eca583cb-e835-445c-b436-297cae073a49",
+      "text": "Banning TikTok."
+    },
+    {
+      "id": "39144651-962d-4bff-b516-e019a6267cd3",
+      "text": "Being someone's property."
+    },
+    {
+      "id": "999446e5-003b-4c91-b1da-0c4a14bf0f37",
+      "text": "Bombing a preschool."
+    },
+    {
+      "id": "9ca9fabc-a016-407e-8f8a-41b022e86640",
+      "text": "Bussy."
+    },
+    {
+      "id": "4547afa4-34ae-4a8b-b9bc-2865f8d5c168",
+      "text": "Catfishing."
+    },
+    {
+      "id": "9518ea6d-384f-4c0c-861f-fd7bd4f19e33",
+      "text": "Chicken bones from the trash can."
+    },
+    {
+      "id": "6d1b0cd3-a5f3-4bfb-9026-dbf4b9a69c39",
+      "text": "Destigmatizing bestiality."
+    },
+    {
+      "id": "9541ca7f-261b-4aa0-8278-baaaf6553505",
+      "text": "Dying at age 15."
+    },
+    {
+      "id": "d197eaa1-4ade-4251-8b19-3ec698db2700",
+      "text": "Eating my sister's hamster."
+    },
+    {
+      "id": "ce0fb326-db0a-4598-80f1-a4325b7080e3",
+      "text": "Falling down the stairs, dying, and getting eaten by my cat."
+    },
+    {
+      "id": "9ef6657e-9e66-41cc-a9db-409dbbc933db",
+      "text": "Feline AIDS."
+    },
+    {
+      "id": "99215db2-f3ae-499e-b130-facfe4645793",
+      "text": "Finally hazzing cheezburger."
+    },
+    {
+      "id": "5002dbcb-1296-4733-b050-6f8b629b1c25",
+      "text": "Having no opinion about whether the Holocaust happened."
+    },
+    {
+      "id": "b4d19485-2694-43ad-9da0-3f7b48fccdb6",
+      "text": "Killing 2.4 billion birds every year."
+    },
+    {
+      "id": "249d2904-a864-4e08-a4fa-3769e4a1b8e6",
+      "text": "Leaving a dog in a hot car."
+    },
+    {
+      "id": "8af471f4-1834-49a1-83b5-066636a69894",
+      "text": "Lesbian catgirls."
+    },
+    {
+      "id": "00a4a108-392f-4ab7-a86f-ca81a7c854df",
+      "text": "Licking my own asshole."
+    },
+    {
+      "id": "78db44f3-c2d0-4a5e-8f8f-7560a86e7715",
+      "text": "Livestreaming my anus while the poop comes out."
+    },
+    {
+      "id": "06f33016-6f00-49c9-a980-285d3914ca5a",
+      "text": "Monetizing my pussy."
+    },
+    {
+      "id": "369813c2-f1db-4f46-914b-4bfb72877f05",
+      "text": "My legal right to defecate anywhere I want on my own property."
+    },
+    {
+      "id": "651cb0d5-f8ac-40cd-9a07-ce972d08d6b6",
+      "text": "My rough little tongue."
+    },
+    {
+      "id": "b50fccf4-c996-4514-99d4-75c9856300e5",
+      "text": "Secretly pissing behind the couch every day."
+    },
+    {
+      "id": "839282b8-1175-4fa6-ac80-70087026cd80",
+      "text": "Setting a dog on fire and watching it die."
+    },
+    {
+      "id": "7dda4a81-e220-40cb-a74e-a6d1a2c414ad",
+      "text": "Telling you to kill yourself."
+    },
+    {
+      "id": "321d5d71-b2dd-4701-ab34-6b2eebc3c63b",
+      "text": "The undeniable sex appeal of cats."
+    },
+    {
+      "id": "612211aa-67ca-45e0-a295-0376062a8f5c",
+      "text": "Tummy rubs."
+    },
+    {
+      "id": "d1353d32-70fc-473a-a73a-5fa5721a97f3",
+      "text": "Validation from internet strangers."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

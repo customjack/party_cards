@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "id": "382c0666-7d4b-4664-9540-c1a9cba0b021",
+  "name": "Cards Against Humanity: College Pack",
+  "description": "Official Cards Against Humanity retail themed pack: College Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "college pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "795fb839-2d1a-4dfc-9ff4-e35ee30cabec",
+      "text": "All classes today are cancelled due to ____.",
+      "pick": 1
+    },
+    {
+      "id": "3dee0a1b-6834-44fa-92f6-6f774976d7ef",
+      "text": "Did you know? Our college was recently named the #1 school for ____!",
+      "pick": 1
+    },
+    {
+      "id": "180489dd-7a68-4f2e-981c-5661306ff921",
+      "text": "In this paper, I will explore ____ from a feminist perspective.",
+      "pick": 1
+    },
+    {
+      "id": "6b657bdd-7581-4c5c-9ef1-cce04892eff0",
+      "text": "My memory of last night is pretty hazy. I remember ____ and that's pretty much it.",
+      "pick": 1
+    },
+    {
+      "id": "08665b87-784f-4be2-88a6-cd1c670aa540",
+      "text": "Pledges! Time to prove you're Delta Phi material. Chug this beer, take off your shirts, and get ready for ____.",
+      "pick": 1
+    },
+    {
+      "id": "b25a8d1b-2ae5-4977-8da9-869c7108cd33",
+      "text": "The Department of Psychology is looking for paid research volunteers. Are you 18-25 and suffering from ____?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "d6e25dfb-5333-45d3-8c37-50f80453c05e",
+      "text": "A 30-rack of Natty Light."
+    },
+    {
+      "id": "0be5eca1-d5d2-404b-8ef8-db79f7d76d94",
+      "text": "A bachelor's degeree in communications."
+    },
+    {
+      "id": "54ecf45a-33ca-416f-ae39-35087984cbfd",
+      "text": "A girl who is so interesting that she has blue hair."
+    },
+    {
+      "id": "22fa9358-ebfb-4c2c-bba6-179531f964a5",
+      "text": "A Yale man."
+    },
+    {
+      "id": "3253e30b-0375-4294-9010-d3a708b9bce0",
+      "text": "An emergency all-floor meeting on inclusion."
+    },
+    {
+      "id": "14538267-7c2e-4fbb-8c41-5e9757ee099a",
+      "text": "Boycotting Israel."
+    },
+    {
+      "id": "6d5cb52b-4fb0-4f6a-b816-53ce30813b3c",
+      "text": "Calling mom because it's just really hard and I miss her and I don't know anyone here."
+    },
+    {
+      "id": "3f440fc9-babe-41a8-9594-2d032e0f25f0",
+      "text": "Falling in love with poetry."
+    },
+    {
+      "id": "8eef85e7-7d61-4b70-9b4b-c6586bc45909",
+      "text": "Five morons signing a lease together."
+    },
+    {
+      "id": "14d5bc71-cc40-4c0b-9630-78f954715a0c",
+      "text": "Fucking the beat boxer from the a cappella group."
+    },
+    {
+      "id": "165de5f0-7c16-4227-ad19-bfe4ae5dfd47",
+      "text": "Going to college and becoming a new person, who has sex."
+    },
+    {
+      "id": "4cc435cd-2770-4ad2-b06e-4c464a07c72e",
+      "text": "Googling how to eat pussy."
+    },
+    {
+      "id": "7e9fb5d4-a627-420a-907d-d464364fe492",
+      "text": "Horny Christian Teens."
+    },
+    {
+      "id": "7a9ea8c9-200c-434b-a9c0-590b5a0ad3de",
+      "text": "How many Asians there are."
+    },
+    {
+      "id": "adcf0488-ec5c-431f-8d1f-478341c89b35",
+      "text": "My high school boyfriend."
+    },
+    {
+      "id": "ee9bf4fa-5d90-4813-8ee8-e101013d35c9",
+      "text": "Performative wokeness."
+    },
+    {
+      "id": "0b1ab35b-15e5-488f-8524-32d70d910fe8",
+      "text": "Pretending to have done the reading."
+    },
+    {
+      "id": "077f1881-60d6-4c5d-9d2f-96a15364687b",
+      "text": "Rocking a 1.5 GPA."
+    },
+    {
+      "id": "8594aed2-8898-42f4-aa02-5bd014824c35",
+      "text": "Sucking a flaccid penis for 20 minutes."
+    },
+    {
+      "id": "e4cf1f07-34ba-41bc-9eb9-0aa65b28ceef",
+      "text": "The sound of my roommate masturbating."
+    },
+    {
+      "id": "a4b0253e-d8c8-4956-b9a0-acee00bb6a0a",
+      "text": "Throw up."
+    },
+    {
+      "id": "81d0d444-5f7b-4c62-9e22-c8cf2d629c80",
+      "text": "Uggs, leggings, and a North Face."
+    },
+    {
+      "id": "fb28454b-8682-47b7-a1b0-4276d6d27900",
+      "text": "Underage drinking."
+    },
+    {
+      "id": "b7bead2f-ca45-456c-8529-8e1c4e672e68",
+      "text": "Valuable leadership experience."
+    },
+    {
+      "id": "28a1e4cb-e783-4016-bcad-9056ccce56c2",
+      "text": "Wandering the streets in search of a party."
+    },
+    {
+      "id": "544c5b0f-de1a-479c-b7ec-9d3cd0e679c7",
+      "text": "Whichever one of you took a shit in the shower."
+    },
+    {
+      "id": "8c297954-3c70-4d5c-bf4f-441469c0cfd3",
+      "text": "Young Republicans."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

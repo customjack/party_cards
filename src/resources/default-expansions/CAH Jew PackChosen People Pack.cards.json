@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "id": "ac3ac019-fe5a-499d-aaea-3a6eb015c44d",
+  "name": "Cards Against Humanity: Jew PackChosen People Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Jew PackChosen People Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "jew packchosen people pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "5d9d2f62-2b37-4141-8724-fc45d2613063",
+      "text": "According to Freud, all children progress through three stages of development: the oral stage, the anal stage, and the ____ stage.",
+      "pick": 1
+    },
+    {
+      "id": "84c8024a-d8c4-4e13-af93-9c29be72ad37",
+      "text": "Can't you see? The Jews are behind everything-the banks, the media, even ____!",
+      "pick": 1
+    },
+    {
+      "id": "0fedced1-acaf-4b13-b6ac-2cf712fe8ebd",
+      "text": "Coming to Broadway next season: \"____ on the Roof.\"",
+      "pick": 1
+    },
+    {
+      "id": "c5f060fd-7ccf-410e-9e6a-5cfe54cd3549",
+      "text": "Oh, your daughter should meet my son! He gives to charity, he loves ____ and did I mention he's a doctor?",
+      "pick": 1
+    },
+    {
+      "id": "cf26fe01-e25b-44d0-833b-79167887516f",
+      "text": "What's so important right now that you can't call your mother?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "9e98c52e-1f9e-403e-851c-58a60dfa38b9",
+      "text": "A big brain full of facts and sadness."
+    },
+    {
+      "id": "02296c0c-e34f-44ae-99ff-5497acd5bcdb",
+      "text": "A headache that's definitely cancer."
+    },
+    {
+      "id": "31b443f5-0c0f-4396-8308-b5a75eb20034",
+      "text": "A lifetime of internalized guilt."
+    },
+    {
+      "id": "e44c0eb5-1005-409c-ba14-40a6a58beb5a",
+      "text": "A little bit of schmutz right there."
+    },
+    {
+      "id": "96636c28-8e3e-43ca-8d5a-6eb1780aa47b",
+      "text": "A three-foot-tall corned beef sandwich."
+    },
+    {
+      "id": "b074aff5-332f-4dba-bf82-7a1fd4822e82",
+      "text": "Also being named Harvey Weinstein."
+    },
+    {
+      "id": "e25a00e6-2c0a-42dc-94c8-a5f67da4828b",
+      "text": "Bags of money."
+    },
+    {
+      "id": "1fca221c-398a-4f0f-b65a-cdc7d09c72d4",
+      "text": "Being a burden."
+    },
+    {
+      "id": "9ca89710-6f45-46d1-a85d-10a7b16ba575",
+      "text": "Being chosen by God to win a free iPod Nano."
+    },
+    {
+      "id": "88e3994e-4d22-439f-84f6-ab54acf82137",
+      "text": "Bupkis."
+    },
+    {
+      "id": "46b49a32-6224-4176-8fcc-31facddc978a",
+      "text": "Chopping off a bit of the penis."
+    },
+    {
+      "id": "7793c3e3-6419-42c1-beca-bdd49f149e9c",
+      "text": "Demolishing that ass like a Palestinian village."
+    },
+    {
+      "id": "ec5fbd13-fe18-4256-89de-b656e661f4bb",
+      "text": "Hiding from the Nazis."
+    },
+    {
+      "id": "be55629f-e7c0-4e5c-a807-a26e2301e7c4",
+      "text": "Holding up the line at Walgreens by trying to use an expired coupon."
+    },
+    {
+      "id": "81b4a186-a727-4d2b-8b7e-4b48a3f7cb93",
+      "text": "Kvetching."
+    },
+    {
+      "id": "3f228eb7-6fb0-4329-99ba-d803c3130f18",
+      "text": "Pork products."
+    },
+    {
+      "id": "423fa206-c238-4a91-9f3f-c75493e63f92",
+      "text": "Resurrecting an army of six million Jews and conquering Germany."
+    },
+    {
+      "id": "5b6a18da-3b70-4aa6-80d8-8b8303ce44ae",
+      "text": "Sacrificing Isaac to the Lord."
+    },
+    {
+      "id": "7da1da36-c084-4da7-95cd-c9fe787e41f7",
+      "text": "Some kind of concentrated encampment for people."
+    },
+    {
+      "id": "622abd21-c832-4e01-b97b-e433de13fde0",
+      "text": "Suddenly remembering that the Holocaust happened."
+    },
+    {
+      "id": "31902e01-3129-4716-a639-d263619bd616",
+      "text": "The blood of Christian babies."
+    },
+    {
+      "id": "90f3f934-8e60-4c29-b4d0-31b7c136d532",
+      "text": "The ethical implications of enjoying a Woody Allen film in light of his child fucking."
+    },
+    {
+      "id": "48fee88a-6a2b-4523-8de7-d28dc53efb86",
+      "text": "The ethical implications of enjoying a Woody Allen film in light of the allegations against him."
+    },
+    {
+      "id": "3c6eb656-3066-41d3-aca5-c6dd27b8cbdf",
+      "text": "The part of Anne Frank's diary where she talks about her vagina."
+    },
+    {
+      "id": "61653ff0-8145-48ed-bd9b-c1363d985adb",
+      "text": "Thy neighbor's wife."
+    },
+    {
+      "id": "6c522c84-6791-4388-aea1-16826054b436",
+      "text": "Torturing Jews until they say they're not Jews anymore."
+    },
+    {
+      "id": "6fb34650-33ff-434f-aa5a-acc7da4bb808",
+      "text": "Usury."
+    },
+    {
+      "id": "b367b259-72f3-4ee3-89ef-90f8165598c3",
+      "text": "Wandering the desert for 40 years."
+    },
+    {
+      "id": "a73f4d69-263d-4302-8d96-f4f494f73cf2",
+      "text": "What it means to be a Jewish woman in contemporary society."
+    },
+    {
+      "id": "6adc7479-5679-4574-9beb-1278fc4d1115",
+      "text": "Whoopi Goldberg."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

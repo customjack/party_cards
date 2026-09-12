@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "id": "33c1be3a-38bc-452d-93ac-ea091bc8f953",
+  "name": "Cards Against Humanity: Ass Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Ass Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "ass pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "04505a17-3677-411a-b2dd-3fd01ff259ba",
+      "text": "I like ____ and I cannot lie!",
+      "pick": 1
+    },
+    {
+      "id": "8ace015f-2da5-4c46-84ea-821e300db99d",
+      "text": "My anaconda don't want none unless you got ____, hun.",
+      "pick": 1
+    },
+    {
+      "id": "d92fb8a2-a76d-47b7-afe3-deae1e7dabb5",
+      "text": "My homeboys tried to warn me, but ____ makes me so horny.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "e7a88d0b-99cf-4671-8386-4d176ad1bc13",
+      "text": "An ass like two football helmets."
+    },
+    {
+      "id": "a36466ff-c7db-4b19-90b7-69c33eeb41e5",
+      "text": "An ass like two old Italian faces telling secrets."
+    },
+    {
+      "id": "575d2a9b-4f28-46f2-9bc5-c187a8fc0c92",
+      "text": "Bad bitches with fat asses."
+    },
+    {
+      "id": "8a8d81d9-06cf-42b7-a9cb-c88d7a223d39",
+      "text": "Being grossly unprepared for this jelly."
+    },
+    {
+      "id": "96836ac6-0765-44b1-8b23-380cd1720064",
+      "text": "Blowing a fart hole in my yoga pants."
+    },
+    {
+      "id": "7f73c3ad-7239-43a4-964c-8d4d18f235bb",
+      "text": "Carrying my poop around in a ziplock bag."
+    },
+    {
+      "id": "e69d7e96-81b5-4d46-b2b9-e65b7547b34a",
+      "text": "Cellulite."
+    },
+    {
+      "id": "dfa6e32a-bab3-41fd-aa37-a6ddfcf612e9",
+      "text": "Cheesy French anus."
+    },
+    {
+      "id": "52043b89-e5f2-4b5b-8ede-790c7354ba4e",
+      "text": "Doing my duty to your booty."
+    },
+    {
+      "id": "224cdb64-ccad-4381-b367-3ea4c5c8fde3",
+      "text": "How good the booty taste."
+    },
+    {
+      "id": "3e78241d-0baf-48d7-bc59-2de6dfe6b997",
+      "text": "Me arse."
+    },
+    {
+      "id": "70109585-b7aa-4391-b7b8-aa4796ca0d3b",
+      "text": "My faithful donkey Bathsheba."
+    },
+    {
+      "id": "3a572a6e-338d-4851-8817-5ca156c8b063",
+      "text": "Pooping and then looking at the poop."
+    },
+    {
+      "id": "4afabc0a-c491-498b-98d9-1c7ee1fc6ec8",
+      "text": "Pulling a shit-covered condom of Fentanyl out of a dead Slovenian's asshole."
+    },
+    {
+      "id": "6dc23430-f2e4-4844-9ea1-03a421023659",
+      "text": "Rubbing sage all over my butt cancer."
+    },
+    {
+      "id": "0c15a697-2395-48d5-8f13-28298816e612",
+      "text": "Ruining my asshole with superglue."
+    },
+    {
+      "id": "addfc23f-79e1-4c1f-a317-c68c1b0c7772",
+      "text": "Shitting out a hot stack of pancakes and a pat of butter."
+    },
+    {
+      "id": "9dac3540-0101-48d8-8ec1-7d45d9e46012",
+      "text": "Showing everyone my lil' dumper."
+    },
+    {
+      "id": "f75b1e51-03d1-4a57-b098-078186e0e8fc",
+      "text": "Sir Mix-a-lot."
+    },
+    {
+      "id": "b6048ce6-732d-47f3-970a-5e723760e88c",
+      "text": "Sir Thomas Crapper, inventor of the toilet."
+    },
+    {
+      "id": "74baf6f9-6449-4f55-9788-8e748b15296a",
+      "text": "Tender anal love."
+    },
+    {
+      "id": "c69db7e4-b759-435e-a2b8-6082305a1e8c",
+      "text": "That post-smack jiggle."
+    },
+    {
+      "id": "ba4fa0e9-85a0-4663-abcd-3db5a4ea1529",
+      "text": "The sun-ripen asses of Sicily."
+    },
+    {
+      "id": "a274d172-3a7c-4cab-b09c-2ecb2388756f",
+      "text": "Thick Ukrainian ass."
+    },
+    {
+      "id": "0cc49a5b-0646-44f1-b5bb-eebc4dd7542e",
+      "text": "Tight, red baboon ass."
+    },
+    {
+      "id": "05b225f9-b33e-4f90-97a1-b8abe2db69a3",
+      "text": "Tracing the furrows of your cellulitic ass like a loving cartographer."
+    },
+    {
+      "id": "c1c21087-dea6-4bb9-91a4-23a85b8f1f99",
+      "text": "Waxing my asshole."
+    },
+    {
+      "id": "582cb53f-789e-4749-8977-fc12aa7178d4",
+      "text": "Your ass cheeks on my face cheeks."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "id": "60b7f8fd-8ab1-4c8d-93af-e9109275993a",
+  "name": "Cards Against Humanity: Food Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Food Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "food pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "62adbf40-41a5-4792-bc3d-bcc218d7a081",
+      "text": "Aw babe, your burps smell like ____!",
+      "pick": 1
+    },
+    {
+      "id": "19271bdd-4a17-4721-ac28-602f658e4310",
+      "text": "Don't miss Rachel Ray's hit new show, Cooking with ____.",
+      "pick": 1
+    },
+    {
+      "id": "8a24cb2e-8d0e-4107-a8e7-80817d8d457d",
+      "text": "Excuse me, waiter. Could you take this back? This soup tastes like ____.",
+      "pick": 1
+    },
+    {
+      "id": "fa740f8a-ee04-4a61-a25f-5106eb7eb7a9",
+      "text": "I'm Bobby Flay, and if you can't stand ____, get out of the kitchen!",
+      "pick": 1
+    },
+    {
+      "id": "d07c3f1f-f03f-4d1f-82f3-112c6321e56a",
+      "text": "It's not delivery. It's ____.",
+      "pick": 1
+    },
+    {
+      "id": "ac075b80-a1bb-4a80-ae94-e87bb4b634e5",
+      "text": "Now on Netflix: Jiro Dreams of ____.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "ebdd3d5c-e1ef-450d-a227-10342450bdd5",
+      "text": "A belly full of hard-boiled eggs."
+    },
+    {
+      "id": "f1540d4a-56e9-4d21-8dee-30c2002179b4",
+      "text": "A joyless vegan patty."
+    },
+    {
+      "id": "3a65a83b-0599-4377-a562-f5c89b331da8",
+      "text": "A sobering quantity of chili cheese fries."
+    },
+    {
+      "id": "3f69c532-c062-4a07-8e83-4f813380a34e",
+      "text": "A table for one at The Cheesecake Factory."
+    },
+    {
+      "id": "c79ca23e-a399-4c82-9a98-c0825205a562",
+      "text": "Being emotionally and physically dominated by Gordon Ramsay."
+    },
+    {
+      "id": "08f1bbf2-e6c0-42ec-8c1f-7c1a6b058635",
+      "text": "Clamping down on a gazelle's jugular and tasting its warm life waters."
+    },
+    {
+      "id": "6c1fecc3-d4b1-407d-805b-7b744c41dd6e",
+      "text": "Committing suicide at the Old Country Buffet."
+    },
+    {
+      "id": "eb13a9a4-5f79-4d43-bff9-b2df53ef41db",
+      "text": "Father's forbidden chocolates."
+    },
+    {
+      "id": "53358d7f-84d2-4a20-8bc6-837482b8fd5f",
+      "text": "Going vegetarian and feeling so great all the time."
+    },
+    {
+      "id": "3c14eb5b-2ea6-476e-b60b-2a31b34ab9d9",
+      "text": "Jizz Twinkies."
+    },
+    {
+      "id": "c0287bf0-34eb-4441-b2c0-398ea7b04a7d",
+      "text": "Kale farts."
+    },
+    {
+      "id": "f5eaa830-7c0b-471f-8a99-bdb6036666d8",
+      "text": "Kevin Bacon Bits."
+    },
+    {
+      "id": "86426d52-1a07-4aec-9752-da3008fdbf9b",
+      "text": "Licking the cake batter off of grandma's fingers."
+    },
+    {
+      "id": "94641f72-def0-4f5c-91b2-51c0b96efc8d",
+      "text": "Motherfucking tater tots."
+    },
+    {
+      "id": "149fb4e9-934f-488c-bc8e-105aa88ca984",
+      "text": "Not knowing what to believe anymore about butter."
+    },
+    {
+      "id": "e5f859ea-a67b-48e5-8954-93088ff5a69a",
+      "text": "Oreos for dinner."
+    },
+    {
+      "id": "42c66be6-2755-4ac6-a6df-024076ce501c",
+      "text": "Real cheese flavor."
+    },
+    {
+      "id": "d41c9250-33cc-4d50-8511-d400c427e247",
+      "text": "Soup that's better than pussy."
+    },
+    {
+      "id": "15546b4d-6543-4fee-b9e9-66c66a42ee4e",
+      "text": "Sucking down thousands of pounds of krill every day."
+    },
+    {
+      "id": "45411d0d-85a8-4920-8c55-d307a0e77d17",
+      "text": "Swishing the wine around and sniffing it like a big fancy man."
+    },
+    {
+      "id": "806638ca-5c29-4d5f-b7de-1bca6a54518f",
+      "text": "The $1 Beefy Fritos Burrito from Taco Bell."
+    },
+    {
+      "id": "44ec76d1-a858-4003-9e20-5b7ca000fabb",
+      "text": "The Dial-A-Slice Apple Divider from Williams-Sonoma."
+    },
+    {
+      "id": "6ea67d4f-77c0-4bd9-ae9a-e5f908f22c52",
+      "text": "The Hellman's Mayonnaise Corporation."
+    },
+    {
+      "id": "4d071d09-ea4f-4fba-a9ef-bc69b3cf6954",
+      "text": "The hot dog I put in my vagina ten days ago."
+    },
+    {
+      "id": "1d7b9d32-b0e5-4b98-9a7c-b39cf2902bcc",
+      "text": "The inaudible screams of carrots."
+    },
+    {
+      "id": "cf675a6a-fb48-42a4-9954-ede28d411f7f",
+      "text": "What to do with all of this chocolate on my penis."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

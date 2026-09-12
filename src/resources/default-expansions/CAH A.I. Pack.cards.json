@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "fa75f51e-3b75-49c2-970c-b2fd04fcdf2e",
+  "name": "Cards Against Humanity: A.I. Pack",
+  "description": "Official Cards Against Humanity retail themed pack: A.I. Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "a.i. pack",
+    "official"
+  ],
+  "blackCards": [],
+  "whiteCards": [
+    {
+      "id": "b7590847-f106-4d1e-84df-b33f5d01838a",
+      "text": "A killer's diet of bush, cucumbers, and feathers."
+    },
+    {
+      "id": "86bf7e21-fa86-4040-b611-b41ecf575243",
+      "text": "A woman who is so smart that she can predict the movements of 300 birds."
+    },
+    {
+      "id": "3af73df3-1a44-4dba-9943-388e09a984a3",
+      "text": "Finding a nipple and being like \"Oooh! That's a nipple!\""
+    },
+    {
+      "id": "480b4793-5bb0-4aab-bd96-cd04b4c21e8a",
+      "text": "Getting Masturbated to."
+    },
+    {
+      "id": "0562f16b-25b4-4c57-9e72-aba2861c07ce",
+      "text": "Giving grandma crappy things she doesn't like."
+    },
+    {
+      "id": "f58ae41e-9a5a-4ade-8a83-3c7e149d5c99",
+      "text": "Ham finger."
+    },
+    {
+      "id": "23426be1-37e8-4aeb-b7dd-3dda7cdf6efb",
+      "text": "Hands down the best eggnog I have ever had."
+    },
+    {
+      "id": "f8faea09-4112-485c-8a7d-8e16a92b2c88",
+      "text": "Insane empanadas."
+    },
+    {
+      "id": "398a2b96-75fd-4a8e-9890-780a2d3b4d56",
+      "text": "Kim Kardashian, but with spider legs."
+    },
+    {
+      "id": "2d6161bb-ca33-4683-b125-5d2caacc3fef",
+      "text": "Laughing hysterically while my partner pours coffee into my eyes."
+    },
+    {
+      "id": "f6b6dd66-a2a4-4110-b39d-c75956d0a493",
+      "text": "More olives than you could possibly understand."
+    },
+    {
+      "id": "d73ab23c-ffe7-49c0-a625-c340ed33f514",
+      "text": "Mr. Poop."
+    },
+    {
+      "id": "280267d2-4a9c-4e7f-8178-789fd8b3f6e8",
+      "text": "My disgusting pot-bellied boy."
+    },
+    {
+      "id": "f9b89936-9098-4710-8895-80ccf71d3d96",
+      "text": "P.F. Chang's fusion of casual and formal cuisine."
+    },
+    {
+      "id": "b1907ad0-7bd8-4be4-a149-4ff72b96bcda",
+      "text": "Screaming \"there's a hawk up my ass!\""
+    },
+    {
+      "id": "510cc6ed-da69-476a-87be-4c87d251b155",
+      "text": "Secret CIA moon prisons."
+    },
+    {
+      "id": "7cd92048-a4d5-4376-a101-0c5a8ccaf134",
+      "text": "Sitting in the back of the plane, smoking a cigar and reading the Flickr privacy policy."
+    },
+    {
+      "id": "ceca8a79-6e2c-4722-9376-8f329cdda8e4",
+      "text": "Some kind of mutated shrimp that can suck dick like a pro."
+    },
+    {
+      "id": "03477488-a031-4a0c-9a66-7288d5676533",
+      "text": "Some sort of unstoppable poo gun."
+    },
+    {
+      "id": "cec02911-99fe-4475-8b9f-f35c16ad5abc",
+      "text": "Stairs."
+    },
+    {
+      "id": "7b087b4d-9c0b-4dca-b503-a7de6485d06f",
+      "text": "That shitty season of Mad Men where Sterling Cooper Draper Pryce gets destroyed by Daenerys Targaryen's dragons."
+    },
+    {
+      "id": "2d710423-3123-4422-82c8-69d3a461a05a",
+      "text": "The amount of emotions a peanut would be capable of holding."
+    },
+    {
+      "id": "293f9ac4-2b46-447d-9829-1f39de8aaa25",
+      "text": "The idea of a walrus."
+    },
+    {
+      "id": "8f269792-d2fe-4077-aa7a-3ab0e37c9e36",
+      "text": "The lesbians of Iowa."
+    },
+    {
+      "id": "cb2c25fa-f6b4-4ca7-9d99-9176938d39fe",
+      "text": "The real story behind the yogurt that came out of Tina's vagina."
+    },
+    {
+      "id": "88a646bc-2489-45b3-8653-1b21c54202a9",
+      "text": "The unspeakable secrets of the weasels."
+    },
+    {
+      "id": "33523e26-876d-4797-b72a-148c6d2c3bdd",
+      "text": "These amazing testicles I'm about to share with you."
+    },
+    {
+      "id": "6b2200a5-25dd-4275-9d3a-6233308084e2",
+      "text": "These awesome gadgets that track my every move."
+    },
+    {
+      "id": "36e4ee15-a167-4b77-9dde-e3bafa83e738",
+      "text": "These new jeans that look so cool but are actually so bad."
+    },
+    {
+      "id": "005e5fb9-cc46-42b4-bcea-cd7b9c4a4c2b",
+      "text": "What I Doin'."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

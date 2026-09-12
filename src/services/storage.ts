@@ -1,4 +1,9 @@
-import { defaultGameTemplate, starterPack } from "../domain/defaults";
+import {
+  builtInPacks,
+  defaultGameTemplate,
+  getBuiltInPack,
+  isBuiltInPack,
+} from "../domain/defaults";
 import { cardsToPick } from "../domain/cardRules";
 import {
   REACTIONS,
@@ -42,7 +47,8 @@ const normalizeWhite = (value: Partial<WhiteCard> | string): WhiteCard => ({
   blank: typeof value === "string" ? false : Boolean(value.blank),
 });
 export const normalizePack = (value: Partial<CardPack>): CardPack => {
-  if (value.id === starterPack.id) return structuredClone(starterPack);
+  const builtIn = value.id ? getBuiltInPack(value.id) : undefined;
+  if (builtIn) return builtIn;
   const now = new Date().toISOString();
   return {
     schemaVersion: 1,
@@ -117,12 +123,14 @@ export const normalizeSettings = (
 export class PackRepository {
   all() {
     return [
-      structuredClone(starterPack),
-      ...read<CardPack>(PACK_KEY).map(normalizePack),
+      ...structuredClone(builtInPacks),
+      ...read<CardPack>(PACK_KEY)
+        .filter((pack) => !isBuiltInPack(pack.id))
+        .map(normalizePack),
     ];
   }
   save(pack: CardPack) {
-    if (pack.id === starterPack.id) return;
+    if (isBuiltInPack(pack.id)) return;
     const packs = read<CardPack>(PACK_KEY),
       normalized = normalizePack(pack),
       index = packs.findIndex((item) => item.id === pack.id);
@@ -131,7 +139,7 @@ export class PackRepository {
     write(PACK_KEY, packs);
   }
   remove(id: string) {
-    if (id !== starterPack.id)
+    if (!isBuiltInPack(id))
       write(
         PACK_KEY,
         read<CardPack>(PACK_KEY).filter((pack) => pack.id !== id),

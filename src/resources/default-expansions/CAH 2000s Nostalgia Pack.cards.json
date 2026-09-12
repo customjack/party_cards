@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "id": "750ce360-9d6b-49b9-9694-ab7b8f29564d",
+  "name": "Cards Against Humanity: 2000s Nostalgia Pack",
+  "description": "Official Cards Against Humanity retail themed pack: 2000s Nostalgia Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "2000s nostalgia pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "13aebb67-ce68-4df9-9805-f989595851b6",
+      "text": "____? That's a no from me, dawg.",
+      "pick": 1
+    },
+    {
+      "id": "c532cba5-1fa0-4d87-b412-a3cad74c8525",
+      "text": "16 people. 39 days of ____. One Survivor.",
+      "pick": 1
+    },
+    {
+      "id": "d18b0cde-2bc2-4a64-be79-300752a87abc",
+      "text": "I couldn't help but wonder. Was \"having it all\" an unattainable myth? Was the secret to a truly happy life just ____?",
+      "pick": 1
+    },
+    {
+      "id": "df0b60c7-df8e-4cfc-a339-1bc41629ad58",
+      "text": "Oh my god! ____ killed Kenny!",
+      "pick": 1
+    },
+    {
+      "id": "29d63dcb-aee7-4b27-8fc7-6c828f8ba249",
+      "text": "Oops! I did it again. I played with ____.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "0a3d188b-a70b-4477-addf-719832ec9039",
+      "text": "All these boys in my yard asking for milkshakes."
+    },
+    {
+      "id": "df6e06b9-762e-42a3-8302-302f7c1b8b4c",
+      "text": "Being a total Miranda."
+    },
+    {
+      "id": "715b8f1b-e578-482f-a23f-1c92d5607ec1",
+      "text": "Blowing Lucas on an inflatable chair."
+    },
+    {
+      "id": "2b5d3c66-e5da-4335-8dca-6c9d8aa7e7cd",
+      "text": "Chunky highlights."
+    },
+    {
+      "id": "55a82176-a193-4c3a-a596-746ae3608663",
+      "text": "Collateralized debt obligations."
+    },
+    {
+      "id": "55de885a-428f-4191-911a-d29479bd8018",
+      "text": "Competing against 20 other women for the love of Flava Flav."
+    },
+    {
+      "id": "e5025c1a-fbde-41f3-80ee-e018afa0a48d",
+      "text": "Cybering with diselman89."
+    },
+    {
+      "id": "d0c2b091-dc8a-4ae1-bafc-a4b47a28e324",
+      "text": "Defining marriage at the union of one man and one woman."
+    },
+    {
+      "id": "f4c453d3-748a-4613-a459-12eafb0c018f",
+      "text": "Doing 9/11."
+    },
+    {
+      "id": "19936009-a58d-4d6b-a663-2cc1069c18ab",
+      "text": "Downloading a bunch of weird porn on Kazaa."
+    },
+    {
+      "id": "925964ff-9463-4149-ad22-f73c14fabc66",
+      "text": "Getting crunk."
+    },
+    {
+      "id": "2b418ba9-ebb2-455f-acae-9280d28980ff",
+      "text": "Getting drenched in Dave Matthew's shit and piss."
+    },
+    {
+      "id": "36f9388a-5410-4796-aba6-e073f1c3255d",
+      "text": "Getting pwned."
+    },
+    {
+      "id": "e28c4cb2-ac87-4591-8fa4-7330077cfecb",
+      "text": "Going to prom with a 108-year-old vampire."
+    },
+    {
+      "id": "6e6bae3e-b4a5-4107-9035-3d8ace21d479",
+      "text": "Hoobastank."
+    },
+    {
+      "id": "30461c61-ca8a-4443-9d71-f3a3de878c4d",
+      "text": "Killing Dumbledore."
+    },
+    {
+      "id": "bf0d2d6a-d94b-4365-a1df-55a961dfebe6",
+      "text": "Letting the terrorists win."
+    },
+    {
+      "id": "0769d4f4-3878-4e0c-a339-25b110a13fa4",
+      "text": "My son and business partnew H.W. Plainview."
+    },
+    {
+      "id": "55ced8c0-cbdc-4b25-b76b-986c72b4dd5b",
+      "text": "Starting to be cool about gay people."
+    },
+    {
+      "id": "ae7685aa-b8c7-4de0-9b53-19615824cd67",
+      "text": "Suspicious white powder."
+    },
+    {
+      "id": "3bd7eea8-f8a5-490b-9b26-17639940e909",
+      "text": "Taking a blurry photo of my penis on my Motorola Razr."
+    },
+    {
+      "id": "0c9145c4-34e3-4c2c-99a8-d2d1a5d9cac1",
+      "text": "The conservative blogosphere."
+    },
+    {
+      "id": "39c4d756-81e1-42eb-bde7-af8a13e96423",
+      "text": "The new Sweet Onion Chicken Teriyaki sandwich from Subway!"
+    },
+    {
+      "id": "4196212a-79c9-4024-aeb8-444c78e994d6",
+      "text": "Trapping my Sim in a swimming pool until she shits herself."
+    },
+    {
+      "id": "be51314e-f74e-48b9-afb6-bfcf044e7ae8",
+      "text": "Two girls sharing one cup of poop."
+    },
+    {
+      "id": "655b2f5a-37f3-4964-b815-3b77e4bbd74b",
+      "text": "Vajazzling my vajayjay."
+    },
+    {
+      "id": "ffd184d7-51cd-4860-b5bd-49e55e265998",
+      "text": "Weapons of mass destruction."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

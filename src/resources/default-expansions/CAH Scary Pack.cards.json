@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "id": "60e69ca6-ec91-4708-a456-8c5059ddb15b",
+  "name": "Cards Against Humanity: Scary Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Scary Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "scary pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "cd65b647-20cf-463b-8ff8-36899c940eba",
+      "text": "\"I think I'm safe,\" she whispered. But then, out of nowhere, ____!",
+      "pick": 1
+    },
+    {
+      "id": "9bcaa0de-0a85-4fbd-ac5d-f2ff63faa60c",
+      "text": "Anne screamed. On her mirror was a message scrawled in blood: \"I AM ____.\"",
+      "pick": 1
+    },
+    {
+      "id": "57554e3c-5ab7-43c5-958e-f8dd29d2d204",
+      "text": "Guillermo Del Toro is the master of supernatural horror, but even he is afraid of ____.",
+      "pick": 1
+    },
+    {
+      "id": "2de548cb-c2e6-4be3-be16-24e335e797db",
+      "text": "OH SHIT!\n____ comin' out of Jumanji!",
+      "pick": 1
+    },
+    {
+      "id": "6074b095-534a-4605-a928-e12274f97d5c",
+      "text": "Tonight on Murder Files: An ordinary man, driven to kill by ____.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "9ea99509-8e34-4d57-9079-f1ff6c4c5279",
+      "text": "A big misunderstanding involving decapitations."
+    },
+    {
+      "id": "724ccb01-c069-426d-8d72-9d6e211478a2",
+      "text": "A CD of haunted house sound effects."
+    },
+    {
+      "id": "2906ec1c-de0b-48bd-aa24-e4ddacc02501",
+      "text": "A cursed Fleshlight that makes you rapidly age when you fuck it."
+    },
+    {
+      "id": "7cf7f5af-0bb7-4759-b43d-75967e2c4607",
+      "text": "A gremlin who spanks your wonderful ass with a fly swatter."
+    },
+    {
+      "id": "d9782756-bb0e-476d-9310-bfd95552a849",
+      "text": "A mannequin that gets a little closer every time you look away."
+    },
+    {
+      "id": "0e879e44-72f7-46b3-b7c4-e25f8d2e59d2",
+      "text": "Agonizingly transforming into a trombone."
+    },
+    {
+      "id": "03887fd0-6f14-4a47-af2d-4f04cb8c8b0b",
+      "text": "An iguana that says \"Ooh la la!\" in a threatening way."
+    },
+    {
+      "id": "b3027fdd-b491-44d5-832a-65678c77a651",
+      "text": "Awakening an ancient evil."
+    },
+    {
+      "id": "0998811c-9802-4ec7-b2d5-56622a2d6e7e",
+      "text": "Chanting in Latin."
+    },
+    {
+      "id": "c045769a-cd57-4ecd-8207-8ce730d1882f",
+      "text": "Crawling all over the walls and ceiling like a dumbass."
+    },
+    {
+      "id": "a242bccd-af3b-4fe6-ba27-2cd65755bd68",
+      "text": "Farting the X-Files theme."
+    },
+    {
+      "id": "067fb8b4-527d-43a5-aba3-1b944904c550",
+      "text": "Getting disemboweled."
+    },
+    {
+      "id": "a991f5cb-2b64-4c31-9c29-89d024416f41",
+      "text": "Having unprotected sex with The Blob."
+    },
+    {
+      "id": "b60dc5f0-390a-4a33-96d3-4c86df13185d",
+      "text": "Human sacrifice."
+    },
+    {
+      "id": "cc1cc096-a924-48ff-824e-d01f589d0a26",
+      "text": "Knowing a bit too much about serial killers."
+    },
+    {
+      "id": "6321528d-23ff-4e27-ace3-e60e1fc965e0",
+      "text": "Night, the scariest half of the day."
+    },
+    {
+      "id": "618216cc-2c22-4c21-9af3-59595d3abd47",
+      "text": "Pus."
+    },
+    {
+      "id": "b153868f-a34a-43fa-a8bc-13cee30a2524",
+      "text": "Putting the lotion on its skin."
+    },
+    {
+      "id": "6985b7ad-404d-47c1-bd98-bacea9665ef5",
+      "text": "Realizing Mom and Dad are now at an age where it wouldn't be that unusual for them to die."
+    },
+    {
+      "id": "4002449e-544e-414e-b609-f71776d6748c",
+      "text": "Serving a man his own testicles on a sizzling fajita platter."
+    },
+    {
+      "id": "d2f596cc-fd6d-46e4-8564-682fa06a320a",
+      "text": "Skulls and spiderwebs and shit."
+    },
+    {
+      "id": "ea579978-8979-49f1-aefc-f9409d58ef41",
+      "text": "Testing negative for being alive."
+    },
+    {
+      "id": "96bd743a-7860-4309-8a97-21b9a55998b7",
+      "text": "The current state of American democracy."
+    },
+    {
+      "id": "5bd90a96-aa89-4b72-bb87-4040b2f29df2",
+      "text": "The ghostly specter of a delicious six-foot party sub that disappears when you try to take a bite."
+    },
+    {
+      "id": "180636c6-417c-45fd-b752-50364c2d8a56",
+      "text": "Vagina dentata."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

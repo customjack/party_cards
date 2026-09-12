@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "id": "94ac0e9b-44c6-4c81-baf4-0580bd376e95",
+  "name": "Cards Against Humanity: Period Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Period Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "period pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "a9a221f1-62ca-42ae-ae94-590b0fa3343d",
+      "text": "Can a woman really have it all? A career and ____?",
+      "pick": 1
+    },
+    {
+      "id": "a849146d-cc92-43c5-93bc-64018504f0ae",
+      "text": "My body, my voice! ____, my choice!",
+      "pick": 1
+    },
+    {
+      "id": "8debf5ba-7c08-4577-bf7a-d1175320e7c0",
+      "text": "My vagina's angry. My vagina's furious and needs to talk. It needs to talk about ____.",
+      "pick": 1
+    },
+    {
+      "id": "83af9099-8b15-42c1-8586-4a58e5a76855",
+      "text": "New fom Mattel, it's ____ Barbie!",
+      "pick": 1
+    },
+    {
+      "id": "d55540f8-bbf1-46d9-931a-90356ec5f399",
+      "text": "Tampax: Don't let your period ruin ____.",
+      "pick": 1
+    },
+    {
+      "id": "081bf9eb-edcb-4a92-a77d-6631f2631a3f",
+      "text": "What gets me wet?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "cf3b2134-1ea5-4976-a087-390b8514e8af",
+      "text": "A diverse group of female friends casually discussing the side effects of birth control."
+    },
+    {
+      "id": "2c095010-1e24-4bc2-9cdf-43d97e2c54e0",
+      "text": "A woman president."
+    },
+    {
+      "id": "fff712c7-0a72-4b64-b53f-3f8672f88b0f",
+      "text": "Always© Infinity Extra Heavy Overnight Pads with Wings."
+    },
+    {
+      "id": "684f28a5-33df-4af1-bd0d-049933bbc60b",
+      "text": "An emotionally draining friendship."
+    },
+    {
+      "id": "4b6dea9e-c353-43f8-af10-f70e2761b448",
+      "text": "Carrying a fetus to term."
+    },
+    {
+      "id": "c8c16ac7-0340-4c62-8f2f-44da1ddf77b5",
+      "text": "Catching a whiff of my vag."
+    },
+    {
+      "id": "9d3b7064-4061-4c8d-a8fa-617a56bc31db",
+      "text": "Dancing carefree in white linen pants."
+    },
+    {
+      "id": "6a1ea83f-a5c4-4cb3-a875-28def89cf57c",
+      "text": "Destroying a pair of underwear."
+    },
+    {
+      "id": "1544a379-bd98-4ba1-9d84-61cb4d5ef932",
+      "text": "Drinking Beyoncé's DivaCup and becoming immortal."
+    },
+    {
+      "id": "5105cb0c-a6f4-4b5c-8b2d-f64b468c9791",
+      "text": "Driving my daughter to her abortion."
+    },
+    {
+      "id": "5c5d5c7a-6b60-4987-a333-a2b8364bda96",
+      "text": "Eating three sleeves of Chips Ahoy!"
+    },
+    {
+      "id": "77c6cf08-379f-46ff-a8f3-54873a0c5392",
+      "text": "Feeling bloaty and crampy."
+    },
+    {
+      "id": "b9509cb6-8f30-4a3a-afc3-4650d2949d1a",
+      "text": "Feeling lots of feelings."
+    },
+    {
+      "id": "d54fef07-6d46-4ee4-81a1-e7d9fe93bd36",
+      "text": "Full bush."
+    },
+    {
+      "id": "5606713f-94d8-4593-8469-4fb7da712b96",
+      "text": "How bloody that dick's about to be."
+    },
+    {
+      "id": "21a8f29e-9ef6-464f-b229-6ca49c00ad4f",
+      "text": "Masturbating with a Sonicare."
+    },
+    {
+      "id": "0e608d3d-cb24-45af-a3fe-42dfe41c768f",
+      "text": "Period globs."
+    },
+    {
+      "id": "b994b958-5277-42c4-8b67-0f482b182f11",
+      "text": "Playing with my pussy while I watch TV."
+    },
+    {
+      "id": "e9b7faaa-adb9-4a3e-aa4c-b940be8051f7",
+      "text": "Post-partum depression."
+    },
+    {
+      "id": "1112ef1a-5a39-4cc7-bdc1-25d731a80bce",
+      "text": "Pulling out a never-ending tampon."
+    },
+    {
+      "id": "8fe59183-3782-4490-b7f7-dda6a89cd3a9",
+      "text": "Pussy lips of all shapes and sizes."
+    },
+    {
+      "id": "e380e9b5-86dc-4078-adc7-8beeed39e878",
+      "text": "Wringing out a sopping wet maxi pad into Donald Trump's mouth."
+    },
+    {
+      "id": "d26a2f37-84aa-4179-9c06-fe59ea65e132",
+      "text": "The vagina hole."
+    },
+    {
+      "id": "443831b4-68d9-4334-bc1d-0029577528e4",
+      "text": "Using a Smucker's Uncrustable™ as a maxi pad."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

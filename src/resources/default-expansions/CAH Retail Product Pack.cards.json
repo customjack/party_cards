@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "7602c730-083d-4e10-bc9d-d4813409139e",
+  "name": "Cards Against Humanity: Retail Product Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Retail Product Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "retail product pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "5b4e6f18-e8e3-47d7-8db7-8c555574f4fb",
+      "text": "Wait, I came here to buy socks. How did I wind up with ____?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "60cbcac1-dab7-4e59-ae72-ffbfe1666a69",
+      "text": "A framed photocopy of an oil painting of Paris, France."
+    },
+    {
+      "id": "ed2d76f6-1811-4e52-9754-e500e8292774",
+      "text": "A Pringle®."
+    },
+    {
+      "id": "9659555c-c891-4904-9146-fcc1ce55291b",
+      "text": "A Pringles® can full of screams."
+    },
+    {
+      "id": "056822ef-3f1f-4f8e-b6df-59f2dfdea2c5",
+      "text": "An 800-foot-long pool noodle."
+    },
+    {
+      "id": "73750972-7d98-47d1-983b-008b81cf4f7f",
+      "text": "An exclusive partnership with Taylor Swift."
+    },
+    {
+      "id": "8a755262-797e-47ef-8d67-97e9997a1231",
+      "text": "Blood Pringles®."
+    },
+    {
+      "id": "49046402-de6c-4e76-b895-c29c82d4f8b0",
+      "text": "Buying and returning clothes just to have someone to talk to."
+    },
+    {
+      "id": "9d17db19-e9b8-4b71-9400-3f0434945163",
+      "text": "Buying the right toothbrush cup for my lifestyle."
+    },
+    {
+      "id": "8699bad8-7187-481a-ac9b-47c107eb337c",
+      "text": "Confusing possessions with accomplishments."
+    },
+    {
+      "id": "bd595708-0683-42f0-835b-bbe0d186e672",
+      "text": "Crunchy snacks for my big flappy mouth."
+    },
+    {
+      "id": "b1c14464-7992-4b03-a1d1-c3ee9ba82634",
+      "text": "Extracting the maximum amount of money from naive consumers."
+    },
+    {
+      "id": "7c725101-c5f0-4596-92b7-5e875b070f4f",
+      "text": "Gender-neutral toys that make children feel no emotions whatsoever."
+    },
+    {
+      "id": "0928a8a3-8ecc-4b24-8019-89bcb77c7ceb",
+      "text": "Getting eaten out in the family fitting room."
+    },
+    {
+      "id": "01b8bc20-6484-4307-ae6a-ec5a11f10754",
+      "text": "How fun it is to eat Pringles®."
+    },
+    {
+      "id": "82f64634-66f9-4199-906b-9b96a90be35a",
+      "text": "Refusing to go up a size."
+    },
+    {
+      "id": "b4b5759c-6c1a-4166-b519-b485de452f8d",
+      "text": "Saving 20% or more on khakis."
+    },
+    {
+      "id": "991761ed-b009-4e76-b1d6-eb0d1a06b17f",
+      "text": "Shiny gadgets for sadness distraction."
+    },
+    {
+      "id": "b3532a47-11ac-44e0-be9d-c7f94386729a",
+      "text": "Subsisting on tiny pizzas."
+    },
+    {
+      "id": "088cb894-ec03-4145-91ff-5c282c993d74",
+      "text": "The obscene amount of money Cards Against Humanity is making by selling this game at Target®."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

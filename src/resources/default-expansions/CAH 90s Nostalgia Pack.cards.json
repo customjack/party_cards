@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "id": "591c458e-2a2c-4460-bec9-2ad301c8b26a",
+  "name": "Cards Against Humanity: 90s Nostalgia Pack",
+  "description": "Official Cards Against Humanity retail themed pack: 90s Nostalgia Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "90s nostalgia pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "b65c873e-3e9d-4d5c-87a9-fb5954990871",
+      "text": "Believe it or not Jim Carrey can do a dead-on impression of ____.",
+      "pick": 1
+    },
+    {
+      "id": "446b9f57-255f-4a89-aaf7-528f52edd129",
+      "text": "How did Stella get her groove back?",
+      "pick": 1
+    },
+    {
+      "id": "1774ade0-416c-4b1b-a86e-0294f1c3ce29",
+      "text": "I can show you ____, shining, shimmering, splendid.",
+      "pick": 1
+    },
+    {
+      "id": "72e98ea7-8a9f-47b5-afb1-3b3e2f0b75e5",
+      "text": "I'm a bitch, I'm a lover, I'm a child, I'm ____.",
+      "pick": 1
+    },
+    {
+      "id": "5dadfbac-1ff8-4a8b-a3c1-4f3f509b3db4",
+      "text": "If I were a Spice Girl, I'd be \"____ Spice.\"",
+      "pick": 1
+    },
+    {
+      "id": "8cbfc0ca-7ea9-422b-a466-c188d044ad02",
+      "text": "It's Morphin' Time! Mastodon! Pterodactyl! Triceratops! Sabertooth Tiger! ____!",
+      "pick": 1
+    },
+    {
+      "id": "36c8dba5-d6d7-48b4-abe3-62bbf2ca91c6",
+      "text": "Siskel and Ebert have panned ____ as \"poorly conceived\" and \"sloppily executed.\"",
+      "pick": 1
+    },
+    {
+      "id": "3e945d54-de0a-4e5a-b8b5-671dc00b57ca",
+      "text": "Tonight on SNICK: \"Are You Afriad of ____?",
+      "pick": 1
+    },
+    {
+      "id": "9e9e3ab8-23f0-4548-97dd-cb23b8868e7f",
+      "text": "Up next on Nickelodeon: \"Clarissa Explains ____.\"",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "e328d41e-f772-412d-8d4c-9b17a81ddeff",
+      "text": "A bus that will explode if it goes under 50 miles per hour."
+    },
+    {
+      "id": "efea71ae-70d0-4402-b66d-fda12ea9f564",
+      "text": "A mulatto, an albino, a mosquito, and my libido."
+    },
+    {
+      "id": "41b9df08-10a9-4c0d-b703-cc7ce3a8bcb6",
+      "text": "A threesome with 1996 Denise Richards and 1999 Denise Richards."
+    },
+    {
+      "id": "6740b048-cfd9-4a16-8b0e-16fdefadbbc7",
+      "text": "Angels interfering in an otherwise fair baseball game."
+    },
+    {
+      "id": "d5906aee-32d8-496c-b631-864440bbd55d",
+      "text": "Cool 90s up-in-the-front hair."
+    },
+    {
+      "id": "15b74cbd-773e-45fd-8c9f-84aeb8aae13e",
+      "text": "Deregulating the mortgage market."
+    },
+    {
+      "id": "1a5aec40-1dda-4434-ad2e-797cb2567b14",
+      "text": "Freeing Willy."
+    },
+    {
+      "id": "39e75a12-bc7d-4fd2-a92f-dfa7004cdf39",
+      "text": "Getting caught up in the CROSSFIRE™."
+    },
+    {
+      "id": "0e3f900d-2dc2-4710-8411-7cd3b1703094",
+      "text": "Getting jiggy with it, as it were."
+    },
+    {
+      "id": "0642405b-0717-4eff-8749-8af73eb29dd6",
+      "text": "Jerking off to a 10-second RealMedia clip."
+    },
+    {
+      "id": "9180fe58-a1a7-416d-9193-472ef81c1e3b",
+      "text": "Kurt Cobain's death."
+    },
+    {
+      "id": "98d73e42-8e2e-4747-8515-92405b786028",
+      "text": "Letting Tim Allen do the Home Improvement grunt into my pussy."
+    },
+    {
+      "id": "dccf029b-67d8-4b7c-935c-1973b9fd0f38",
+      "text": "Liking big butts and not being able to lie about it."
+    },
+    {
+      "id": "3bd57378-275e-4dc7-a1c5-661e06204e7b",
+      "text": "Log™."
+    },
+    {
+      "id": "f31beac6-5112-444e-b539-0ed5bd65414b",
+      "text": "Painting with all the colors of the wind."
+    },
+    {
+      "id": "660934a9-e6db-4453-98b3-6de2aa8a3c38",
+      "text": "Pamela Anderson's boobs running in slow motion."
+    },
+    {
+      "id": "b378b321-9c01-4348-8120-d8d48e00539e",
+      "text": "Patti Mayonnaise."
+    },
+    {
+      "id": "8fee192c-8d7a-44da-ba17-ddc7aaa42130",
+      "text": "Pizza in the morning, pizza in the evening, pizza at supper time."
+    },
+    {
+      "id": "dfba97e8-3ae7-42d8-97d9-b30287e3edac",
+      "text": "Pure Moods, Vol. 1."
+    },
+    {
+      "id": "eb12c555-5308-455b-9fd4-eab28760da40",
+      "text": "Several Michael Keatons"
+    },
+    {
+      "id": "25edb085-01f4-4e33-be74-a9bb04e71f51",
+      "text": "Stabbing the shit out of a Capri Sun."
+    },
+    {
+      "id": "37f42573-55b1-4a8b-b0e3-09bad73a3710",
+      "text": "Sucking the president's dick."
+    },
+    {
+      "id": "c55c30b2-9ee9-4729-b93d-daa54c6faeae",
+      "text": "Sunny D! Alright!"
+    },
+    {
+      "id": "3b04cad7-1c2b-47cf-b057-bca12630208b",
+      "text": "The 1996 Chicago Bulls."
+    },
+    {
+      "id": "fd92c255-0e4e-4e3b-88ca-056a86cf5f1f",
+      "text": "The Great Cornholio."
+    },
+    {
+      "id": "f7aa5dcf-6573-4145-9340-46234bc6fa34",
+      "text": "The Y2K bug."
+    },
+    {
+      "id": "545ad0ba-f6f7-47ea-9a35-8a604dab2461",
+      "text": "Wearing Nicolas Cage's face."
+    },
+    {
+      "id": "9e98579f-01d0-433e-91b3-8dba2387a500",
+      "text": "Yelling \"girl power!\" and doing a high kick."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

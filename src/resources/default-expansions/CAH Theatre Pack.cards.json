@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "id": "b8271043-30ce-4a6e-85ad-e42c877c7692",
+  "name": "Cards Against Humanity: Theatre Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Theatre Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "theatre pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "a5c72134-bc8a-476b-9f10-cfa50afed6b2",
+      "text": "Alright everybody, HOLD!\nKelly, why is there ____ on my stage?",
+      "pick": 1
+    },
+    {
+      "id": "6864deaa-fd94-42d7-886c-2c2867945191",
+      "text": "Comedy = Tragedy + ____.",
+      "pick": 1
+    },
+    {
+      "id": "36f458be-5e15-4830-b609-dfb1469cdc24",
+      "text": "Let's take it from the top, and remember, you are ____. Show me (SAME CARD AGAIN) .",
+      "pick": 1
+    },
+    {
+      "id": "045881fa-2e76-41a6-b146-a9be079df0ea",
+      "text": "Match-maker,\nmatch-maker,\nmake me a match.\nFind me ____.",
+      "pick": 1
+    },
+    {
+      "id": "b21e1119-f90d-4462-b582-49e3884cc1cb",
+      "text": "This season at Manhattan Theatre Club: \"Who's afraid of ____?\"",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "b4898490-f3c0-4e1d-817b-3d83b35215b1",
+      "text": "A dead salesman."
+    },
+    {
+      "id": "42e99236-c1af-438d-913f-fe2bdcfbe5a3",
+      "text": "A Drama Desk Award for Outstanding Sound Design in a Play."
+    },
+    {
+      "id": "0b2d4662-6397-4d4d-b79b-55bf16f7e0b4",
+      "text": "A fog machine."
+    },
+    {
+      "id": "f866e875-471d-400f-b699-7347188768d5",
+      "text": "A play about people I don't like doing things I don't care about."
+    },
+    {
+      "id": "69284e6c-9e21-4feb-98dd-99c9df79c94a",
+      "text": "Absolutely butchering Sondheim."
+    },
+    {
+      "id": "a759cca4-c616-475f-a975-5df0bc5f6610",
+      "text": "All 59 inches of Kristin Chenoweth."
+    },
+    {
+      "id": "93c15279-f6d6-420d-a1b3-24f72ee8e192",
+      "text": "An autographed headshot of Nathan Lane."
+    },
+    {
+      "id": "74f58d81-8f2a-4f9b-a318-12d4af72437a",
+      "text": "Being crushed to death by a stage light."
+    },
+    {
+      "id": "108c5181-37a2-4539-a26d-f1e0b5f0d441",
+      "text": "Brief male nudity."
+    },
+    {
+      "id": "6773254a-d1a6-4248-a152-d5f1435a81b8",
+      "text": "Five miso soups, four seaweed salads, three soy burger dinners, two tofu dog platters, and one pasta with meatless meatballs."
+    },
+    {
+      "id": "b257f030-e0dc-469d-aeff-81788e71da24",
+      "text": "Forgetting your lines, shitting your pants, and your pants falling down."
+    },
+    {
+      "id": "18c66e24-5dbb-4cb7-b01d-7146e3fdb6ae",
+      "text": "Improv comedy."
+    },
+    {
+      "id": "4f2be3e6-3c56-4d0f-8725-4c2f6b8f6917",
+      "text": "Killing Dad and fucking Mom."
+    },
+    {
+      "id": "3f1c5ad3-1100-4b92-b6fb-0e72956e827b",
+      "text": "Linda, 18 but wise beyond her years, achingly beautiful."
+    },
+    {
+      "id": "be3540e0-2e01-4019-9ec3-42ac6086dfb4",
+      "text": "My whole family watching."
+    },
+    {
+      "id": "5b7ae4a3-db42-45dd-a67c-08bc184f16b7",
+      "text": "Narcissistic Personality Disorder."
+    },
+    {
+      "id": "a93cec42-2178-450a-85ca-18d9cb07991c",
+      "text": "Problematic depictions of Asian characters."
+    },
+    {
+      "id": "a1dd06c3-7213-4138-89a7-61ed6762b91c",
+      "text": "Rampant misogyny and sexual harassment."
+    },
+    {
+      "id": "5c2f2226-c1eb-40d6-9143-985eb6a7f78d",
+      "text": "Taking a year off to study Japanese puppet theatre."
+    },
+    {
+      "id": "d6df6a52-dd35-4ed9-a747-6a95cad4f35c",
+      "text": "The Phantom of the Opera."
+    },
+    {
+      "id": "39283e99-067e-4ecd-8a35-d672acf3058a",
+      "text": "The wickedly talented, one and only, Adele Dazeem."
+    },
+    {
+      "id": "c697519a-83c2-4328-a3f5-959ef38c115f",
+      "text": "This old lady next to me who won't stop farting."
+    },
+    {
+      "id": "62ef5bdc-9e2a-464c-b936-dda4e254e920",
+      "text": "Two contrasting monologues- one classical, one contemporary."
+    },
+    {
+      "id": "c2819289-980c-47b0-94e9-98fd9932bca1",
+      "text": "Two men in a horse costume."
+    },
+    {
+      "id": "fff7e683-72a7-4dd2-8f02-65cf7bea9077",
+      "text": "Two tickets to Hamilton."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

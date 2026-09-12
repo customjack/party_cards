@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "id": "c14d81d6-6339-4f15-919c-ed9abf726bf3",
+  "name": "Cards Against Humanity: Seasons Greetings Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Seasons Greetings Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "seasons greetings pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "70f3715b-6faa-4711-a0d7-991b7c3e279d",
+      "text": "Blessed are you, Lord our God, creator of the universe, who has granted us ____.",
+      "pick": 1
+    },
+    {
+      "id": "2d44c8eb-8839-44f4-8f5c-f223b02ccefa",
+      "text": "Donna, pick up my dry cleaning and get my wife something for Christmas. I think she likes ____.",
+      "pick": 1
+    },
+    {
+      "id": "210fd08d-bae4-4131-9007-2a9a622da7c9",
+      "text": "Here's what you can expect for the new year.\nOut: ____.\nIn: ____.",
+      "pick": 2
+    },
+    {
+      "id": "aa485039-d961-427e-8d7a-a69794790abd",
+      "text": "It's beginning to look a lot like ____.",
+      "pick": 1
+    },
+    {
+      "id": "b234a1dd-ab56-4306-9c11-f14f3d0934d7",
+      "text": "Jesus is ____.",
+      "pick": 1
+    },
+    {
+      "id": "68e0ab93-b564-44e1-989c-2dba70f625ec",
+      "text": "This holiday season, Tim Allen must overcome his fear of ____ to save Christmas.",
+      "pick": 1
+    },
+    {
+      "id": "d99a5c9c-69c3-48eb-89f9-cba7a712ecf7",
+      "text": "What's the one thing that makes an elf instantly ejaculate?",
+      "pick": 1
+    },
+    {
+      "id": "8753467a-d2ac-4b29-b2cb-f41a57f0716f",
+      "text": "You love Black Friday. You love Cyber Monday. So don't miss ____ Wednesday, only at Kohl's!",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "6f8128f0-aa29-4eb6-850c-6f241c0da85a",
+      "text": "A choir of angels descending from the sky and jizzing all over dad's sweater."
+    },
+    {
+      "id": "5461e70a-9d26-491a-8b47-891b1262194f",
+      "text": "A frozen homeless man shattering on your doorstep."
+    },
+    {
+      "id": "20c87b47-e039-44d9-b8e1-59517979ef09",
+      "text": "A snowman that contains the soul of my dead father."
+    },
+    {
+      "id": "a6017ede-23b1-4aac-b605-7dbb7d98c2e7",
+      "text": "A toxic family environment."
+    },
+    {
+      "id": "f1a029ef-ba55-4447-95d0-ded8c9228e1d",
+      "text": "Another shitty year."
+    },
+    {
+      "id": "fa6c0680-0a19-4d45-bf81-d13349347957",
+      "text": "Capitalism"
+    },
+    {
+      "id": "867280e3-b38a-499f-9b62-dd84c437fb4f",
+      "text": "Elf cum."
+    },
+    {
+      "id": "8a5e6e63-bff3-41f2-9f12-73333782b433",
+      "text": "Finding out that Santa isn't real."
+    },
+    {
+      "id": "6271b8d1-e9a8-4fa6-b503-3dce64bb2411",
+      "text": "Fucking up Silent Night in front of 300 parents."
+    },
+    {
+      "id": "b7dbdf49-0ba7-442d-8271-221ebb600dab",
+      "text": "Gift-wrapping a live hamster."
+    },
+    {
+      "id": "08ec094e-b443-474d-9143-682d5ac411a5",
+      "text": "How cool it is that I love Jesus and he loves me back."
+    },
+    {
+      "id": "9ee2ff97-6f00-4000-91b8-273275360130",
+      "text": "How great of a blowjob Jesus could give."
+    },
+    {
+      "id": "2a038226-3397-4372-8618-72c84e4aa788",
+      "text": "How many drinks Aunty Deborah has had."
+    },
+    {
+      "id": "177cf0a8-4825-4958-a143-0b4a14702baa",
+      "text": "My hot cousin."
+    },
+    {
+      "id": "3ddbdd12-1e38-4eee-b6cd-3c64aa15c5c9",
+      "text": "My uncle who voted for Trump."
+    },
+    {
+      "id": "0cb2c616-c8c4-42db-8069-42b9b357135d",
+      "text": "Piece of shit Christmas cards with no money in them."
+    },
+    {
+      "id": "f59579c0-90c9-487c-afd1-d485f51e2600",
+      "text": "Pretending to be happy."
+    },
+    {
+      "id": "585dbe7e-8762-4db4-a7ca-7d75f5968ae0",
+      "text": "Probably Grandma's last Christmas, kids."
+    },
+    {
+      "id": "fb8f53fb-713d-4125-a35d-0cc18f995559",
+      "text": "Snow falling gently on the frozen body of an orphan boy."
+    },
+    {
+      "id": "862bb84a-d39a-4e36-993b-33107e9a1d01",
+      "text": "Socks."
+    },
+    {
+      "id": "d8596214-acca-49a3-9fdc-827b117e547d",
+      "text": "Starting to see where ISIS is coming from."
+    },
+    {
+      "id": "cd2605ef-7fab-4071-92eb-393d9a5af2b9",
+      "text": "The 9,000 children who starved to death today."
+    },
+    {
+      "id": "6dfedb77-8ac7-4a5b-8598-63a60b987159",
+      "text": "The shittier, Jewish version of Christmas."
+    },
+    {
+      "id": "de71ee71-0bd9-4d97-8d0b-b966550ddc63",
+      "text": "These low, low prices!"
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

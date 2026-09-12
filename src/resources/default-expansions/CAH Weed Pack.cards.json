@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "id": "278b0417-fe3e-43b4-b3be-fb4a1d2fa169",
+  "name": "Cards Against Humanity: Weed Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Weed Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "weed pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "bb1cec91-5bb6-41d0-98c8-36635a34b8bf",
+      "text": "Everyone is staring at you because you're ____.",
+      "pick": 1
+    },
+    {
+      "id": "695e70c4-66ef-4597-8a0c-e1c719a8f347",
+      "text": "Hold up. I gotta deal with ____, then l'mma smoke this.",
+      "pick": 1
+    },
+    {
+      "id": "0b1df00b-0faa-47d9-94f0-9a81b8814ba4",
+      "text": "Okay here's the pitch. James Franco and Seth Rogen are trying to score some weed, and then ____ happens.",
+      "pick": 1
+    },
+    {
+      "id": "732dbe86-6e45-41c4-97e7-79943ce32eca",
+      "text": "You know what's, like, really funny when you think about it? ____.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "c153d4f9-9fd5-4a16-887a-f2a846643a45",
+      "text": "A bong rip so massive it restores justice to the kingdom."
+    },
+    {
+      "id": "1676b616-9523-4dac-b3f3-6e4f514adb3b",
+      "text": "A sandwich with Cheetos in it!"
+    },
+    {
+      "id": "9fe2c053-a4a5-4674-9ac7-5ff5fd0bb00b",
+      "text": "A whole cheese pizza just for me."
+    },
+    {
+      "id": "5b2bea15-0933-493d-88af-cc11df3739d5",
+      "text": "An eight-foot man smoking a six-foot bong."
+    },
+    {
+      "id": "d5b1016c-f3d7-403a-b1fd-845060d27eaa",
+      "text": "Ancient aliens."
+    },
+    {
+      "id": "db72bc58-01c0-4b7c-b66c-74cb34c34d13",
+      "text": "Being too high for airplane."
+    },
+    {
+      "id": "a8727a56-a8b8-4d3b-89f3-651ab07a0439",
+      "text": "Cheese crunchies."
+    },
+    {
+      "id": "885f7cc6-c16b-4e09-a073-b6b185da8595",
+      "text": "Dank ass cancer weed."
+    },
+    {
+      "id": "30047194-fce5-4b0e-b55d-e7dff429dad9",
+      "text": "Dicking around on the guitar for an hour."
+    },
+    {
+      "id": "d547d9be-6a41-48d0-973c-51657527e214",
+      "text": "Dropping stuff and knocking everything over."
+    },
+    {
+      "id": "94df967b-14d1-427f-ad4d-a554d46606e9",
+      "text": "Eating all the skin off a rotisserie chicken."
+    },
+    {
+      "id": "1d22f972-ff00-44d6-88c6-e16bd9bf1105",
+      "text": "Forgetting to breathe and then dying."
+    },
+    {
+      "id": "fce9964d-44b2-436f-9c2e-37cdd4295725",
+      "text": "Getting high and watching Planet Earth."
+    },
+    {
+      "id": "8d85833c-1a09-49cb-91c3-51f8db71a78e",
+      "text": "Grinning like an idiot."
+    },
+    {
+      "id": "e1f5e09d-8d93-4241-a8f1-3324a21de9d0",
+      "text": "Hot tub."
+    },
+    {
+      "id": "fe7607ca-1b32-48bc-80bc-6d8a19e05062",
+      "text": "How bright the sun is."
+    },
+    {
+      "id": "e3e21290-1032-4961-8510-9ab6412e0545",
+      "text": "Huge popcorn nugs of hairy alien weed."
+    },
+    {
+      "id": "67f4afe7-6ff7-455c-933c-b07b92ebd1ea",
+      "text": "My own fingers."
+    },
+    {
+      "id": "8fafe3c9-e779-47db-bed2-0b23ac0de265",
+      "text": "Smoking a blunt butt-ass naked."
+    },
+    {
+      "id": "45748619-c1d5-4000-85fa-1b86231926df",
+      "text": "Smoking a joint with former President Barack Obama."
+    },
+    {
+      "id": "0b52a529-41b3-42d9-9806-5f30fdcbbb9a",
+      "text": "Snoop Dogg."
+    },
+    {
+      "id": "e4b71778-af6c-4321-a9f8-748cbf26558a",
+      "text": "The banks, the media, the entire system, man."
+    },
+    {
+      "id": "8d0b7282-8eb3-4e88-b2de-1915e11c6e5e",
+      "text": "Too much edibles."
+    },
+    {
+      "id": "9e928eb8-beb2-41e3-b149-0758b21df38f",
+      "text": "Unbelievably soft carpet."
+    },
+    {
+      "id": "8107bc46-233b-428e-954a-26cf41ea69d3",
+      "text": "Whatever the fuck I was just talking about."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

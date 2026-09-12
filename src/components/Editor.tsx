@@ -2,8 +2,9 @@ import { ArrowLeft, Download, Plus, Save, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import {
   createGameSettings,
-  starterPack,
   defaultGameTemplate,
+  isBuiltInPack,
+  starterPack,
 } from "../domain/defaults";
 import type {
   BlackCard,
@@ -83,7 +84,7 @@ function PackEditor({
     [draft, setDraft] = useState<CardPack>(() => structuredClone(packs[0])),
     [dirty, setDirty] = useState(false),
     file = useRef<HTMLInputElement>(null),
-    locked = draft.id === starterPack.id;
+    locked = isBuiltInPack(draft.id);
   const select = (pack: CardPack) => {
     if (dirty && !confirm("Discard your unsaved changes?")) return;
     setDraft(structuredClone(pack));
@@ -152,10 +153,10 @@ function PackEditor({
                 <span>
                   {pack.blackCards.length} black · {pack.whiteCards.length}{" "}
                   white
-                  {pack.id === starterPack.id ? " · built in" : ""}
+                  {isBuiltInPack(pack.id) ? " · built in" : ""}
                 </span>
               </button>
-              {pack.id !== starterPack.id && (
+              {!isBuiltInPack(pack.id) && (
                 <button
                   className="library-delete"
                   aria-label={`Delete ${pack.name}`}

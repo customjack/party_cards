@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "6c45f12a-0313-4062-98e6-e7c3c02ec8be",
+  "name": "Cards Against Humanity: Clam-O-Naise",
+  "description": "Official Cards Against Humanity retail themed pack: Clam-O-Naise.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "clam-o-naise",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "ac7a4a80-f31d-4a4a-8c8b-b205275c3f22",
+      "text": "That's right!\nWe put ____ in mayonnaise.",
+      "pick": 1
+    },
+    {
+      "id": "fe076a52-048b-4889-b9b6-b1bb702aa5ca",
+      "text": "LOSE WEIGHT and FEEL GREAT with the ALL-NEW CLAM-O-NAISE® and ____.",
+      "pick": 1
+    },
+    {
+      "id": "dbbfb9aa-58e6-4758-9159-0732c85cd96d",
+      "text": "When I think of Clam-O-Naise®, I think about ____.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "6e8462df-b767-41d5-9df8-dc2187694822",
+      "text": "Force-feeding mayonnaise to Tom Holland."
+    },
+    {
+      "id": "ff93ab31-29ed-46e5-a558-58a758e35827",
+      "text": "The sexual possibilities of coleslaw."
+    },
+    {
+      "id": "06d379d4-2f1a-4ce4-bace-67af3ae2647a",
+      "text": "KNIFE-CLAM, the clam that stabs."
+    },
+    {
+      "id": "5d72be25-d961-40ec-ac88-1c38d46feebf",
+      "text": "MayooooooOOOO-NAISE!!!!"
+    },
+    {
+      "id": "ea718da9-62f0-472e-953c-fa2600238d3b",
+      "text": "A perfectly normal rimjob that doesn't involve clams or mayonnaise in any way."
+    },
+    {
+      "id": "8d34c56c-d885-484c-9574-1c1953dffe07",
+      "text": "Some kind of mayonnaise baptism."
+    },
+    {
+      "id": "8e1969e1-8347-4319-b4b0-2429ba9b735f",
+      "text": "Sneaking 700 steamed clams into a movie theater."
+    },
+    {
+      "id": "822d39cb-c325-4554-8f99-b1eb4b1d36dc",
+      "text": "Dr. Mayonnaise, the doctor who injects his patients with mayonnaise."
+    },
+    {
+      "id": "99c8b41a-c12b-45f2-955b-91a4e80701f1",
+      "text": "Not having sex with a clam under any circumstances, no matter how sexy it looks."
+    },
+    {
+      "id": "f5047fa4-3000-4f4d-84af-33e5b3730077",
+      "text": "Sticking a tube up a cow's ass to collect its mayonnaise."
+    },
+    {
+      "id": "777919f7-232e-4755-90c8-ff05139c466f",
+      "text": "My beautiful daughter, Salmonella."
+    },
+    {
+      "id": "c2307baf-c03b-4508-a5a2-42263d538051",
+      "text": "Fucking a clam out of curiosity."
+    },
+    {
+      "id": "ebedfd2a-6150-4cf5-90ba-68fd0b910256",
+      "text": "Tucker Carlson debating a clam on live television."
+    },
+    {
+      "id": "56b29058-f63c-4714-928a-363d5a7cda3a",
+      "text": "This kind of clam."
+    },
+    {
+      "id": "7edba30f-6256-435a-be26-7286421bad36",
+      "text": "The United States Strategic Mayonnaise Reserve."
+    },
+    {
+      "id": "199ca057-49b8-47d2-bcdd-2ab710d530f0",
+      "text": "White people food."
+    },
+    {
+      "id": "66b3b3f6-a408-4cc7-aba6-7cf0a5471ebe",
+      "text": "Eating shellfish in defiance of God's will."
+    },
+    {
+      "id": "85e523a4-0e1d-4112-b1c5-109d886b59f2",
+      "text": "Keepin' it smooth and creamy."
+    },
+    {
+      "id": "b0b1c267-ba65-403c-bb4a-a470b816daa0",
+      "text": "The remarkable effectiveness of mayonnaise as a sexual lubricant."
+    },
+    {
+      "id": "bec72441-01b3-41ff-98db-eae98dbd5b91",
+      "text": "Clam-O Naise®."
+    },
+    {
+      "id": "3a44b326-43a0-467a-a293-8711298ac586",
+      "text": "My clamfather."
+    },
+    {
+      "id": "76abcfc9-14bc-4119-8b7c-0d99fea86016",
+      "text": "Just the right amount of mayonnaise."
+    },
+    {
+      "id": "56e2ebca-1e46-4bbd-8d65-fec8e7246ac5",
+      "text": "Sodium benzoate (to preserve freshness)."
+    },
+    {
+      "id": "892eb7b4-3dac-4ee1-8e6e-a4ee9cb0a677",
+      "text": "Cholesterol."
+    },
+    {
+      "id": "b0e91335-00df-49e7-8f80-7e00f5d1c066",
+      "text": "A garbage bag full of mayonnaise."
+    },
+    {
+      "id": "53a5623d-b386-4de0-a91a-fed941ec13e4",
+      "text": "The all-new CLAMWICH, only at Subway!"
+    },
+    {
+      "id": "d627f6c1-f683-491f-960e-04727ed684c1",
+      "text": "Not even knowing what's happening anymore."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

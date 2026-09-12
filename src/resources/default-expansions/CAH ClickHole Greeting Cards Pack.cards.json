@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "5eb7fc3c-bb35-4409-b2e4-dc4876d73e17",
+  "name": "Cards Against Humanity: ClickHole Greeting Cards Pack",
+  "description": "Official Cards Against Humanity retail themed pack: ClickHole Greeting Cards Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "clickhole greeting cards pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "0b318ed4-089d-46af-b89b-740625b51ff0",
+      "text": "Hallmark has invented a new holiday. It's called \"____ Day.\"",
+      "pick": 1
+    },
+    {
+      "id": "c2b0cbaa-e1f1-41ac-ba15-aedb572f7f97",
+      "text": "Happy Birthday! I love you. Here's ____.",
+      "pick": 1
+    },
+    {
+      "id": "2985bc5a-b5c6-41bd-84c7-f12712b637af",
+      "text": "Honey, it's gonna take more than a shitty greeting card to make up for ten years of ____.",
+      "pick": 1
+    },
+    {
+      "id": "2c8530cc-c9d4-4344-bbac-db15dca18b90",
+      "text": "I cannot stop smiling about ____.",
+      "pick": 1
+    },
+    {
+      "id": "f4200118-e169-4ba4-b554-92ae3d37cf72",
+      "text": "Roses are red. Violets are blue. I am ____ and so are you.",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "0569b1df-7801-47d1-9fed-d8ea6bca8c18",
+      "text": "A one-star Uber driver named \"Wife of Tarantula.\""
+    },
+    {
+      "id": "0318e3fb-782b-498a-bb1a-272f9d58c81e",
+      "text": "An explosion of glitter."
+    },
+    {
+      "id": "8d445ce9-5fa9-4842-bbee-7286a7ade9e5",
+      "text": "Eating my children."
+    },
+    {
+      "id": "f7f17d04-78b6-406e-935e-c0467055d64b",
+      "text": "Emerging from my mother's vagina."
+    },
+    {
+      "id": "ac27e244-c2dc-47dd-af08-fff78b6451e9",
+      "text": "Give me kiss."
+    },
+    {
+      "id": "39f357db-8371-40ff-a93a-49c56ca03fa2",
+      "text": "Looking like shit."
+    },
+    {
+      "id": "afcf8c84-e407-4269-aa79-bc6f5ff544d9",
+      "text": "Luring my husband to the bedroom with a trail of ferret teeth and appearing on the bed in a ferret costume."
+    },
+    {
+      "id": "6dd2798b-f252-4bee-a6f5-5d74da5e4e35",
+      "text": "Mom's special birthday rimjob."
+    },
+    {
+      "id": "e81045db-ceb6-42d0-ab90-011f4895b4f2",
+      "text": "My five dead husbands."
+    },
+    {
+      "id": "b268e946-5b35-477e-b0d7-5c36a91e2fa4",
+      "text": "Turning 70 and still being fuckable."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

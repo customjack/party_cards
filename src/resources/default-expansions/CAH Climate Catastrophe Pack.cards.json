@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "id": "2eb572a3-c5fc-4ecb-97d7-dadf1c5ada56",
+  "name": "Cards Against Humanity: Climate Catastrophe Pack",
+  "description": "Official Cards Against Humanity retail themed pack: Climate Catastrophe Pack.",
+  "author": "Cards Against Humanity LLC",
+  "tags": [
+    "cah",
+    "themed pack",
+    "climate catastrophe pack",
+    "official"
+  ],
+  "blackCards": [
+    {
+      "id": "d7830456-7257-46fa-8183-1dda0223d60f",
+      "text": "Al Gore is giving the world a wake-up call with his new documentary, \"An Inconvenient Truth About ____.\"",
+      "pick": 1
+    },
+    {
+      "id": "41064263-7539-4f88-8ca2-f7cb18597e0a",
+      "text": "BREAKING NEWS: Florida destroyed by ____!",
+      "pick": 1
+    },
+    {
+      "id": "50baba3c-09e2-4944-bc57-ef34e1ce05d7",
+      "text": "Greta Thunberg hates ____.",
+      "pick": 1
+    },
+    {
+      "id": "e38de379-f123-4d2f-ab00-bc396c9fbac3",
+      "text": "New from David Attenborough, Planet Earth III: ____.",
+      "pick": 1
+    },
+    {
+      "id": "f1fa19fc-fc42-4dd8-a88d-b5e2a624bf3b",
+      "text": "What's a simple solution to all of humanity's problems?",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    {
+      "id": "5f93d640-60ea-40ea-bdcc-820991d39c0f",
+      "text": "36 billion metric tons of CO₂."
+    },
+    {
+      "id": "3046209a-f997-4eda-a175-61f47b2f0b43",
+      "text": "A chart that just says \"SHIT BAD.\""
+    },
+    {
+      "id": "c038e837-42b3-49ba-bb5f-45151c77a011",
+      "text": "A massive, coordinated international effort to stop climate change."
+    },
+    {
+      "id": "11a1ab72-95c5-4b95-870a-caf1da061542",
+      "text": "Ball sweat."
+    },
+    {
+      "id": "765fbca8-e512-4ad3-b186-0f2989b2bae6",
+      "text": "Dead whales all over the place."
+    },
+    {
+      "id": "3e9399c8-9cae-467e-9053-b590bb3a32e9",
+      "text": "Eating Grandma to survive."
+    },
+    {
+      "id": "3e07428c-76f0-4bc2-92e1-9fef4c69c876",
+      "text": "Empty promises and half measures."
+    },
+    {
+      "id": "ec9af476-2cf6-4dbd-9702-0d200ca3b3ec",
+      "text": "Everybody giving Al Gore the apology-blowjob he deserves."
+    },
+    {
+      "id": "64d1cd10-5255-4ada-9a35-aca19e65f8b7",
+      "text": "Fucking a tree."
+    },
+    {
+      "id": "d6f9aadf-d68b-466f-bc8d-94fe307b856e",
+      "text": "Getting hurled into a wildfire by a hurricane."
+    },
+    {
+      "id": "ff09b4c8-f639-4069-baff-f0c4cc5bf707",
+      "text": "Giving billions of taxpayer dollars to oil companies."
+    },
+    {
+      "id": "57d38c13-27fe-47ca-8f65-c29015bb8328",
+      "text": "Hot."
+    },
+    {
+      "id": "b08ffcd6-f8f5-4731-8eed-74f7fb6d77f9",
+      "text": "Human extinction."
+    },
+    {
+      "id": "29e4d3bb-f3af-43ef-b314-aa91d0c12f1a",
+      "text": "Ignoring climate change and hoping it goes away."
+    },
+    {
+      "id": "5c707edf-f570-47a2-9b93-c5d2c3c6091a",
+      "text": "Living in a pineapple under the sea, because of climate change."
+    },
+    {
+      "id": "c9c029d8-3e0b-4e28-80d0-17ae6e8ef639",
+      "text": "Not believing in science."
+    },
+    {
+      "id": "69f128bb-b1c6-49c1-af55-27ff11427e59",
+      "text": "OH MY GOD WE'RE ALL GOING TO DIE."
+    },
+    {
+      "id": "a26bbbc5-5bc7-4ebb-ba2d-638cfc480d5b",
+      "text": "Plastic."
+    },
+    {
+      "id": "a2262cbd-e690-4167-a14d-d4acba431044",
+      "text": "Post-apocalyptic bear-cockroaches."
+    },
+    {
+      "id": "b3015715-8694-4045-9396-a439f4e6ef21",
+      "text": "Regulatory capture."
+    },
+    {
+      "id": "b75a68eb-0324-494e-b950-afa5030c977c",
+      "text": "Sucking the farts out of a cow's butthole."
+    },
+    {
+      "id": "2531ef0b-5c58-4d60-8b7d-c8e438c34da4",
+      "text": "The Great Pacific Garbage Patch."
+    },
+    {
+      "id": "8c873a8b-6af3-49ac-8296-1963c8a31dda",
+      "text": "The increasingly depressing narration in nature documentaries."
+    },
+    {
+      "id": "c09e2642-cd28-4fe5-850a-a376b126b4c0",
+      "text": "The world going to shit."
+    },
+    {
+      "id": "66863574-ec71-45aa-a1ac-d832e9fa4b10",
+      "text": "Titty sweat."
+    },
+    {
+      "id": "9d5691ca-f161-416b-b22d-5d55483c4621",
+      "text": "Trying to stop climate change with weird chemicals, but accidentally creating a new ice age, and now the only surviving humans are stuck on a cyberpunk murder-train."
+    }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}
