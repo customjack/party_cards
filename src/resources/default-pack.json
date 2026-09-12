@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "id": "default-pack",
+  "name": "Default Cards",
+  "description": "Original, reusable cards written for Party Cards.",
+  "author": "Party Cards",
+  "tags": ["default", "party"],
+  "blackCards": [
+    { "id": "b01", "text": "My foolproof plan begins with ____.", "pick": 1 },
+    {
+      "id": "b02",
+      "text": "The neighborhood association has officially banned ____.",
+      "pick": 1
+    },
+    {
+      "id": "b03",
+      "text": "Tonight's special: ____ served with ____.",
+      "pick": 2
+    },
+    {
+      "id": "b04",
+      "text": "Scientists have finally discovered the true cause of ____.",
+      "pick": 1
+    },
+    {
+      "id": "b05",
+      "text": "Nothing ruins a family reunion faster than ____.",
+      "pick": 1
+    },
+    {
+      "id": "b06",
+      "text": "The secret ingredient in grandma's recipe was ____ all along.",
+      "pick": 1
+    },
+    {
+      "id": "b07",
+      "text": "Coming soon to a theater near you: ____ II: ____.",
+      "pick": 2
+    },
+    {
+      "id": "b08",
+      "text": "My five-year plan is mostly ____ and a little bit of ____.",
+      "pick": 2
+    },
+    {
+      "id": "b09",
+      "text": "The museum's least popular exhibit is devoted to ____.",
+      "pick": 1
+    },
+    {
+      "id": "b10",
+      "text": "For legal reasons, we can no longer call it ____.",
+      "pick": 1
+    },
+    {
+      "id": "b11",
+      "text": "The school talent show was canceled after an incident involving ____.",
+      "pick": 1
+    },
+    {
+      "id": "b12",
+      "text": "A balanced breakfast includes fruit, toast, and ____.",
+      "pick": 1
+    },
+    {
+      "id": "b13",
+      "text": "Step one: ____. Step two: ____. Step three: profit.",
+      "pick": 2
+    },
+    {
+      "id": "b14",
+      "text": "The next lifestyle trend sweeping the nation is ____.",
+      "pick": 1
+    },
+    {
+      "id": "b15",
+      "text": "I knew the date was over when they mentioned ____.",
+      "pick": 1
+    },
+    {
+      "id": "b16",
+      "text": "Our company values are honesty, teamwork, and ____.",
+      "pick": 1
+    },
+    {
+      "id": "b17",
+      "text": "The royal family keeps ____ in the forbidden wing of the palace.",
+      "pick": 1
+    },
+    {
+      "id": "b18",
+      "text": "In the future, historians will call this the Age of ____.",
+      "pick": 1
+    },
+    {
+      "id": "b19",
+      "text": "The worst thing to hear from the pilot is, ‘Good news, everyone! ____.’",
+      "pick": 1
+    },
+    { "id": "b20", "text": "My autobiography is titled ____.", "pick": 1 },
+    {
+      "id": "b21",
+      "text": "We tried team-building. We got ____ instead.",
+      "pick": 1
+    },
+    {
+      "id": "b22",
+      "text": "The password is ____ followed by ____.",
+      "pick": 2
+    },
+    { "id": "b23", "text": "This meeting could have been ____.", "pick": 1 },
+    { "id": "b24", "text": "The prophecy warned us about ____.", "pick": 1 }
+  ],
+  "whiteCards": [
+    { "id": "w01", "text": "a suspiciously confident pigeon" },
+    { "id": "w02", "text": "three raccoons with a business license" },
+    { "id": "w03", "text": "the consequences of my own actions" },
+    { "id": "w04", "text": "an aggressively educational puppet" },
+    { "id": "w05", "text": "a coupon that expired in 1997" },
+    { "id": "w06", "text": "the world's dampest handshake" },
+    { "id": "w07", "text": "a PowerPoint transition nobody asked for" },
+    { "id": "w08", "text": "one extremely long spaghetti" },
+    { "id": "w09", "text": "an emotional-support traffic cone" },
+    { "id": "w10", "text": "the forbidden fourth meal" },
+    { "id": "w11", "text": "a tiny hat with enormous confidence" },
+    { "id": "w12", "text": "competitive napping" },
+    { "id": "w13", "text": "a haunted group chat" },
+    { "id": "w14", "text": "the last clean spoon" },
+    { "id": "w15", "text": "an unnecessary amount of fog" },
+    { "id": "w16", "text": "a horse named Spreadsheet" },
+    { "id": "w17", "text": "the smell of ambitious cheese" },
+    { "id": "w18", "text": "a strongly worded interpretive dance" },
+    { "id": "w19", "text": "my browser history, printed and bound" },
+    { "id": "w20", "text": "an artisanal bucket of regret" },
+    { "id": "w21", "text": "six minutes of unbroken eye contact" },
+    { "id": "w22", "text": "a moonlit tax audit" },
+    { "id": "w23", "text": "the mayor's secret trampoline" },
+    { "id": "w24", "text": "a tasteful amount of screaming" },
+    { "id": "w25", "text": "an off-brand wizard" },
+    { "id": "w26", "text": "the ceremonial cheese wheel" },
+    { "id": "w27", "text": "a motivational threat" },
+    { "id": "w28", "text": "the Wi-Fi password to destiny" },
+    { "id": "w29", "text": "a poorly supervised time machine" },
+    { "id": "w30", "text": "a committee of judgmental geese" },
+    { "id": "w31", "text": "the confidence of a toddler in a cape" },
+    { "id": "w32", "text": "an ominous kazoo solo" },
+    { "id": "w33", "text": "a wheelbarrow full of secrets" },
+    { "id": "w34", "text": "the emergency glitter reserve" },
+    { "id": "w35", "text": "a legally distinct space wizard" },
+    { "id": "w36", "text": "breakfast lasagna" },
+    { "id": "w37", "text": "a sentient terms-of-service agreement" },
+    { "id": "w38", "text": "four interns in a trench coat" },
+    { "id": "w39", "text": "the world's least convincing alibi" },
+    { "id": "w40", "text": "a deeply personal vendetta against chairs" },
+    { "id": "w41", "text": "an unlimited breadstick loophole" },
+    { "id": "w42", "text": "the sound of one sock disappearing" },
+    { "id": "w43", "text": "an inspirational parking ticket" },
+    { "id": "w44", "text": "a surprise inspection by the moon" },
+    { "id": "w45", "text": "a bag labeled ‘definitely not bees’" },
+    { "id": "w46", "text": "the slow collapse of office morale" },
+    { "id": "w47", "text": "a pirate's LinkedIn profile" },
+    { "id": "w48", "text": "a medically inadvisable amount of ranch" },
+    { "id": "w49", "text": "the haunted remains of a potluck" },
+    { "id": "w50", "text": "an apology written entirely in coupons" },
+    { "id": "w51", "text": "a dragon with excellent credit" },
+    { "id": "w52", "text": "the annual screaming budget" },
+    { "id": "w53", "text": "an escape room with no theme, only taxes" },
+    { "id": "w54", "text": "a very patient swarm of bees" },
+    { "id": "w55", "text": "a podcast nobody remembers starting" },
+    { "id": "w56", "text": "the crushing responsibility of choosing lunch" },
+    { "id": "w57", "text": "a suspiciously warm briefcase" },
+    { "id": "w58", "text": "the confidence to reply-all" },
+    { "id": "w59", "text": "an orchestra of microwave beeps" },
+    { "id": "w60", "text": "a coupon for one free consequence" }
+  ],
+  "createdAt": "2026-09-12T00:00:00.000Z",
+  "updatedAt": "2026-09-12T00:00:00.000Z"
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "default-game",
+  "name": "Default game",
+  "maxPlayers": 12,
+  "allowSpectators": true,
+  "lateJoin": true,
+  "takeoverDisconnectedPlayers": true,
+  "fullRoomFallback": "spectator",
+  "scoreboardTimeSeconds": 8,
+  "showScoreboardAfterEachHand": true,
+  "maxReactionsPerPlayer": "unlimited",
+  "maxReactionsPerTarget": 1,
+  "reactionPoints": {
+    "brilliant": 0,
+    "great-move": 0,
+    "best-move": 0,
+    "excellent": 0,
+    "good": 0,
+    "book": 0,
+    "inaccuracy": 0,
+    "mistake": 0,
+    "miss": 0,
+    "blunder": 0
+  },
+  "rounds": [
+    {
+      "id": "standard-rounds",
+      "name": "Main game",
+      "hands": 10,
+      "handSize": 10,
+      "winnerPoints": 1,
+      "judgeStrategy": "rotate",
+      "answerTimeSeconds": 75,
+      "judgeTimeSeconds": 45,
+      "resultsTimeSeconds": 8,
+      "revealStyle": "one-at-a-time",
+      "revealTimeSeconds": 1,
+      "endAnsweringWhenAllPlayed": true,
+      "anonymousSubmissions": true,
+      "allowJudgeToSubmit": false,
+      "packIds": []
+    }
+  ]
+}
