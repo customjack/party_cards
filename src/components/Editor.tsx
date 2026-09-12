@@ -18,6 +18,7 @@ import {
   SettingsRepository,
 } from "../services/storage";
 import { SettingsForm } from "./SettingsForm";
+import { cardsToPick } from "../domain/cardRules";
 
 export function Editor({
   packsRepo,
@@ -262,7 +263,12 @@ function CardList({
           <details
             className={`prompt-editor-card ${kind === "black" ? "black-card-editor" : ""}`}
             key={card.id}
-            open={!card.text}
+            ref={(element) => {
+              if (element && !element.dataset.initialized) {
+                element.open = !card.text;
+                element.dataset.initialized = "true";
+              }
+            }}
           >
             <summary>
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -292,13 +298,15 @@ function CardList({
                     onChange(
                       cards.map((item, itemIndex) =>
                         itemIndex === index
-                          ? {
-                              ...item,
-                              text: event.target.value.slice(
+                          ? (() => {
+                              const text = event.target.value.slice(
                                 0,
                                 kind === "black" ? 300 : 180,
-                              ),
-                            }
+                              );
+                              return kind === "black"
+                                ? { ...item, text, pick: cardsToPick(text) }
+                                : { ...item, text };
+                            })()
                           : item,
                       ),
                     )
@@ -306,30 +314,10 @@ function CardList({
                 />
               </label>
               {kind === "black" && (
-                <label className="mini-field pick-field">
-                  <span>Cards to pick</span>
-                  <input
-                    type="number"
-                    min="1"
-                    max="3"
-                    value={(card as BlackCard).pick}
-                    onChange={(event) =>
-                      onChange(
-                        cards.map((item, itemIndex) =>
-                          itemIndex === index
-                            ? {
-                                ...item,
-                                pick: Math.max(
-                                  1,
-                                  Math.min(3, Number(event.target.value)),
-                                ),
-                              }
-                            : item,
-                        ),
-                      )
-                    }
-                  />
-                </label>
+                <small className="inferred-pick">
+                  {cardsToPick(card.text)} card
+                  {cardsToPick(card.text) === 1 ? "" : "s"} will be played
+                </small>
               )}
             </div>
           </details>

@@ -2416,6 +2416,15 @@ button.white-card:hover:not(:disabled) {
 .pick-field {
   max-width: 180px;
 }
+.inferred-pick {
+  display: inline-block;
+  padding: 7px 10px;
+  border-radius: 99px;
+  color: #57515e;
+  background: #eee9ff;
+  font-size: 12px;
+  font-weight: 800;
+}
 .color-field input[type="color"] {
   width: 100%;
   min-height: 46px;

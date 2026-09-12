@@ -1,9 +1,16 @@
 import defaultPackResource from "../resources/default-pack.json";
 import defaultSettingsResource from "../resources/default-settings.json";
 import type { CardPack, GameSettings, RoundSettings } from "./types";
+import { cardsToPick } from "./cardRules";
 
 const clone = <T>(value: T): T => structuredClone(value);
-export const starterPack = clone(defaultPackResource) as CardPack;
+export const starterPack = {
+  ...(clone(defaultPackResource) as CardPack),
+  blackCards: defaultPackResource.blackCards.map((card) => ({
+    ...card,
+    pick: cardsToPick(card.text),
+  })),
+};
 export const defaultGameTemplate = clone(
   defaultSettingsResource,
 ) as GameSettings;

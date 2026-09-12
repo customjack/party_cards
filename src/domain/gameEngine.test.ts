@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { defaultGameTemplate, starterPack } from "./defaults";
 import { CardGameEngine } from "./gameEngine";
 import type { Player } from "./types";
+import { cardsToPick } from "./cardRules";
 
 const players = (count: number): Player[] =>
   Array.from({ length: count }, (_, index) => ({
@@ -15,6 +16,16 @@ const players = (count: number): Player[] =>
   }));
 
 describe("CardGameEngine", () => {
+  it("infers the number of cards from separate prompt blanks", () => {
+    expect(cardsToPick("Why ____?")).toBe(1);
+    expect(cardsToPick("____, then ____, then ____.")).toBe(3);
+    expect(cardsToPick("A question without a printed blank?")).toBe(1);
+    expect(
+      starterPack.blackCards.every(
+        (card) => card.pick === cardsToPick(card.text),
+      ),
+    ).toBe(true);
+  });
   it("loads original defaults from export-compatible resources", () => {
     expect(defaultGameTemplate.schemaVersion).toBe(1);
     expect(defaultGameTemplate.showScoreboardAfterEachHand).toBe(true);

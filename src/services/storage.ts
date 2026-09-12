@@ -1,4 +1,5 @@
 import { defaultGameTemplate, starterPack } from "../domain/defaults";
+import { cardsToPick } from "../domain/cardRules";
 import {
   REACTIONS,
   type BlackCard,
@@ -24,11 +25,14 @@ const text = (value: unknown, max: number) =>
   String(value ?? "")
     .trim()
     .slice(0, max);
-const normalizeBlack = (value: Partial<BlackCard>): BlackCard => ({
-  id: text(value.id, 100) || crypto.randomUUID(),
-  text: text(value.text, 300),
-  pick: Math.max(1, Math.min(3, Number(value.pick) || 1)),
-});
+const normalizeBlack = (value: Partial<BlackCard>): BlackCard => {
+  const prompt = text(value.text, 300);
+  return {
+    id: text(value.id, 100) || crypto.randomUUID(),
+    text: prompt,
+    pick: cardsToPick(prompt),
+  };
+};
 const normalizeWhite = (value: Partial<WhiteCard> | string): WhiteCard => ({
   id:
     typeof value === "string"
