@@ -1,4 +1,12 @@
-import { Check, Crown, Lock, SmilePlus, Unlock } from "lucide-react";
+import {
+  Check,
+  Crown,
+  Lock,
+  SmilePlus,
+  Unlock,
+  Users,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   REACTIONS,
@@ -68,6 +76,16 @@ export function GameView({
   const ranking = Object.entries(game.scores).sort(
     (left, right) => right[1] - left[1],
   );
+  const kickPlayer = (playerId: string) => {
+    const player = snapshot.players.find((item) => item.id === playerId);
+    if (
+      isHost &&
+      player &&
+      !player.isHost &&
+      confirm(`Remove “${player.name}” from the game?`)
+    )
+      (session as HostSession).kickPlayer(playerId);
+  };
   if (snapshot.phase === "finished")
     return (
       <main className="center-page finish-page">
@@ -106,6 +124,7 @@ export function GameView({
           snapshot={snapshot}
           seconds={seconds}
           connectionState={connectionState}
+          onKick={isHost ? kickPlayer : undefined}
         />
         <section className="play-card scoreboard-card">
           <span className="eyebrow">
@@ -149,6 +168,7 @@ export function GameView({
           snapshot={snapshot}
           seconds={seconds}
           connectionState={connectionState}
+          onKick={isHost ? kickPlayer : undefined}
         />
         <PlayerProgress snapshot={snapshot} />
         <section className="table-stage">
@@ -303,6 +323,7 @@ export function GameView({
         snapshot={snapshot}
         seconds={seconds}
         connectionState={connectionState}
+        onKick={isHost ? kickPlayer : undefined}
       />
       <section className="table-stage">
         <BlackCardView
@@ -459,10 +480,12 @@ function Header({
   snapshot,
   seconds,
   connectionState,
+  onKick,
 }: {
   snapshot: LobbySnapshot;
   seconds: number | null;
   connectionState: ConnectionState;
+  onKick?: (playerId: string) => void;
 }) {
   return (
     <header className="game-header">
@@ -478,6 +501,28 @@ function Header({
         </strong>
       )}
       <span>ROOM {snapshot.roomCode}</span>
+      {onKick && (
+        <details className="host-player-menu">
+          <summary title="Manage players" aria-label="Manage players">
+            <Users />
+          </summary>
+          <div className="host-player-menu-popover">
+            <b>Manage players</b>
+            {snapshot.players
+              .filter((player) => !player.isHost)
+              .map((player) => (
+                <button
+                  type="button"
+                  onClick={() => onKick(player.id)}
+                  key={player.id}
+                >
+                  <span>{player.name}</span>
+                  <X />
+                </button>
+              ))}
+          </div>
+        </details>
+      )}
     </header>
   );
 }

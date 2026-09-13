@@ -179,4 +179,5 @@ export type ClientCommand =
 export type HostEvent =
   | { type: "SNAPSHOT"; payload: LobbySnapshot }
   | { type: "ASSIGNED_PLAYER"; payload: { playerId: string } }
+  | { type: "KICKED"; payload: { reason: string } }
   | { type: "REJECTED"; payload: { reason: string } };

@@ -16,6 +16,7 @@ import {
   type CardPack,
   type GameSettings,
   type LobbySnapshot,
+  type Player,
 } from "../domain/types";
 import { SettingsValidator } from "../domain/validation";
 import {
@@ -239,6 +240,11 @@ export function Lobby({
       ? (session as HostSession).updateHost(profile)
       : (session as ClientSession).updateProfile(profile);
   };
+  const kickPlayer = (player: Player) => {
+    if (!isHost || player.isHost) return;
+    if (confirm(`Remove “${player.name}” from the game?`))
+      (session as HostSession).kickPlayer(player.id);
+  };
 
   return (
     <main className="page shell lobby-page">
@@ -317,6 +323,17 @@ export function Lobby({
                     )}
                   </span>
                 </div>
+                {isHost && !player.isHost && (
+                  <button
+                    type="button"
+                    className="kick-player-button"
+                    title={`Remove ${player.name}`}
+                    aria-label={`Remove ${player.name}`}
+                    onClick={() => kickPlayer(player)}
+                  >
+                    <X />
+                  </button>
+                )}
               </article>
             ))}
             {Array.from(
@@ -347,6 +364,17 @@ export function Lobby({
                 {spectators.map((player) => (
                   <span key={player.id}>
                     {player.avatar} {player.name}
+                    {isHost && (
+                      <button
+                        type="button"
+                        className="kick-player-button"
+                        title={`Remove ${player.name}`}
+                        aria-label={`Remove ${player.name}`}
+                        onClick={() => kickPlayer(player)}
+                      >
+                        <X />
+                      </button>
+                    )}
                   </span>
                 ))}
               </div>
@@ -407,46 +435,11 @@ export function Lobby({
             </section>
           )}
           {me && (
-            <section className="panel profile-panel">
-              <span className="eyebrow">YOUR PROFILE</span>
-              <input
-                maxLength={NAME_MAX_LENGTH}
-                value={me.name}
-                onChange={(event) =>
-                  updateProfile({ name: event.target.value })
-                }
-              />
-              <div className="mini-avatar-picker">
-                {AVATARS.map((avatar) => (
-                  <button
-                    className={`avatar ${avatar === me.avatar ? "selected" : ""}`}
-                    style={{ backgroundColor: me.avatarColor }}
-                    onClick={() => updateProfile({ avatar })}
-                    key={avatar}
-                  >
-                    <span className="avatar-glyph">{avatar}</span>
-                  </button>
-                ))}
-              </div>
-              <label className="color-field compact-color-field">
-                Icon color
-                <input
-                  type="color"
-                  value={me.avatarColor}
-                  onChange={(event) =>
-                    updateProfile({ avatarColor: event.target.value })
-                  }
-                />
-              </label>
-              {!isHost && snapshot.settings.allowSpectators && (
-                <button
-                  className="text-button"
-                  onClick={() => updateProfile({ spectator: !me.spectator })}
-                >
-                  {me.spectator ? "Join as player" : "Switch to spectator"}
-                </button>
-              )}
-            </section>
+            <LobbyProfileEditor
+              player={me}
+              canChangeRole={!isHost && snapshot.settings.allowSpectators}
+              onChange={updateProfile}
+            />
           )}
           {isHost ? (
             <button
@@ -540,5 +533,78 @@ export function Lobby({
         </div>
       )}
     </main>
+  );
+}
+
+function LobbyProfileEditor({
+  player,
+  canChangeRole,
+  onChange,
+}: {
+  player: Player;
+  canChangeRole: boolean;
+  onChange: (changes: Partial<Player>) => void;
+}) {
+  const [name, setName] = useState(player.name);
+  useEffect(() => setName(player.name), [player.name]);
+
+  const normalizedName = () => name.trim().slice(0, NAME_MAX_LENGTH) || "Player";
+  const commitName = () => {
+    const next = normalizedName();
+    setName(next);
+    if (next !== player.name) onChange({ name: next });
+  };
+
+  return (
+    <section className="panel profile-panel">
+      <span className="eyebrow">YOUR PROFILE</span>
+      <input
+        maxLength={NAME_MAX_LENGTH}
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        onBlur={commitName}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") event.currentTarget.blur();
+        }}
+      />
+      <div className="mini-avatar-picker">
+        {AVATARS.map((avatar) => (
+          <button
+            className={`avatar ${avatar === player.avatar ? "selected" : ""}`}
+            style={{ backgroundColor: player.avatarColor }}
+            onClick={() => onChange({ name: normalizedName(), avatar })}
+            key={avatar}
+          >
+            <span className="avatar-glyph">{avatar}</span>
+          </button>
+        ))}
+      </div>
+      <label className="color-field compact-color-field">
+        Icon color
+        <input
+          type="color"
+          value={player.avatarColor}
+          onChange={(event) =>
+            onChange({
+              name: normalizedName(),
+              avatarColor: event.target.value,
+            })
+          }
+        />
+      </label>
+      {canChangeRole && (
+        <button
+          className="text-button"
+          onClick={() =>
+            onChange({
+              name: normalizedName(),
+              spectator: !player.spectator,
+            })
+          }
+        >
+          {player.spectator ? "Join as player" : "Switch to spectator"}
+        </button>
+      )}
+    </section>
   );
 }

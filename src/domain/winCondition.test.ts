@@ -25,8 +25,9 @@ const setup = () => {
 };
 
 describe("game win conditions", () => {
-  it("finishes after the configured stage sequence by default", () => {
+  it("finishes after the configured stage sequence when selected", () => {
     const { settings, game } = setup();
+    settings.winCondition = { type: "all-stages" };
     expect(isGameComplete(settings, game)).toBe(false);
     game.handIndex = settings.rounds[0].hands - 1;
     expect(isGameComplete(settings, game)).toBe(true);

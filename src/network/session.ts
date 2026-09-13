@@ -83,6 +83,7 @@ export class HostSession extends GameSession {
   private signalingRetry?: number;
   private readonly peerId: string;
   private hasOpened = false;
+  private kickedPlayerIds = new Set<string>();
   constructor(host: ProfilePayload, settings: GameSettings, packs: CardPack[]) {
     super();
     const code = makeCode();
@@ -122,6 +123,30 @@ export class HostSession extends GameSession {
       ...this.cleanProfile(profile),
       spectator: false,
     };
+    this.broadcast();
+  }
+  kickPlayer(playerId: string) {
+    const player = this.state.players.find((item) => item.id === playerId);
+    if (!player || player.isHost) return;
+    this.kickedPlayerIds.add(playerId);
+    this.state.players = this.state.players.filter(
+      (item) => item.id !== playerId,
+    );
+    this.removePlayerFromGame(playerId);
+    this.connections.forEach((connection, connectionId) => {
+      if (this.connectionPlayers.get(connectionId) !== playerId) return;
+      if (connection.open)
+        connection.send({
+          type: "KICKED",
+          payload: { reason: "The host removed you from the game." },
+        } satisfies HostEvent);
+      this.connections.delete(connectionId);
+      this.connectionPlayers.delete(connectionId);
+      const timer = this.dropTimers.get(connectionId);
+      if (timer) clearTimeout(timer);
+      this.dropTimers.delete(connectionId);
+      window.setTimeout(() => connection.close(), 50);
+    });
     this.broadcast();
   }
   start() {
@@ -302,6 +327,14 @@ export class HostSession extends GameSession {
           : token
             ? `${PREFIX}seat-${token}`
             : connection.peer;
+      if (this.kickedPlayerIds.has(resumeId)) {
+        connection.send({
+          type: "KICKED",
+          payload: { reason: "The host removed you from the game." },
+        } satisfies HostEvent);
+        window.setTimeout(() => connection.close(), 50);
+        return;
+      }
       const resumable = this.state.players.find(
         (player) => player.id === resumeId,
       );
@@ -531,6 +564,40 @@ export class HostSession extends GameSession {
   private currentRound() {
     return this.state.settings.rounds[this.state.game!.roundIndex];
   }
+  private removePlayerFromGame(playerId: string) {
+    const game = this.state.game;
+    if (!game) return;
+    delete game.hands[playerId];
+    delete game.submissions[playerId];
+    delete game.scores[playerId];
+    delete game.reactions[playerId];
+    delete game.reactionTotals[playerId];
+    game.lockedPlayerIds = game.lockedPlayerIds.filter(
+      (id) => id !== playerId,
+    );
+    game.revealOrder = game.revealOrder.filter((id) => id !== playerId);
+    Object.values(game.reactions).forEach((reactions) => {
+      const remaining = reactions.filter(
+        (reaction) => reaction.targetPlayerId !== playerId,
+      );
+      reactions.splice(0, reactions.length, ...remaining);
+    });
+    if (game.winnerId === playerId) game.winnerId = undefined;
+    if (game.judgeId !== playerId) return;
+    const replacement = this.state.players.find(
+      (player) => !player.spectator && player.connected,
+    );
+    game.judgeId = replacement?.id ?? "host";
+    if (
+      this.state.phase === "answering" &&
+      !this.currentRound().allowJudgeToSubmit
+    ) {
+      delete game.submissions[game.judgeId];
+      game.lockedPlayerIds = game.lockedPlayerIds.filter(
+        (id) => id !== game.judgeId,
+      );
+    }
+  }
   private activePacks() {
     return this.packs.filter((pack) =>
       this.state.selectedPackIds.includes(pack.id),
@@ -673,7 +740,12 @@ export class ClientSession extends GameSession {
       if (event.type === "SNAPSHOT") this.emit(event.payload);
       else if (event.type === "ASSIGNED_PLAYER")
         this.playerId = event.payload.playerId;
-      else this.fail(event.payload.reason);
+      else if (event.type === "KICKED") {
+        this.explicitlyLeft = true;
+        this.setStatus("disconnected");
+        this.fail(event.payload.reason);
+        window.setTimeout(() => connection.close(), 0);
+      } else this.fail(event.payload.reason);
     });
     connection.on("close", () => this.scheduleReconnect());
     connection.on("error", () => this.scheduleReconnect());

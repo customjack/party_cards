@@ -8,7 +8,8 @@
   "takeoverDisconnectedPlayers": true,
   "fullRoomFallback": "spectator",
   "winCondition": {
-    "type": "all-stages"
+    "type": "score-target",
+    "target": 7
   },
   "scoreboardTimeSeconds": 8,
   "showScoreboardAfterEachHand": true,
@@ -30,7 +31,7 @@
     {
       "id": "standard-rounds",
       "name": "Main game",
-      "hands": 10,
+      "hands": 100,
       "handSize": 10,
       "winnerPoints": 1,
       "judgeStrategy": "rotate",
