@@ -7,6 +7,9 @@
   "lateJoin": true,
   "takeoverDisconnectedPlayers": true,
   "fullRoomFallback": "spectator",
+  "winCondition": {
+    "type": "all-stages"
+  },
   "scoreboardTimeSeconds": 8,
   "showScoreboardAfterEachHand": true,
   "maxReactionsPerPlayer": "unlimited",

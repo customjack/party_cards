@@ -13,6 +13,7 @@ import {
   type ReactionId,
 } from "../domain/types";
 import { getPeerOptions } from "./peerConfig";
+import { isGameComplete, nextStageIndex } from "../domain/winCondition";
 
 const PREFIX = "party-cards-",
   RECONNECT_GRACE_MS = 60_000;
@@ -476,17 +477,17 @@ export class HostSession extends GameSession {
   private advance() {
     const game = this.state.game!,
       round = this.currentRound();
-    if (game.handIndex + 1 < round.hands) {
+    if (isGameComplete(this.state.settings, game)) {
+      this.state.phase = "finished";
+      this.state.phaseEndsAt = undefined;
+    } else if (game.handIndex + 1 < round.hands) {
       if (this.state.settings.showScoreboardAfterEachHand) {
         this.state.phase = "scoreboard";
         this.setDeadline(this.state.settings.scoreboardTimeSeconds);
       } else this.prepareNextHand();
-    } else if (game.roundIndex + 1 < this.state.settings.rounds.length) {
+    } else {
       this.state.phase = "scoreboard";
       this.setDeadline(this.state.settings.scoreboardTimeSeconds);
-    } else {
-      this.state.phase = "finished";
-      this.state.phaseEndsAt = undefined;
     }
   }
   private continueAfterScoreboard() {
@@ -502,7 +503,7 @@ export class HostSession extends GameSession {
   }
   private beginNextStage() {
     const previous = this.state.game!,
-      index = previous.roundIndex + 1,
+      index = nextStageIndex(this.state.settings, previous.roundIndex),
       round = this.state.settings.rounds[index];
     let seats = this.state.players.filter((player) => !player.spectator).length;
     this.state.players.forEach((player) => {

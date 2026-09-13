@@ -44,6 +44,10 @@ export const REACTIONS = [
 export type ReactionId = (typeof REACTIONS)[number]["id"];
 export type Reaction = { targetPlayerId: string; reaction: ReactionId };
 export type ReactionLimit = number | "unlimited";
+export type WinCondition =
+  | { type: "all-stages" }
+  | { type: "round-count"; target: number }
+  | { type: "score-target"; target: number };
 
 export type BlackCard = { id: string; text: string; pick: number };
 export type WhiteCard = { id: string; text: string; blank?: boolean };
@@ -89,6 +93,7 @@ export type GameSettings = {
   lateJoin: boolean;
   takeoverDisconnectedPlayers: boolean;
   fullRoomFallback: "spectator" | "reject";
+  winCondition: WinCondition;
   scoreboardTimeSeconds: number;
   showScoreboardAfterEachHand: boolean;
   maxReactionsPerPlayer: ReactionLimit;

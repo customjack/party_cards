@@ -87,6 +87,14 @@ export const normalizeSettings = (
     id: text(value.id, 100) || crypto.randomUUID(),
     name: text(value.name, 60) || "Custom game",
     maxPlayers: Math.max(2, Number(value.maxPlayers) || 12),
+    winCondition:
+      value.winCondition?.type === "round-count" ||
+      value.winCondition?.type === "score-target"
+        ? {
+            type: value.winCondition.type,
+            target: Math.max(1, Math.floor(Number(value.winCondition.target) || 1)),
+          }
+        : { type: "all-stages" },
     showScoreboardAfterEachHand:
       value.showScoreboardAfterEachHand ??
       defaultGameTemplate.showScoreboardAfterEachHand,

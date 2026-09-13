@@ -384,6 +384,16 @@ export function Lobby({
                 </dd>
               </div>
               <div>
+                <dt>Win</dt>
+                <dd>
+                  {snapshot.settings.winCondition.type === "all-stages"
+                    ? "All stages"
+                    : snapshot.settings.winCondition.type === "round-count"
+                      ? `${snapshot.settings.winCondition.target} rounds`
+                      : `${snapshot.settings.winCondition.target} points`}
+                </dd>
+              </div>
+              <div>
                 <dt>Packs</dt>
                 <dd>{selectedPacks.length}</dd>
               </div>

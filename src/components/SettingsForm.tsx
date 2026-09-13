@@ -121,6 +121,55 @@ export function SettingsForm({
             min={2}
             onChange={(value) => set("maxPlayers", Math.max(2, value))}
           />
+          <label className="mini-field">
+            <span>Win condition</span>
+            <select
+              value={settings.winCondition.type}
+              onChange={(event) => {
+                const type = event.target
+                  .value as GameSettings["winCondition"]["type"];
+                if (type === "all-stages")
+                  set("winCondition", { type: "all-stages" });
+                else
+                  set("winCondition", {
+                    type,
+                    target:
+                      type === "round-count"
+                        ? Math.max(
+                            1,
+                            settings.rounds.reduce(
+                              (sum, round) => sum + round.hands,
+                              0,
+                            ),
+                          )
+                        : 10,
+                  });
+              }}
+            >
+              <option value="all-stages">Complete all stages</option>
+              <option value="round-count">Rounds played</option>
+              <option value="score-target">First to a score</option>
+            </select>
+          </label>
+          {settings.winCondition.type !== "all-stages" && (
+            <NumberField
+              label={
+                settings.winCondition.type === "round-count"
+                  ? "Rounds to play"
+                  : "Points to win"
+              }
+              value={settings.winCondition.target}
+              min={1}
+              onChange={(value) => {
+                const type = settings.winCondition.type;
+                if (type === "all-stages") return;
+                set("winCondition", {
+                  type,
+                  target: Math.max(1, Math.floor(value || 1)),
+                });
+              }}
+            />
+          )}
           <NumberField
             label="Scoreboard seconds"
             value={settings.scoreboardTimeSeconds}

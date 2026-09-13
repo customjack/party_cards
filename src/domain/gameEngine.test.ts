@@ -31,6 +31,7 @@ describe("CardGameEngine", () => {
     expect(defaultGameTemplate.showScoreboardAfterEachHand).toBe(true);
     expect(defaultGameTemplate.maxReactionsPerPlayer).toBe("unlimited");
     expect(defaultGameTemplate.maxReactionsPerTarget).toBe(1);
+    expect(defaultGameTemplate.winCondition).toEqual({ type: "all-stages" });
     expect(
       Object.values(defaultGameTemplate.reactionPoints).every(
         (points) => points === 0,

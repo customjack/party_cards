@@ -36,6 +36,23 @@ export class SettingsValidator {
     );
     if (!settings.rounds.length)
       issues.push({ level: "error", message: "Add at least one stage." });
+    if (
+      settings.winCondition.type !== "all-stages" &&
+      settings.winCondition.target < 1
+    )
+      issues.push({
+        level: "error",
+        message: "The win-condition target must be at least one.",
+      });
+    if (
+      settings.winCondition.type === "score-target" &&
+      !settings.rounds.some((round) => round.winnerPoints > 0) &&
+      !Object.values(settings.reactionPoints).some((points) => points > 0)
+    )
+      issues.push({
+        level: "error",
+        message: "A score-target game needs at least one way to earn points.",
+      });
     if (!packs.length)
       issues.push({
         level: "error",
