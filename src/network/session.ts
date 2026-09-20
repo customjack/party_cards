@@ -83,7 +83,6 @@ export class HostSession extends GameSession {
   private signalingRetry?: number;
   private readonly peerId: string;
   private hasOpened = false;
-  private kickedPlayerIds = new Set<string>();
   constructor(host: ProfilePayload, settings: GameSettings, packs: CardPack[]) {
     super();
     const code = makeCode();
@@ -128,7 +127,6 @@ export class HostSession extends GameSession {
   kickPlayer(playerId: string) {
     const player = this.state.players.find((item) => item.id === playerId);
     if (!player || player.isHost) return;
-    this.kickedPlayerIds.add(playerId);
     this.state.players = this.state.players.filter(
       (item) => item.id !== playerId,
     );
@@ -327,14 +325,6 @@ export class HostSession extends GameSession {
           : token
             ? `${PREFIX}seat-${token}`
             : connection.peer;
-      if (this.kickedPlayerIds.has(resumeId)) {
-        connection.send({
-          type: "KICKED",
-          payload: { reason: "The host removed you from the game." },
-        } satisfies HostEvent);
-        window.setTimeout(() => connection.close(), 50);
-        return;
-      }
       const resumable = this.state.players.find(
         (player) => player.id === resumeId,
       );

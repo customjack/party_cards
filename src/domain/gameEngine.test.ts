@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defaultGameTemplate, starterPack } from "./defaults";
 import { CardGameEngine } from "./gameEngine";
-import type { Player } from "./types";
+import type { CardPack, Player } from "./types";
 import { cardsToPick } from "./cardRules";
 
 const players = (count: number): Player[] =>
@@ -96,6 +96,68 @@ describe("CardGameEngine", () => {
     expect(Object.values(game.hands).every((hand) => hand.length === 10)).toBe(
       true,
     );
+  });
+
+  it("does not manufacture duplicate cards to fill a long stage", () => {
+    const round = { ...defaultGameTemplate.rounds[0], hands: 100 },
+      game = CardGameEngine.createStage(round, players(12), [starterPack]),
+      whiteCards = [...game.whiteDeck, ...Object.values(game.hands).flat()],
+      blackCards = [game.blackCard, ...game.blackDeck];
+    expect(whiteCards).toHaveLength(starterPack.whiteCards.length);
+    expect(new Set(whiteCards.map((card) => card.id)).size).toBe(
+      whiteCards.length,
+    );
+    expect(blackCards).toHaveLength(starterPack.blackCards.length);
+    expect(new Set(blackCards.map((card) => card.id)).size).toBe(
+      blackCards.length,
+    );
+  });
+
+  it("removes overlap between packs but preserves duplicates within a pack", () => {
+    const pack = (
+      id: string,
+      blackCards: CardPack["blackCards"],
+      whiteCards: CardPack["whiteCards"],
+    ): CardPack => ({
+      ...structuredClone(starterPack),
+      id,
+      name: id,
+      blackCards,
+      whiteCards,
+    });
+    const first = pack(
+        "first",
+        [{ id: "black-a", text: "A repeated prompt ____.", pick: 1 }],
+        [
+          { id: "white-a", text: "Repeated response" },
+          { id: "white-a", text: "Repeated response" },
+          { id: "white-c", text: "Only in the first pack" },
+        ],
+      ),
+      second = pack(
+        "second",
+        [
+          { id: "black-b", text: "  A REPEATED prompt   ____. ", pick: 1 },
+        ],
+        [
+          { id: "white-d", text: " repeated RESPONSE " },
+          { id: "white-e", text: "Only in the second pack" },
+        ],
+      ),
+      game = CardGameEngine.createStage(
+        { ...defaultGameTemplate.rounds[0], hands: 1, handSize: 2 },
+        players(3),
+        [first, second],
+      ),
+      whiteCards = [...game.whiteDeck, ...Object.values(game.hands).flat()];
+    expect(
+      whiteCards.filter(
+        (card) => card.text.trim().toLowerCase() === "repeated response",
+      ),
+    ).toHaveLength(2);
+    expect(whiteCards).toHaveLength(4);
+    expect(new Set(whiteCards.map((card) => card.id)).size).toBe(4);
+    expect([game.blackCard, ...game.blackDeck]).toHaveLength(1);
   });
 
   it("validates multi-card submissions against the player's hand", () => {

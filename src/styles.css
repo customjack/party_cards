@@ -2396,6 +2396,9 @@ button.white-card:hover:not(:disabled) {
   right: auto;
   left: 10px;
 }
+.submission-stack .ordered-played-card {
+  padding-top: 54px;
+}
 .card-editor-list {
   margin-top: 30px;
   padding-top: 24px;

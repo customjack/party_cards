@@ -22,25 +22,22 @@ export class CardGameEngine {
       allowedPacks = packs.filter(
         (pack) => !round.packIds.length || round.packIds.includes(pack.id),
       ),
-      blackPool = allowedPacks.flatMap((pack) =>
-        pack.blackCards.map((card) => ({
-          ...card,
-          id: `${pack.id}:${card.id}`,
-        })),
+      blackPool = this.mergePackCards(
+        allowedPacks,
+        (pack) => pack.blackCards,
+        (card) => this.cardTextKey(card.text),
       ),
-      whitePool = allowedPacks.flatMap((pack) =>
-        pack.whiteCards
-          .filter((card) => round.allowBlankCards || !card.blank)
-          .map((card) => ({
-            ...card,
-            id: `${pack.id}:${card.id}`,
-          })),
+      whitePool = this.mergePackCards(
+        allowedPacks,
+        (pack) =>
+          pack.whiteCards.filter(
+            (card) => round.allowBlankCards || !card.blank,
+          ),
+        (card) =>
+          card.blank ? "__blank_response__" : this.cardTextKey(card.text),
       ),
-      blackDeck = this.expandedDeck(blackPool, round.hands),
-      whiteDeck = this.expandedDeck(
-        whitePool,
-        active.length * round.handSize + active.length * round.hands,
-      ),
+      blackDeck = this.shuffle(blackPool),
+      whiteDeck = this.shuffle(whitePool),
       game: GameRuntime = {
         roundIndex: 0,
         handIndex: 0,
@@ -266,22 +263,27 @@ export class CardGameEngine {
     return { id: crypto.randomUUID(), text: "The answer is ____.", pick: 1 };
   }
 
-  private static expandedDeck<T extends { id: string }>(
-    cards: T[],
-    minimum: number,
+  private static mergePackCards<T extends { id: string }>(
+    packs: CardPack[],
+    cardsForPack: (pack: CardPack) => T[],
+    duplicateKey: (card: T) => string,
   ): T[] {
-    if (!cards.length) return [];
-    const copies = Array.from(
-      { length: Math.max(cards.length, minimum) },
-      (_, index) => {
-        const card = cards[index % cards.length];
-        return {
-          ...card,
-          id: `${card.id}:${Math.floor(index / cards.length)}`,
-        };
-      },
-    );
-    return this.shuffle(copies);
+    const priorPackKeys = new Set<string>();
+    return packs.flatMap((pack) => {
+      const keysBeforeThisPack = new Set(priorPackKeys);
+      const cards = cardsForPack(pack).filter(
+        (card) => !keysBeforeThisPack.has(duplicateKey(card)),
+      );
+      cards.forEach((card) => priorPackKeys.add(duplicateKey(card)));
+      return cards.map((card, index) => ({
+        ...card,
+        id: `${pack.id}:${card.id}:${index}`,
+      }));
+    });
+  }
+
+  private static cardTextKey(text: string) {
+    return text.trim().replace(/\s+/g, " ").toLowerCase();
   }
 
   static shuffle<T>(items: T[]) {

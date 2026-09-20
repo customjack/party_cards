@@ -390,7 +390,10 @@ export function GameView({
                 >
                   {submission.cards.map(
                     (card: WhiteCard, cardIndex: number) => (
-                      <span className="white-card" key={card.id}>
+                      <span
+                        className={`white-card ${submission.cards.length > 1 ? "ordered-played-card" : ""}`}
+                        key={card.id}
+                      >
                         {submission.cards.length > 1 && (
                           <span className="played-order">{cardIndex + 1}</span>
                         )}
