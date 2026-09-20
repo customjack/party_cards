@@ -559,16 +559,26 @@ function PlayerProgress({ snapshot }: { snapshot: LobbySnapshot }) {
             !player.spectator &&
             (round.allowJudgeToSubmit || player.id !== game.judgeId),
         )
-        .map((player) => (
-          <span
-            className={game.lockedPlayerIds.includes(player.id) ? "done" : ""}
-            key={player.id}
-          >
-            <Avatar name={player.avatar} color={player.avatarColor} size="sm" />
-            {player.name}
-            {game.lockedPlayerIds.includes(player.id) && <Check />}
-          </span>
-        ))}
+        .map((player) => {
+          const ready = game.lockedPlayerIds.includes(player.id);
+          return (
+            <div
+              className={`player-status ${ready ? "done" : "working"}`}
+              key={player.id}
+            >
+              <Avatar
+                name={player.avatar}
+                color={player.avatarColor}
+                size="sm"
+              />
+              <span className="player-status-copy">
+                <b>{player.name}</b>
+                <small>{ready ? "Ready" : "Choosing cards"}</small>
+              </span>
+              {ready && <Check aria-hidden />}
+            </div>
+          );
+        })}
     </div>
   );
 }

@@ -199,8 +199,8 @@ export function SettingsForm({
             onChange={(value) => set("allowSpectators", value)}
           />
           <Toggle
-            label="Allow joining active games"
-            hint="Late players spectate until the next stage."
+            label="Allow players to join active games"
+            hint="Late players enter at the next hand."
             checked={settings.lateJoin}
             onChange={(value) => set("lateJoin", value)}
           />

@@ -31,6 +31,7 @@ describe("CardGameEngine", () => {
     expect(defaultGameTemplate.showScoreboardAfterEachHand).toBe(true);
     expect(defaultGameTemplate.maxReactionsPerPlayer).toBe("unlimited");
     expect(defaultGameTemplate.maxReactionsPerTarget).toBe(1);
+    expect(defaultGameTemplate.lateJoin).toBe(true);
     expect(defaultGameTemplate.rounds).toHaveLength(1);
     expect(defaultGameTemplate.winCondition).toEqual({
       type: "score-target",
@@ -228,6 +229,20 @@ describe("CardGameEngine", () => {
     expect(game.judgeId).not.toBe(firstJudge);
     expect(game.hands[submitter.id]).toHaveLength(originalSize);
     expect(game.submissions).toEqual({});
+  });
+
+  it("deals in a late player at the next hand with a fresh score", () => {
+    const originalPlayers = players(3),
+      latePlayer = players(4)[3],
+      round = defaultGameTemplate.rounds[0],
+      game = CardGameEngine.createStage(round, originalPlayers, [starterPack]);
+    CardGameEngine.prepareNextHand(game, round, [
+      ...originalPlayers,
+      latePlayer,
+    ]);
+    expect(game.hands[latePlayer.id]).toHaveLength(round.handSize);
+    expect(game.scores[latePlayer.id]).toBe(0);
+    expect(game.reactionTotals[latePlayer.id]).toEqual({});
   });
 
   it("awards the configured score only to a valid submission", () => {

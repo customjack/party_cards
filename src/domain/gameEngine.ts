@@ -64,13 +64,13 @@ export class CardGameEngine {
         whiteDiscard: [],
         blackDiscard: [],
       };
-    active.forEach((player) =>
+    active.forEach((player) => {
       this.refillHand(
         game,
         player.id,
         Math.max(round.handSize, game.blackCard.pick),
-      ),
-    );
+      );
+    });
     return game;
   }
 
@@ -229,13 +229,15 @@ export class CardGameEngine {
     game.revealOrder = [];
     game.winnerId = undefined;
     game.reactions = {};
-    active.forEach((player) =>
+    active.forEach((player) => {
+      game.scores[player.id] ??= 0;
+      game.reactionTotals[player.id] ??= {};
       this.refillHand(
         game,
         player.id,
         Math.max(round.handSize, game.blackCard.pick),
-      ),
-    );
+      );
+    });
   }
 
   private static refillHand(game: GameRuntime, playerId: string, size: number) {

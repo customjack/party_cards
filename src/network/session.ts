@@ -231,6 +231,7 @@ export class HostSession extends GameSession {
   }
   playAgain() {
     if (this.state.phase !== "finished") return;
+    this.activateWaitingPlayers();
     this.state.game = undefined;
     this.state.phase = "lobby";
     this.state.phaseEndsAt = undefined;
@@ -350,19 +351,23 @@ export class HostSession extends GameSession {
         this.broadcast();
         return;
       }
-      const activeCount = this.state.players.filter(
-          (player) => !player.spectator,
+      const occupiedPlayerSeats = this.state.players.filter(
+          (player) => !player.spectator || player.waitingForNextHand,
         ).length,
         requestedSpectator = command.payload.profile.spectator,
         gameActive = this.state.phase !== "lobby",
-        openSeat = activeCount < this.state.settings.maxPlayers,
-        waitingForNextStage =
+        openSeat = occupiedPlayerSeats < this.state.settings.maxPlayers,
+        waitingForNextHand =
           gameActive &&
           !requestedSpectator &&
           openSeat &&
           this.state.settings.lateJoin,
         spectator = requestedSpectator || gameActive || !openSeat;
-      if (spectator && !this.state.settings.allowSpectators) {
+      if (
+        spectator &&
+        !waitingForNextHand &&
+        !this.state.settings.allowSpectators
+      ) {
         connection.send({
           type: "REJECTED",
           payload: { reason: "This room is full or not accepting spectators." },
@@ -372,7 +377,7 @@ export class HostSession extends GameSession {
       if (
         gameActive &&
         !requestedSpectator &&
-        !waitingForNextStage &&
+        !waitingForNextHand &&
         this.state.settings.fullRoomFallback === "reject"
       ) {
         connection.send({
@@ -387,7 +392,7 @@ export class HostSession extends GameSession {
         ...this.cleanProfile(command.payload.profile),
         id,
         spectator,
-        waitingForNextStage,
+        waitingForNextHand,
         connected: true,
         isHost: false,
       });
@@ -520,6 +525,7 @@ export class HostSession extends GameSession {
   }
   private prepareNextHand() {
     const round = this.currentRound();
+    this.activateWaitingPlayers();
     CardGameEngine.prepareNextHand(this.state.game!, round, this.state.players);
     this.state.phase = "answering";
     this.setDeadline(round.answerTimeSeconds);
@@ -528,17 +534,7 @@ export class HostSession extends GameSession {
     const previous = this.state.game!,
       index = nextStageIndex(this.state.settings, previous.roundIndex),
       round = this.state.settings.rounds[index];
-    let seats = this.state.players.filter((player) => !player.spectator).length;
-    this.state.players.forEach((player) => {
-      if (
-        player.waitingForNextStage &&
-        seats < this.state.settings.maxPlayers
-      ) {
-        player.spectator = false;
-        player.waitingForNextStage = false;
-        seats += 1;
-      }
-    });
+    this.activateWaitingPlayers();
     this.state.game = CardGameEngine.createStage(
       round,
       this.state.players,
@@ -550,6 +546,19 @@ export class HostSession extends GameSession {
     this.state.game.roundIndex = index;
     this.state.phase = "answering";
     this.setDeadline(round.answerTimeSeconds);
+  }
+  private activateWaitingPlayers() {
+    let seats = this.state.players.filter((player) => !player.spectator).length;
+    this.state.players.forEach((player) => {
+      if (
+        player.waitingForNextHand &&
+        seats < this.state.settings.maxPlayers
+      ) {
+        player.spectator = false;
+        player.waitingForNextHand = false;
+        seats += 1;
+      }
+    });
   }
   private currentRound() {
     return this.state.settings.rounds[this.state.game!.roundIndex];

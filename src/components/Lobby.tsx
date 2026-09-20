@@ -316,8 +316,8 @@ export function Lobby({
                       <>
                         <Crown /> Host
                       </>
-                    ) : player.waitingForNextStage ? (
-                      "Joining next stage"
+                    ) : player.waitingForNextHand ? (
+                      "Joining next hand"
                     ) : (
                       "Player"
                     )}

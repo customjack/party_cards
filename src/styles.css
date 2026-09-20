@@ -1844,40 +1844,66 @@ section.panel > select {
   }
 }
 .player-progress {
-  max-width: 950px;
-  margin: 18px auto -25px;
+  max-width: 1080px;
+  margin: 18px auto -20px;
   padding: 0 15px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
 }
-.player-progress span {
+.player-status {
+  min-width: 155px;
+  max-width: 210px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 9px;
+  gap: 9px;
+  padding: 7px 10px;
   border: 1px solid #ffffff77;
-  border-radius: 30px;
+  border-radius: 9px;
   color: #ddd9ff;
-  font-size: 11px;
+  background: #201d38cc;
 }
-.player-progress span.done {
+.player-status.done {
   color: #163f30;
   background: #9ae3cb;
   border-color: var(--ink);
 }
-.player-progress i {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  color: var(--ink);
-  font-style: normal;
+.player-status > .avatar {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-width: 1.5px;
+  border-radius: 7px;
+  font-size: 18px;
 }
-.player-progress svg {
-  width: 13px;
+.player-status-copy {
+  min-width: 0;
+  flex: 1;
+  line-height: 1.15;
+}
+.player-status-copy b,
+.player-status-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-status-copy b {
+  font-size: 12px;
+}
+.player-status-copy small {
+  margin-top: 3px;
+  color: #aaa4c9;
+  font-size: 10px;
+}
+.player-status.done .player-status-copy small {
+  color: #376655;
+}
+.player-status > svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
 }
 .answer-box.is-locked {
   opacity: 0.62;

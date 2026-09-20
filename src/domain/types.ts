@@ -109,7 +109,7 @@ export type Player = {
   connected: boolean;
   spectator: boolean;
   isHost: boolean;
-  waitingForNextStage?: boolean;
+  waitingForNextHand?: boolean;
 };
 export type Submission = { playerId: string; cards: WhiteCard[] };
 export type GameRuntime = {
