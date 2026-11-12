@@ -71,6 +71,8 @@ export type RoundSettings = {
   name: string;
   hands: number;
   handSize: number;
+  maxDiscardsPerTurn: number;
+  maxDiscardsPerStage: number | "unlimited";
   winnerPoints: number;
   judgeStrategy: JudgeStrategy;
   answerTimeSeconds: number;
@@ -121,6 +123,8 @@ export type GameRuntime = {
   hands: Record<string, WhiteCard[]>;
   submissions: Record<string, WhiteCard[]>;
   lockedPlayerIds: string[];
+  discardsThisTurn: Record<string, number>;
+  discardsThisStage: Record<string, number>;
   revealOrder: string[];
   winnerId?: string;
   scores: Record<string, number>;
@@ -169,6 +173,7 @@ export type ClientCommand =
       type: "SUBMIT_CARDS";
       payload: { cardIds: string[]; blankAnswers: Record<string, string> };
     }
+  | { type: "DISCARD_CARDS"; payload: { cardIds: string[] } }
   | { type: "UNLOCK_CARDS" }
   | { type: "CHOOSE_WINNER"; payload: { playerId: string } }
   | {

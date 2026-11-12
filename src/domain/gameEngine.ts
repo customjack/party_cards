@@ -48,6 +48,8 @@ export class CardGameEngine {
         hands: Object.fromEntries(active.map((player) => [player.id, []])),
         submissions: {},
         lockedPlayerIds: [],
+        discardsThisTurn: {},
+        discardsThisStage: {},
         revealOrder: [],
         scores: Object.fromEntries(
           active.map((player) => [player.id, previousScores[player.id] ?? 0]),
@@ -100,6 +102,49 @@ export class CardGameEngine {
     game.submissions[playerId] = resolved;
     if (!game.lockedPlayerIds.includes(playerId))
       game.lockedPlayerIds.push(playerId);
+    return true;
+  }
+
+  static remainingDiscards(
+    game: GameRuntime,
+    round: RoundSettings,
+    playerId: string,
+  ) {
+    return Math.max(
+      0,
+      Math.min(
+        round.maxDiscardsPerTurn - (game.discardsThisTurn[playerId] ?? 0),
+        round.maxDiscardsPerStage === "unlimited"
+          ? Infinity
+          : round.maxDiscardsPerStage - (game.discardsThisStage[playerId] ?? 0),
+      ),
+    );
+  }
+
+  static discard(
+    game: GameRuntime,
+    round: RoundSettings,
+    playerId: string,
+    cardIds: string[],
+  ) {
+    const hand = game.hands[playerId];
+    if (
+      !hand ||
+      !Array.isArray(cardIds) ||
+      !cardIds.length ||
+      new Set(cardIds).size !== cardIds.length ||
+      game.lockedPlayerIds.includes(playerId) ||
+      cardIds.length > this.remainingDiscards(game, round, playerId) ||
+      hand.length - cardIds.length < game.blackCard.pick ||
+      cardIds.some((id) => !hand.some((card) => card.id === id))
+    )
+      return false;
+    game.whiteDiscard.push(...hand.filter((card) => cardIds.includes(card.id)));
+    game.hands[playerId] = hand.filter((card) => !cardIds.includes(card.id));
+    game.discardsThisTurn[playerId] =
+      (game.discardsThisTurn[playerId] ?? 0) + cardIds.length;
+    game.discardsThisStage[playerId] =
+      (game.discardsThisStage[playerId] ?? 0) + cardIds.length;
     return true;
   }
 
@@ -229,6 +274,7 @@ export class CardGameEngine {
     game.revealOrder = [];
     game.winnerId = undefined;
     game.reactions = {};
+    game.discardsThisTurn = {};
     active.forEach((player) => {
       game.scores[player.id] ??= 0;
       game.reactionTotals[player.id] ??= {};

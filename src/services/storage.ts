@@ -92,7 +92,10 @@ export const normalizeSettings = (
       value.winCondition?.type === "score-target"
         ? {
             type: value.winCondition.type,
-            target: Math.max(1, Math.floor(Number(value.winCondition.target) || 1)),
+            target: Math.max(
+              1,
+              Math.floor(Number(value.winCondition.target) || 1),
+            ),
           }
         : { type: "all-stages" },
     showScoreboardAfterEachHand:
@@ -124,6 +127,10 @@ export const normalizeSettings = (
           ...round,
           id: round.id || crypto.randomUUID(),
           allowBlankCards: round.allowBlankCards ?? true,
+          maxDiscardsPerTurn:
+            round.maxDiscardsPerTurn ?? fallback.maxDiscardsPerTurn,
+          maxDiscardsPerStage:
+            round.maxDiscardsPerStage ?? fallback.maxDiscardsPerStage,
         }))
       : [],
   };

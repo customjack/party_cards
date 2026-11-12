@@ -2690,3 +2690,76 @@ button.white-card:hover:not(:disabled) {
   height: 16px;
   flex: none;
 }
+
+.scoreboard-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  border: 1px solid #655b91;
+  border-radius: 8px;
+  background: #332c50;
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background 150ms, border-color 150ms;
+}
+.scoreboard-trigger svg {
+  width: 18px;
+  height: 18px;
+  color: var(--yellow);
+  flex-shrink: 0;
+}
+.scoreboard-trigger:hover {
+  background: #44376d;
+  border-color: #a997ff;
+}
+.scoreboard-trigger:active {
+  background: #29223f;
+}
+.scoreboard-trigger:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.scoreboard-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  color: #191919;
+  background: #fff;
+}
+.scoreboard-dialog::backdrop {
+  background: rgb(0 0 0 / 55%);
+}
+.game-header .scoreboard-dialog span {
+  color: inherit;
+  font-size: inherit;
+}
+.discard-help {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.game-header {
+  height: auto;
+  min-height: 64px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.game-header .scoreboard-dialog b {
+  font: inherit;
+  font-weight: 800;
+  margin-right: 0;
+}
+.game-header .scoreboard-dialog span {
+  letter-spacing: normal;
+}

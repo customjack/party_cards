@@ -6,6 +6,21 @@ export class SettingsValidator {
     players: number,
   ): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
+    for (const [label, limit] of [
+      ["Discards per turn", round.maxDiscardsPerTurn],
+      ["Discards per stage", round.maxDiscardsPerStage],
+    ] as const) {
+      if (label === "Discards per stage" && limit === "unlimited") continue;
+      if (
+        typeof limit !== "number" ||
+        !Number.isSafeInteger(limit) ||
+        limit < 0
+      )
+        issues.push({
+          level: "error",
+          message: `${label} must be a non-negative whole number.`,
+        });
+    }
     if (round.hands < 1)
       issues.push({
         level: "error",

@@ -33,6 +33,8 @@
       "name": "Main game",
       "hands": 100,
       "handSize": 10,
+      "maxDiscardsPerTurn": 1,
+      "maxDiscardsPerStage": "unlimited",
       "winnerPoints": 1,
       "judgeStrategy": "rotate",
       "answerTimeSeconds": 75,

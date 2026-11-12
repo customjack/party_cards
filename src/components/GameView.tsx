@@ -2,12 +2,14 @@ import {
   Check,
   Crown,
   Lock,
+  Trash2,
+  Trophy,
   SmilePlus,
   Unlock,
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   REACTIONS,
   type GameRuntime,
@@ -20,6 +22,7 @@ import {
   HostSession,
   type ConnectionState,
 } from "../network/session";
+import { CardGameEngine } from "../domain/gameEngine";
 import { Avatar } from "./Avatar";
 import { ReactionIcon } from "../resources/ReactionIcon";
 
@@ -65,10 +68,12 @@ export function GameView({
     me = snapshot.players.find((player) => player.id === session.localPlayerId),
     judge = snapshot.players.find((player) => player.id === game.judgeId),
     seconds = useCountdown(snapshot),
+    [discardMode, setDiscardMode] = useState(false),
     [selected, setSelected] = useState<string[]>([]),
     [blankAnswers, setBlankAnswers] = useState<Record<string, string>>({}),
     [reactionMenuTarget, setReactionMenuTarget] = useState<string | null>(null);
   useEffect(() => {
+    setDiscardMode(false);
     setSelected([]);
     setBlankAnswers({});
     setReactionMenuTarget(null);
@@ -149,13 +154,24 @@ export function GameView({
       !me?.spectator && (round.allowJudgeToSubmit || me?.id !== game.judgeId),
     locked = Boolean(me && game.lockedPlayerIds.includes(me.id)),
     hand = me ? (game.hands[me.id] ?? []) : [];
+  const remainingDiscards = me
+    ? CardGameEngine.remainingDiscards(game, round, me.id)
+    : 0;
+  const selectionLimit = discardMode
+    ? Math.min(
+        remainingDiscards,
+        Math.max(0, hand.length - game.blackCard.pick),
+      )
+    : game.blackCard.pick;
   const toggleCard = (cardId: string) =>
     setSelected((items) =>
-      items.includes(cardId)
-        ? items.filter((id) => id !== cardId)
-        : items.length < game.blackCard.pick
-          ? [...items, cardId]
-          : [...items.slice(1), cardId],
+      selectionLimit === 0
+        ? []
+        : items.includes(cardId)
+          ? items.filter((id) => id !== cardId)
+          : items.length < selectionLimit
+            ? [...items, cardId]
+            : [...items.slice(1), cardId],
     );
   const selectedBlanksAreReady = selected.every((id) => {
     const card = hand.find((item) => item.id === id);
@@ -177,7 +193,7 @@ export function GameView({
             pick={game.blackCard.pick}
             judge={judge?.name}
           />
-          {eligible ? (
+          {me && !me.spectator ? (
             <>
               <div className="hand-heading">
                 <div>
@@ -185,9 +201,30 @@ export function GameView({
                   <h2>
                     {locked
                       ? "Cards locked in"
-                      : `Choose ${game.blackCard.pick}`}
+                      : discardMode
+                        ? "Choose cards to discard"
+                        : eligible
+                          ? `Choose ${game.blackCard.pick}`
+                          : "You’re the Card Judge"}
                   </h2>
                 </div>
+                {!locked && (
+                  <button
+                    className="button secondary"
+                    disabled={
+                      !discardMode &&
+                      (remainingDiscards === 0 ||
+                        hand.length <= game.blackCard.pick)
+                    }
+                    onClick={() => {
+                      setDiscardMode(!discardMode);
+                      setSelected([]);
+                    }}
+                  >
+                    <Trash2 />{" "}
+                    {discardMode ? "Cancel discard" : "Discard cards"}
+                  </button>
+                )}
                 {locked && (
                   <button
                     className="button secondary"
@@ -201,6 +238,15 @@ export function GameView({
                   </button>
                 )}
               </div>
+              <p className="discard-help">
+                {remainingDiscards} discard{remainingDiscards === 1 ? "" : "s"}{" "}
+                left this turn
+                {round.maxDiscardsPerStage !== "unlimited" &&
+                  ` · ${Math.max(0, round.maxDiscardsPerStage - (game.discardsThisStage[me.id] ?? 0))} left this stage`}
+                . Replacements arrive next hand. Keep at least{" "}
+                {game.blackCard.pick} card{game.blackCard.pick === 1 ? "" : "s"}
+                .
+              </p>
               <div className={`card-hand ${locked ? "locked" : ""}`}>
                 {hand.map((card) =>
                   (() => {
@@ -225,7 +271,7 @@ export function GameView({
                           <small>BLANK CARD</small>
                           <textarea
                             aria-label="Custom blank-card response"
-                            disabled={locked}
+                            disabled={locked || discardMode || !eligible}
                             maxLength={180}
                             placeholder="Write anything…"
                             value={submittedText ?? blankAnswers[card.id] ?? ""}
@@ -239,9 +285,14 @@ export function GameView({
                           {!locked && (
                             <button
                               className="blank-card-select"
+                              disabled={!eligible && !discardMode}
                               onClick={() => toggleCard(card.id)}
                             >
-                              {order >= 0 ? "Remove card" : "Use this card"}
+                              {order >= 0
+                                ? "Deselect card"
+                                : discardMode
+                                  ? "Discard this card"
+                                  : "Use this card"}
                             </button>
                           )}
                         </div>
@@ -250,7 +301,7 @@ export function GameView({
                     return (
                       <button
                         className={`white-card ${order >= 0 ? "selected" : ""}`}
-                        disabled={locked}
+                        disabled={locked || (!eligible && !discardMode)}
                         key={card.id}
                         onClick={() => toggleCard(card.id)}
                       >
@@ -263,7 +314,25 @@ export function GameView({
                   })(),
                 )}
               </div>
-              {!locked && (
+              {!locked && discardMode && (
+                <button
+                  className="button secondary big"
+                  disabled={
+                    selected.length === 0 || selected.length > selectionLimit
+                  }
+                  onClick={() => {
+                    isHost
+                      ? (session as HostSession).discardCards("host", selected)
+                      : (session as ClientSession).discardCards(selected);
+                    setSelected([]);
+                    setDiscardMode(false);
+                  }}
+                >
+                  <Trash2 /> Discard {selected.length} card
+                  {selected.length === 1 ? "" : "s"}
+                </button>
+              )}
+              {!locked && !discardMode && eligible && (
                 <button
                   className="button primary big"
                   disabled={
@@ -490,6 +559,7 @@ function Header({
   connectionState: ConnectionState;
   onKick?: (playerId: string) => void;
 }) {
+  const scoreboard = useRef<HTMLDialogElement>(null);
   return (
     <header className="game-header">
       <b>PARTY CARDS</b>
@@ -504,6 +574,39 @@ function Header({
         </strong>
       )}
       <span>ROOM {snapshot.roomCode}</span>
+      <button
+        className="scoreboard-trigger"
+        type="button"
+        aria-haspopup="dialog"
+        onClick={() => scoreboard.current?.showModal()}
+      >
+        <Trophy aria-hidden="true" /> Scoreboard
+      </button>
+      <dialog
+        ref={scoreboard}
+        className="scoreboard-dialog"
+        aria-labelledby="scoreboard-title"
+      >
+        <div className="section-heading">
+          <h2 id="scoreboard-title">Scoreboard</h2>
+          <button
+            className="button secondary"
+            onClick={() => scoreboard.current?.close()}
+            aria-label="Close scoreboard"
+            autoFocus
+          >
+            <X />
+          </button>
+        </div>
+        <p>Live scores · Play continues while this is open.</p>
+        <Leaderboard
+          ranking={Object.entries(snapshot.game!.scores).sort(
+            (left, right) => right[1] - left[1],
+          )}
+          players={snapshot.players}
+          reactionTotals={snapshot.game!.reactionTotals}
+        />
+      </dialog>
       {onKick && (
         <details className="host-player-menu">
           <summary title="Manage players" aria-label="Manage players">

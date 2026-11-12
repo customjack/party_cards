@@ -383,6 +383,38 @@ function RoundForm({
               onChange={(value) => set("handSize", Math.max(2, value))}
             />
             <NumberField
+              label="Discards per player per turn (0 = disabled)"
+              value={round.maxDiscardsPerTurn}
+              onChange={(value) =>
+                set("maxDiscardsPerTurn", Math.max(0, Math.floor(value)))
+              }
+            />
+            <label className="mini-field">
+              <span>Discards per player per stage</span>
+              <input
+                type="number"
+                min={0}
+                step={1}
+                placeholder="Unlimited"
+                value={
+                  round.maxDiscardsPerStage === "unlimited"
+                    ? ""
+                    : round.maxDiscardsPerStage
+                }
+                onChange={(event) =>
+                  set(
+                    "maxDiscardsPerStage",
+                    event.target.value === ""
+                      ? "unlimited"
+                      : Math.max(0, Math.floor(Number(event.target.value))),
+                  )
+                }
+              />
+              <small>
+                Leave empty for unlimited. Discarded cards refill next hand.
+              </small>
+            </label>
+            <NumberField
               label="Points for winner"
               value={round.winnerPoints}
               min={0}

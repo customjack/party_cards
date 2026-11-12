@@ -137,9 +137,7 @@ describe("CardGameEngine", () => {
       ),
       second = pack(
         "second",
-        [
-          { id: "black-b", text: "  A REPEATED prompt   ____. ", pick: 1 },
-        ],
+        [{ id: "black-b", text: "  A REPEATED prompt   ____. ", pick: 1 }],
         [
           { id: "white-d", text: " repeated RESPONSE " },
           { id: "white-e", text: "Only in the second pack" },
@@ -256,5 +254,116 @@ describe("CardGameEngine", () => {
     expect(CardGameEngine.chooseWinner(game, "missing", 2)).toBe(false);
     expect(CardGameEngine.chooseWinner(game, winner.id, 2)).toBe(true);
     expect(game.scores[winner.id]).toBe(2);
+  });
+});
+
+describe("discards", () => {
+  const setup = (perTurn = 1, perStage: number | "unlimited" = "unlimited") => {
+    const roster = players(3);
+    const round = {
+      ...defaultGameTemplate.rounds[0],
+      maxDiscardsPerTurn: perTurn,
+      maxDiscardsPerStage: perStage,
+    };
+    const game = CardGameEngine.createStage(round, roster, [starterPack]);
+    game.blackCard = { id: "prompt", text: "____", pick: 1 };
+    return { roster, round, game };
+  };
+
+  it("defaults to one card per turn and unlimited per stage", () => {
+    expect(defaultGameTemplate.rounds[0].maxDiscardsPerTurn).toBe(1);
+    expect(defaultGameTemplate.rounds[0].maxDiscardsPerStage).toBe("unlimited");
+  });
+
+  it("enforces turn limits per player and refills discarded and played cards next hand", () => {
+    const { roster, round, game } = setup();
+    const card = game.hands.p1[0];
+    expect(CardGameEngine.discard(game, round, "p1", [card.id])).toBe(true);
+    expect(game.hands.p1).toHaveLength(round.handSize - 1);
+    expect(game.whiteDiscard).toContainEqual(card);
+    expect(
+      CardGameEngine.discard(game, round, "p1", [game.hands.p1[0].id]),
+    ).toBe(false);
+    expect(
+      CardGameEngine.discard(game, round, "p2", [game.hands.p2[0].id]),
+    ).toBe(true);
+    expect(CardGameEngine.submit(game, "p1", [game.hands.p1[0].id])).toBe(true);
+    CardGameEngine.prepareNextHand(game, round, roster);
+    expect(game.hands.p1).toHaveLength(round.handSize);
+    expect(game.hands.p2).toHaveLength(round.handSize);
+    expect(CardGameEngine.remainingDiscards(game, round, "p1")).toBe(1);
+    expect(game.discardsThisStage.p1).toBe(1);
+  });
+
+  it("counts cards across requests and hands and resets the stage allowance", () => {
+    const { roster, round, game } = setup(2, 3);
+    expect(
+      CardGameEngine.discard(
+        game,
+        round,
+        "p1",
+        game.hands.p1.slice(0, 2).map((c) => c.id),
+      ),
+    ).toBe(true);
+    CardGameEngine.prepareNextHand(game, round, roster);
+    expect(CardGameEngine.remainingDiscards(game, round, "p1")).toBe(1);
+    expect(
+      CardGameEngine.discard(
+        game,
+        round,
+        "p1",
+        game.hands.p1.slice(0, 2).map((c) => c.id),
+      ),
+    ).toBe(false);
+    expect(
+      CardGameEngine.discard(game, round, "p1", [game.hands.p1[0].id]),
+    ).toBe(true);
+    CardGameEngine.prepareNextHand(game, round, roster);
+    expect(CardGameEngine.remainingDiscards(game, round, "p1")).toBe(0);
+    const next = CardGameEngine.createStage(round, roster, [starterPack]);
+    expect(CardGameEngine.remainingDiscards(next, round, "p1")).toBe(2);
+  });
+
+  it("rejects invalid, duplicate, foreign and locked cards without mutation", () => {
+    const { round, game } = setup(5);
+    const original = structuredClone(game);
+    for (const ids of [
+      [],
+      ["missing"],
+      [game.hands.p2[0].id],
+      [game.hands.p1[0].id, game.hands.p1[0].id],
+    ])
+      expect(CardGameEngine.discard(game, round, "p1", ids)).toBe(false);
+    expect(
+      CardGameEngine.discard(game, round, "missing", [game.hands.p1[0].id]),
+    ).toBe(false);
+    expect(game).toEqual(original);
+    CardGameEngine.submit(game, "p1", [game.hands.p1[0].id]);
+    expect(
+      CardGameEngine.discard(game, round, "p1", [game.hands.p1[1].id]),
+    ).toBe(false);
+    CardGameEngine.unlock(game, "p1");
+    expect(
+      CardGameEngine.discard(game, round, "p1", [game.hands.p1[1].id]),
+    ).toBe(true);
+  });
+
+  it("keeps enough cards for multi-card prompts and allows zero to disable discards", () => {
+    const { round, game } = setup(20);
+    game.blackCard.pick = 2;
+    const ids = game.hands.p1.map((c) => c.id);
+    expect(CardGameEngine.discard(game, round, "p1", ids.slice(1))).toBe(false);
+    expect(
+      CardGameEngine.discard(game, { ...round, maxDiscardsPerTurn: 0 }, "p1", [
+        ids[0],
+      ]),
+    ).toBe(false);
+    expect(
+      CardGameEngine.discard(game, { ...round, maxDiscardsPerStage: 0 }, "p1", [
+        ids[0],
+      ]),
+    ).toBe(false);
+    expect(CardGameEngine.discard(game, round, "p1", ids.slice(2))).toBe(true);
+    expect(game.hands.p1).toHaveLength(2);
   });
 });

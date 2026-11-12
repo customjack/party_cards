@@ -185,6 +185,19 @@ export class HostSession extends GameSession {
       this.beginReveal();
     this.broadcast();
   }
+  discardCards(playerId: string, cardIds: string[]) {
+    const game = this.state.game;
+    const player = this.state.players.find((item) => item.id === playerId);
+    if (
+      this.state.phase !== "answering" ||
+      !game ||
+      !player?.connected ||
+      player.spectator
+    )
+      return;
+    if (CardGameEngine.discard(game, this.currentRound(), playerId, cardIds))
+      this.broadcast();
+  }
   unlockCards(playerId: string) {
     if (this.state.phase !== "answering" || !this.state.game) return;
     CardGameEngine.unlock(this.state.game, playerId);
@@ -429,6 +442,8 @@ export class HostSession extends GameSession {
         command.payload.cardIds,
         command.payload.blankAnswers,
       );
+    else if (command.type === "DISCARD_CARDS")
+      this.discardCards(id, command.payload.cardIds);
     else if (command.type === "UNLOCK_CARDS") this.unlockCards(id);
     else if (command.type === "CHOOSE_WINNER")
       this.chooseWinner(id, command.payload.playerId);
@@ -550,10 +565,7 @@ export class HostSession extends GameSession {
   private activateWaitingPlayers() {
     let seats = this.state.players.filter((player) => !player.spectator).length;
     this.state.players.forEach((player) => {
-      if (
-        player.waitingForNextHand &&
-        seats < this.state.settings.maxPlayers
-      ) {
+      if (player.waitingForNextHand && seats < this.state.settings.maxPlayers) {
         player.spectator = false;
         player.waitingForNextHand = false;
         seats += 1;
@@ -567,13 +579,13 @@ export class HostSession extends GameSession {
     const game = this.state.game;
     if (!game) return;
     delete game.hands[playerId];
+    delete game.discardsThisTurn[playerId];
+    delete game.discardsThisStage[playerId];
     delete game.submissions[playerId];
     delete game.scores[playerId];
     delete game.reactions[playerId];
     delete game.reactionTotals[playerId];
-    game.lockedPlayerIds = game.lockedPlayerIds.filter(
-      (id) => id !== playerId,
-    );
+    game.lockedPlayerIds = game.lockedPlayerIds.filter((id) => id !== playerId);
     game.revealOrder = game.revealOrder.filter((id) => id !== playerId);
     Object.values(game.reactions).forEach((reactions) => {
       const remaining = reactions.filter(
@@ -675,6 +687,9 @@ export class ClientSession extends GameSession {
   }
   submitCards(cardIds: string[], blankAnswers: Record<string, string> = {}) {
     this.send({ type: "SUBMIT_CARDS", payload: { cardIds, blankAnswers } });
+  }
+  discardCards(cardIds: string[]) {
+    this.send({ type: "DISCARD_CARDS", payload: { cardIds } });
   }
   unlockCards() {
     this.send({ type: "UNLOCK_CARDS" });
