@@ -218,6 +218,12 @@ export function SettingsForm({
         </div>
         <details className="settings-subsection">
           <summary>Reaction scoring</summary>
+          <Toggle
+            label="Allow reactions after reveal"
+            hint="Off: react only during reveal. On: also react during judging and results."
+            checked={settings.allowReactionsAfterReveal}
+            onChange={(value) => set("allowReactionsAfterReveal", value)}
+          />
           <p>
             Reactions are always counted. Limits reset for every hand; leave
             point values at zero for cosmetic reactions only.

@@ -98,6 +98,7 @@ export type GameSettings = {
   winCondition: WinCondition;
   scoreboardTimeSeconds: number;
   showScoreboardAfterEachHand: boolean;
+  allowReactionsAfterReveal: boolean;
   maxReactionsPerPlayer: ReactionLimit;
   maxReactionsPerTarget: ReactionLimit;
   reactionPoints: Record<ReactionId, number>;

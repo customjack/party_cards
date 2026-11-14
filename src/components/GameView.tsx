@@ -22,6 +22,7 @@ import {
   HostSession,
   type ConnectionState,
 } from "../network/session";
+import { canReactDuringPhase } from "../domain/reactionRules";
 import { CardGameEngine } from "../domain/gameEngine";
 import { Avatar } from "./Avatar";
 import { ReactionIcon } from "../resources/ReactionIcon";
@@ -423,6 +424,7 @@ export function GameView({
               (reaction) => reaction.targetPlayerId === submission.id,
             ).length;
             const canReact =
+              canReactDuringPhase(snapshot.phase, snapshot.settings) &&
               me &&
               submission.id !== me.id &&
               withinReactionLimit(

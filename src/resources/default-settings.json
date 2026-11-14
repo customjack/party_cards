@@ -13,6 +13,7 @@
   },
   "scoreboardTimeSeconds": 8,
   "showScoreboardAfterEachHand": true,
+  "allowReactionsAfterReveal": false,
   "maxReactionsPerPlayer": "unlimited",
   "maxReactionsPerTarget": 1,
   "reactionPoints": {

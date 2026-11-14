@@ -101,6 +101,7 @@ export const normalizeSettings = (
     showScoreboardAfterEachHand:
       value.showScoreboardAfterEachHand ??
       defaultGameTemplate.showScoreboardAfterEachHand,
+    allowReactionsAfterReveal: value.allowReactionsAfterReveal === true,
     maxReactionsPerPlayer:
       value.maxReactionsPerPlayer == null
         ? defaultGameTemplate.maxReactionsPerPlayer

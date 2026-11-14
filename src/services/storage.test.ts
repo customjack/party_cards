@@ -29,3 +29,21 @@ describe("discard settings compatibility", () => {
     }
   });
 });
+
+describe("reaction timing settings compatibility", () => {
+  it("defaults older rules to no reactions after reveal", () => {
+    const legacy = JSON.parse(JSON.stringify(defaultGameTemplate));
+    legacy.id = "legacy";
+    delete legacy.allowReactionsAfterReveal;
+    expect(normalizeSettings(legacy).allowReactionsAfterReveal).toBe(false);
+  });
+
+  it.each([false, true])("preserves an explicit setting of %s", (enabled) => {
+    const settings = {
+      ...structuredClone(defaultGameTemplate),
+      id: "custom",
+      allowReactionsAfterReveal: enabled,
+    };
+    expect(normalizeSettings(settings).allowReactionsAfterReveal).toBe(enabled);
+  });
+});

@@ -1,4 +1,5 @@
 import Peer, { type DataConnection } from "peerjs";
+import { canReactDuringPhase } from "../domain/reactionRules";
 import { CardGameEngine } from "../domain/gameEngine";
 import {
   NAME_MAX_LENGTH,
@@ -226,7 +227,7 @@ export class HostSession extends GameSession {
     const game = this.state.game;
     if (
       !game ||
-      !["reveal", "judging", "results"].includes(this.state.phase) ||
+      !canReactDuringPhase(this.state.phase, this.state.settings) ||
       !REACTIONS.some((item) => item.id === reaction) ||
       !this.state.players.some((player) => player.id === playerId) ||
       !CardGameEngine.react(
