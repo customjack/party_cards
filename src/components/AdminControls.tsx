@@ -1,3 +1,4 @@
+import { roleChangeError } from "../domain/seating";
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Settings2, X } from "lucide-react";
@@ -116,7 +117,11 @@ export function AdminControls({
                   <b>{player.name}</b>
                   <small>
                     {player.connected ? "Connected" : "Disconnected"}
-                    {player.spectator ? " · Spectator" : ""}
+                    {player.waitingForNextHand
+                      ? " · Joining next hand"
+                      : player.spectator
+                        ? " · Spectator"
+                        : ""}
                   </small>
                 </div>
                 {Object.hasOwn(snapshot.game!.scores, player.id) && (
@@ -126,6 +131,38 @@ export function AdminControls({
                     onSave={(score) => session.setPlayerScore(player.id, score)}
                   />
                 )}
+                <button
+                  className="button secondary compact"
+                  disabled={
+                    !player.connected ||
+                    Boolean(
+                      roleChangeError(
+                        snapshot,
+                        player.id,
+                        player.waitingForNextHand ? true : !player.spectator,
+                      ),
+                    )
+                  }
+                  title={
+                    roleChangeError(
+                      snapshot,
+                      player.id,
+                      player.waitingForNextHand ? true : !player.spectator,
+                    ) ?? undefined
+                  }
+                  onClick={() =>
+                    session.setPlayerSpectator(
+                      player.id,
+                      player.waitingForNextHand ? true : !player.spectator,
+                    )
+                  }
+                >
+                  {player.waitingForNextHand
+                    ? "Cancel player seat"
+                    : player.spectator
+                      ? "Join next hand"
+                      : "Make spectator"}
+                </button>
                 {!player.isHost && (
                   <button
                     className="button secondary compact"

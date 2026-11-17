@@ -29,8 +29,10 @@ describe("CardGameEngine", () => {
   it("loads original defaults from export-compatible resources", () => {
     expect(defaultGameTemplate.schemaVersion).toBe(1);
     expect(defaultGameTemplate.showScoreboardAfterEachHand).toBe(true);
-    expect(defaultGameTemplate.maxReactionsPerPlayer).toBe("unlimited");
-    expect(defaultGameTemplate.maxReactionsPerTarget).toBe(1);
+    expect(defaultGameTemplate.rounds[0].maxReactionsPerPlayer).toBe(
+      "unlimited",
+    );
+    expect(defaultGameTemplate.rounds[0].maxReactionsPerTarget).toBe(1);
     expect(defaultGameTemplate.lateJoin).toBe(true);
     expect(defaultGameTemplate.rounds).toHaveLength(1);
     expect(defaultGameTemplate.winCondition).toEqual({
@@ -41,7 +43,7 @@ describe("CardGameEngine", () => {
       defaultGameTemplate.maxPlayers * 6,
     );
     expect(
-      Object.values(defaultGameTemplate.reactionPoints).every(
+      Object.values(defaultGameTemplate.rounds[0].reactionPoints).every(
         (points) => points === 0,
       ),
     ).toBe(true);

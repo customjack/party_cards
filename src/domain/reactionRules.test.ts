@@ -14,19 +14,21 @@ const phases: LobbySnapshot["phase"][] = [
 ];
 
 describe("reaction timing", () => {
-  it.each(phases)("allows reveal and judging by default (phase: %s)", (phase) => {
-    expect(defaultGameTemplate.allowReactionsAfterReveal).toBe(false);
-    expect(canReactDuringPhase(phase, defaultGameTemplate)).toBe(
-      phase === "reveal" || phase === "judging",
-    );
-  });
-
   it.each(phases)(
-    "optionally also allows results (phase: %s)",
+    "allows reveal and judging by default (phase: %s)",
     (phase) => {
-      expect(
-        canReactDuringPhase(phase, { allowReactionsAfterReveal: true }),
-      ).toBe(["reveal", "judging", "results"].includes(phase));
+      expect(defaultGameTemplate.rounds[0].allowReactionsAfterReveal).toBe(
+        false,
+      );
+      expect(canReactDuringPhase(phase, defaultGameTemplate.rounds[0])).toBe(
+        phase === "reveal" || phase === "judging",
+      );
     },
   );
+
+  it.each(phases)("optionally also allows results (phase: %s)", (phase) => {
+    expect(
+      canReactDuringPhase(phase, { allowReactionsAfterReveal: true }),
+    ).toBe(["reveal", "judging", "results"].includes(phase));
+  });
 });

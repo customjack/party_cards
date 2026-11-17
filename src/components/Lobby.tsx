@@ -1,3 +1,5 @@
+import { roleChangeError } from "../domain/seating";
+import { PackSelector } from "./PackSelector";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -287,7 +289,10 @@ export function Lobby({
           <div>
             <Eye />
             <span>
-              <b>{spectators.length}</b> spectators
+              <b>
+                {spectators.length}/{snapshot.settings.maxSpectators}
+              </b>{" "}
+              spectators
             </span>
           </div>
         </div>
@@ -437,7 +442,8 @@ export function Lobby({
           {me && (
             <LobbyProfileEditor
               player={me}
-              canChangeRole={!isHost && snapshot.settings.allowSpectators}
+              canChangeRole={true}
+              roleError={roleChangeError(snapshot, me.id, !me.spectator)}
               onChange={updateProfile}
             />
           )}
@@ -494,37 +500,17 @@ export function Lobby({
                   <p className="sidebar-hint">
                     Choose the decks available to every stage.
                   </p>
-                  {packs.map((pack) => (
-                    <label className="check-card" key={pack.id}>
-                      <input
-                        type="checkbox"
-                        checked={snapshot.selectedPackIds.includes(pack.id)}
-                        onChange={() =>
-                          updateSettings(
-                            snapshot.settings,
-                            snapshot.selectedPackIds.includes(pack.id)
-                              ? snapshot.selectedPackIds.filter(
-                                  (id) => id !== pack.id,
-                                )
-                              : [...snapshot.selectedPackIds, pack.id],
-                          )
-                        }
-                      />
-                      <span>
-                        <b>{pack.name}</b>
-                        <small>
-                          {pack.blackCards.length} black ·{" "}
-                          {pack.whiteCards.length} white
-                        </small>
-                      </span>
-                    </label>
-                  ))}
+                  <PackSelector
+                    packs={packs}
+                    selectedIds={snapshot.selectedPackIds}
+                    onChange={(ids) => updateSettings(snapshot.settings, ids)}
+                  />
                 </section>
               </aside>
               <section className="settings-column">
                 <SettingsForm
                   settings={snapshot.settings}
-                  packs={packs}
+                  packs={selectedPacks}
                   onChange={updateSettings}
                 />
               </section>
@@ -539,16 +525,19 @@ export function Lobby({
 function LobbyProfileEditor({
   player,
   canChangeRole,
+  roleError,
   onChange,
 }: {
   player: Player;
   canChangeRole: boolean;
+  roleError: string | null;
   onChange: (changes: Partial<Player>) => void;
 }) {
   const [name, setName] = useState(player.name);
   useEffect(() => setName(player.name), [player.name]);
 
-  const normalizedName = () => name.trim().slice(0, NAME_MAX_LENGTH) || "Player";
+  const normalizedName = () =>
+    name.trim().slice(0, NAME_MAX_LENGTH) || "Player";
   const commitName = () => {
     const next = normalizedName();
     setName(next);
@@ -595,6 +584,8 @@ function LobbyProfileEditor({
       {canChangeRole && (
         <button
           className="text-button"
+          disabled={Boolean(roleError)}
+          title={roleError ?? undefined}
           onClick={() =>
             onChange({
               name: normalizedName(),

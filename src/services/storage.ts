@@ -11,6 +11,7 @@ import {
   type CardPack,
   type GameSettings,
   type ReactionId,
+  type RoundSettings,
   type WhiteCard,
 } from "../domain/types";
 
@@ -75,14 +76,39 @@ export const normalizePack = (value: Partial<CardPack>): CardPack => {
   };
 };
 export const normalizeSettings = (
-  value: Partial<GameSettings>,
+  value: Partial<GameSettings> &
+    Partial<
+      Pick<
+        RoundSettings,
+        | "reactionPoints"
+        | "maxReactionsPerPlayer"
+        | "maxReactionsPerTarget"
+        | "allowReactionsAfterReveal"
+      >
+    >,
 ): GameSettings => {
   if (value.id === defaultGameTemplate.id)
     return structuredClone(defaultGameTemplate);
   const fallback = defaultGameTemplate.rounds[0];
+  const {
+    reactionPoints,
+    maxReactionsPerPlayer,
+    maxReactionsPerTarget,
+    allowReactionsAfterReveal,
+    ...current
+  } = value;
+  const limit = (
+    value: RoundSettings["maxReactionsPerPlayer"] | undefined,
+    fallback: RoundSettings["maxReactionsPerPlayer"],
+  ) =>
+    value == null
+      ? fallback
+      : value === "unlimited" || Number(value) <= 0
+        ? "unlimited"
+        : Math.max(1, Math.floor(Number(value)) || 1);
   return {
     ...structuredClone(defaultGameTemplate),
-    ...value,
+    ...current,
     schemaVersion: 1,
     id: text(value.id, 100) || crypto.randomUUID(),
     name: text(value.name, 60) || "Custom game",
@@ -101,33 +127,38 @@ export const normalizeSettings = (
     showScoreboardAfterEachHand:
       value.showScoreboardAfterEachHand ??
       defaultGameTemplate.showScoreboardAfterEachHand,
-    allowReactionsAfterReveal: value.allowReactionsAfterReveal === true,
-    maxReactionsPerPlayer:
-      value.maxReactionsPerPlayer == null
-        ? defaultGameTemplate.maxReactionsPerPlayer
-        : value.maxReactionsPerPlayer === "unlimited" ||
-            Number(value.maxReactionsPerPlayer) <= 0
-          ? "unlimited"
-          : Math.max(1, Number(value.maxReactionsPerPlayer)),
-    maxReactionsPerTarget:
-      value.maxReactionsPerTarget == null
-        ? defaultGameTemplate.maxReactionsPerTarget
-        : value.maxReactionsPerTarget === "unlimited" ||
-            Number(value.maxReactionsPerTarget) <= 0
-          ? "unlimited"
-          : Math.max(1, Number(value.maxReactionsPerTarget)),
-    reactionPoints: Object.fromEntries(
-      REACTIONS.map(({ id }) => [
-        id,
-        Number(value.reactionPoints?.[id as ReactionId]) || 0,
-      ]),
-    ) as GameSettings["reactionPoints"],
+    maxSpectators: Number.isFinite(value.maxSpectators)
+      ? Math.max(0, Math.floor(value.maxSpectators!))
+      : 64,
+    allowSpectatorReactions: value.allowSpectatorReactions ?? true,
     rounds: Array.isArray(value.rounds)
       ? value.rounds.map((round) => ({
           ...structuredClone(fallback),
           ...round,
           id: round.id || crypto.randomUUID(),
           allowBlankCards: round.allowBlankCards ?? true,
+          useAllPacks: round.useAllPacks ?? !round.packIds?.length,
+          allowReactionsAfterReveal:
+            round.allowReactionsAfterReveal ??
+            allowReactionsAfterReveal ??
+            false,
+          maxReactionsPerPlayer: limit(
+            round.maxReactionsPerPlayer ?? maxReactionsPerPlayer,
+            fallback.maxReactionsPerPlayer,
+          ),
+          maxReactionsPerTarget: limit(
+            round.maxReactionsPerTarget ?? maxReactionsPerTarget,
+            fallback.maxReactionsPerTarget,
+          ),
+          reactionPoints: Object.fromEntries(
+            REACTIONS.map(({ id }) => [
+              id,
+              Number(
+                round.reactionPoints?.[id as ReactionId] ??
+                  reactionPoints?.[id as ReactionId],
+              ) || 0,
+            ]),
+          ) as RoundSettings["reactionPoints"],
           maxDiscardsPerTurn:
             round.maxDiscardsPerTurn ?? fallback.maxDiscardsPerTurn,
           maxDiscardsPerStage:

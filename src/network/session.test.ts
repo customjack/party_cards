@@ -348,3 +348,189 @@ it("resumes the client countdown after PeerJS serializes the cleared pause state
   expect(isTimerPaused(stopped)).toBe(false);
   expect(timerSeconds(stopped, Date.now())).toBeNull();
 });
+
+describe("player and spectator roles", () => {
+  const profile = (spectator: boolean) => ({
+    name: "Player",
+    avatar: "✦",
+    avatarColor: "#ffc83d",
+    spectator,
+  });
+  const lobby = (maxPlayers = 2, maxSpectators = 1) => {
+    const host = startGame(false);
+    host.stopGame();
+    host.updateSettings(
+      { ...host.snapshot.settings, maxPlayers, maxSpectators },
+      [starterPack.id],
+    );
+    return host;
+  };
+
+  it("lets host and clients change lobby roles while enforcing both capacities", () => {
+    const host = lobby();
+    const peer = connectPlayer("player");
+    host.updateHost(profile(true));
+    expect(host.snapshot.players.find((p) => p.isHost)?.spectator).toBe(true);
+    peer.command({ type: "UPDATE_PROFILE", payload: profile(true) });
+    expect(
+      host.snapshot.players.find((p) => p.id === peer.assigned())?.spectator,
+    ).toBe(false);
+    connectPlayer("second-player");
+    host.updateHost(profile(false));
+    expect(host.snapshot.players.find((p) => p.isHost)?.spectator).toBe(true);
+    host.updateSettings({ ...host.snapshot.settings, maxSpectators: 2 }, [
+      starterPack.id,
+    ]);
+    peer.command({ type: "UPDATE_PROFILE", payload: profile(true) });
+    host.updateHost(profile(false));
+    expect(host.snapshot.players.find((p) => p.isHost)?.spectator).toBe(false);
+    peer.command({ type: "UPDATE_PROFILE", payload: profile(false) });
+    expect(
+      host.snapshot.players.find((p) => p.id === peer.assigned())?.spectator,
+    ).toBe(true);
+  });
+
+  it("enforces spectator limits on new joins but permits reconnecting to an existing seat", () => {
+    const host = lobby();
+    const watcher = connectPlayer("watcher", undefined, true);
+    const extra = connectPlayer("extra", undefined, true);
+    expect(host.snapshot.players.filter((p) => p.spectator)).toHaveLength(1);
+    expect(
+      extra.connection.send.mock.calls.some(
+        ([event]) => event.type === "REJECTED",
+      ),
+    ).toBe(true);
+    watcher.connection.close();
+    const resumed = connectPlayer("watcher", watcher.assigned(), true);
+    expect(resumed.assigned()).toBe(watcher.assigned());
+    expect(host.snapshot.players.filter((p) => p.spectator)).toHaveLength(1);
+    expect(
+      host.snapshot.players.find((p) => p.id === resumed.assigned())?.connected,
+    ).toBe(true);
+  });
+
+  it("starts with a spectator host who is neither dealt cards nor selected as judge", () => {
+    const host = lobby();
+    host.updateHost(profile(true));
+    const peer = connectPlayer("player");
+    host.start();
+    expect(host.snapshot.phase).toBe("answering");
+    expect(host.snapshot.game!.judgeId).toBe(peer.assigned());
+    expect(host.snapshot.game!.hands.host).toBeUndefined();
+    const hand = peer.snapshot().game.hands[peer.assigned()];
+    peer.command({
+      type: "SUBMIT_CARDS",
+      payload: {
+        cardIds: hand
+          .slice(0, host.snapshot.game!.blackCard.pick)
+          .map((card: { id: string }) => card.id),
+        blankAnswers: {},
+      },
+    });
+    host.react("host", peer.assigned(), "brilliant");
+    expect(host.snapshot.game!.reactionTotals[peer.assigned()].brilliant).toBe(
+      1,
+    );
+  });
+
+  it("reserves admin-promoted player seats and deals them in only on the next hand", () => {
+    const host = lobby(2, 3);
+    const first = connectPlayer("first-watcher", undefined, true);
+    const second = connectPlayer("second-watcher", undefined, true);
+    host.start();
+    expect(host.setPlayerSpectator(first.assigned(), false)).toBe(true);
+    expect(host.setPlayerSpectator(second.assigned(), false)).toBe(false);
+    expect(
+      host.snapshot.players.find((p) => p.id === first.assigned())
+        ?.waitingForNextHand,
+    ).toBe(true);
+    expect(first.snapshot().game.hands[first.assigned()]).toBeUndefined();
+    host.advancePhase();
+    host.advancePhase();
+    host.advancePhase();
+    host.advancePhase();
+    expect(host.snapshot.phase).toBe("answering");
+    expect(
+      host.snapshot.players.find((p) => p.id === first.assigned())?.spectator,
+    ).toBe(false);
+    expect(first.snapshot().game.hands[first.assigned()]).toHaveLength(
+      host.snapshot.settings.rounds[0].handSize,
+    );
+    expect(host.setPlayerSpectator("host", true)).toBe(true);
+    expect(host.snapshot.players.find((p) => p.isHost)?.spectator).toBe(true);
+  });
+
+  it("does not let client role commands change roles during an active game", () => {
+    const host = lobby();
+    const watcher = connectPlayer("watcher", undefined, true);
+    host.start();
+    watcher.command({ type: "UPDATE_PROFILE", payload: profile(false) });
+    expect(
+      host.snapshot.players.find((p) => p.id === watcher.assigned())?.spectator,
+    ).toBe(true);
+    expect(
+      host.snapshot.players.find((p) => p.id === watcher.assigned())
+        ?.waitingForNextHand,
+    ).not.toBe(true);
+  });
+});
+
+describe("stage reaction scoring and spectator permissions", () => {
+  it.each([true, false])(
+    "applies each stage's points and spectator reaction permission (%s)",
+    (allowed) => {
+      const host = startGame(false);
+      host.stopGame();
+      const settings = host.snapshot.settings;
+      settings.allowSpectatorReactions = allowed;
+      settings.winCondition = { type: "all-stages" };
+      settings.rounds = [2, 5].map((points, index) => ({
+        ...structuredClone(settings.rounds[0]),
+        id: `stage-${index}`,
+        hands: 1,
+        reactionPoints: {
+          ...settings.rounds[0].reactionPoints,
+          brilliant: points,
+        },
+      }));
+      host.updateSettings(settings, [starterPack.id]);
+      const watcher = connectPlayer("watcher", undefined, true);
+      host.start();
+      host.advancePhase();
+      watcher.command({
+        type: "REACT",
+        payload: { targetPlayerId: "host", reaction: "brilliant" },
+      });
+      expect(host.snapshot.game!.scores.host).toBe(allowed ? 2 : 0);
+      host.advancePhase();
+      host.chooseWinner("host", "host");
+      host.advancePhase();
+      host.advancePhase();
+      expect(host.snapshot.game!.roundIndex).toBe(1);
+      const previous = host.snapshot.game!.scores.host;
+      host.advancePhase();
+      watcher.command({
+        type: "REACT",
+        payload: { targetPlayerId: "host", reaction: "brilliant" },
+      });
+      expect(host.snapshot.game!.scores.host).toBe(
+        previous + (allowed ? 5 : 0),
+      );
+    },
+  );
+
+  it("refuses to start if a stage's pack pool is explicitly disabled", () => {
+    const host = startGame(false);
+    host.stopGame();
+    const settings = host.snapshot.settings;
+    settings.rounds[0].useAllPacks = false;
+    settings.rounds[0].packIds = [];
+    host.updateSettings(settings, [starterPack.id]);
+    host.start();
+    expect(host.snapshot.phase).toBe("lobby");
+    settings.rounds[0].packIds = [starterPack.id];
+    host.updateSettings(settings, [starterPack.id]);
+    host.start();
+    expect(host.snapshot.phase).toBe("answering");
+  });
+});

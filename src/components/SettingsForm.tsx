@@ -8,6 +8,7 @@ import {
   type ReactionLimit,
   type RoundSettings,
 } from "../domain/types";
+import { PackSelector } from "./PackSelector";
 import { ReactionIcon } from "../resources/ReactionIcon";
 
 // Keep unfinished edits local so clearing a field doesn't insert 0 or its minimum.
@@ -169,6 +170,13 @@ export function SettingsForm({
             min={2}
             onChange={(value) => set("maxPlayers", Math.max(2, value))}
           />
+          <NumberField
+            label="Maximum spectators"
+            value={settings.maxSpectators}
+            onChange={(value) =>
+              set("maxSpectators", Math.max(0, Math.floor(value)))
+            }
+          />
           <label className="mini-field">
             <span>Win condition</span>
             <select
@@ -247,6 +255,11 @@ export function SettingsForm({
             onChange={(value) => set("allowSpectators", value)}
           />
           <Toggle
+            label="Allow spectators to react"
+            checked={settings.allowSpectatorReactions}
+            onChange={(value) => set("allowSpectatorReactions", value)}
+          />
+          <Toggle
             label="Allow players to join active games"
             hint="Late players enter at the next hand."
             checked={settings.lateJoin}
@@ -264,49 +277,6 @@ export function SettingsForm({
             onChange={(value) => set("showScoreboardAfterEachHand", value)}
           />
         </div>
-        <details className="settings-subsection">
-          <summary>Reaction scoring</summary>
-          <Toggle
-            label="Allow reactions after the winner is revealed"
-            hint="Reactions stay open while cards are revealed and the judge chooses. Turn on to also allow reactions during results."
-            checked={settings.allowReactionsAfterReveal}
-            onChange={(value) => set("allowReactionsAfterReveal", value)}
-          />
-          <p>
-            Reactions are always counted. Limits reset for every hand; leave
-            point values at zero for cosmetic reactions only.
-          </p>
-          <div className="settings-grid">
-            <ReactionLimitField
-              label="Total reactions per player"
-              value={settings.maxReactionsPerPlayer}
-              onChange={(value) => set("maxReactionsPerPlayer", value)}
-            />
-            <ReactionLimitField
-              label="Reactions per card"
-              value={settings.maxReactionsPerTarget}
-              onChange={(value) => set("maxReactionsPerTarget", value)}
-            />
-          </div>
-          <div className="reaction-settings-grid">
-            {REACTIONS.map((reaction) => (
-              <div className="reaction-setting" key={reaction.id}>
-                <ReactionIcon reaction={reaction.id} />
-                <NumberField
-                  label={reaction.label}
-                  value={settings.reactionPoints[reaction.id]}
-                  min={-999}
-                  onChange={(points) =>
-                    set("reactionPoints", {
-                      ...settings.reactionPoints,
-                      [reaction.id]: points,
-                    })
-                  }
-                />
-              </div>
-            ))}
-          </div>
-        </details>
       </section>
       <section className="round-settings">
         <div className="section-heading">
@@ -514,6 +484,49 @@ function RoundForm({
           </div>
         </details>
         <details className="settings-subsection">
+          <summary>Reaction scoring</summary>
+          <Toggle
+            label="Allow reactions after the winner is revealed"
+            hint="Reactions stay open while cards are revealed and the judge chooses. Turn on to also allow reactions during results."
+            checked={round.allowReactionsAfterReveal}
+            onChange={(value) => set("allowReactionsAfterReveal", value)}
+          />
+          <p>
+            Reactions are always counted. Limits reset for every hand; leave
+            point values at zero for cosmetic reactions only.
+          </p>
+          <div className="settings-grid">
+            <ReactionLimitField
+              label="Total reactions per player"
+              value={round.maxReactionsPerPlayer}
+              onChange={(value) => set("maxReactionsPerPlayer", value)}
+            />
+            <ReactionLimitField
+              label="Reactions per card"
+              value={round.maxReactionsPerTarget}
+              onChange={(value) => set("maxReactionsPerTarget", value)}
+            />
+          </div>
+          <div className="reaction-settings-grid">
+            {REACTIONS.map((reaction) => (
+              <div className="reaction-setting" key={reaction.id}>
+                <ReactionIcon reaction={reaction.id} />
+                <NumberField
+                  label={reaction.label}
+                  value={round.reactionPoints[reaction.id]}
+                  min={-999}
+                  onChange={(points) =>
+                    set("reactionPoints", {
+                      ...round.reactionPoints,
+                      [reaction.id]: points,
+                    })
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </details>
+        <details className="settings-subsection">
           <summary>Timing &amp; reveal</summary>
           <div className="settings-grid">
             <NumberField
@@ -562,28 +575,21 @@ function RoundForm({
           </div>
         </details>
         <details className="settings-subsection">
-          <summary>
-            Pack pool <small>Empty uses all available packs</small>
-          </summary>
-          <div className="check-grid">
-            {packs.map((pack) => (
-              <label className="check-card" key={pack.id}>
-                <input
-                  type="checkbox"
-                  checked={round.packIds.includes(pack.id)}
-                  onChange={() =>
-                    set(
-                      "packIds",
-                      round.packIds.includes(pack.id)
-                        ? round.packIds.filter((id) => id !== pack.id)
-                        : [...round.packIds, pack.id],
-                    )
-                  }
-                />
-                {pack.name}
-              </label>
-            ))}
-          </div>
+          <summary>Pack pool</summary>
+          <Toggle
+            label="Use all enabled room packs"
+            checked={round.useAllPacks}
+            onChange={(value) => onChange({ ...round, useAllPacks: value })}
+          />
+          <PackSelector
+            packs={packs}
+            selectedIds={
+              round.useAllPacks ? packs.map((pack) => pack.id) : round.packIds
+            }
+            onChange={(packIds) =>
+              onChange({ ...round, useAllPacks: false, packIds })
+            }
+          />
         </details>
       </div>
     </details>

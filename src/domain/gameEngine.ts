@@ -20,7 +20,7 @@ export class CardGameEngine {
   ): GameRuntime {
     const active = players.filter((player) => !player.spectator),
       allowedPacks = packs.filter(
-        (pack) => !round.packIds.length || round.packIds.includes(pack.id),
+        (pack) => round.useAllPacks || round.packIds.includes(pack.id),
       ),
       blackPool = this.mergePackCards(
         allowedPacks,
@@ -51,16 +51,22 @@ export class CardGameEngine {
         discardsThisTurn: {},
         discardsThisStage: {},
         revealOrder: [],
-        scores: Object.fromEntries(
-          active.map((player) => [player.id, previousScores[player.id] ?? 0]),
-        ),
+        scores: {
+          ...previousScores,
+          ...Object.fromEntries(
+            active.map((player) => [player.id, previousScores[player.id] ?? 0]),
+          ),
+        },
         reactions: {},
-        reactionTotals: Object.fromEntries(
-          active.map((player) => [
-            player.id,
-            structuredClone(previousReactionTotals[player.id] ?? {}),
-          ]),
-        ),
+        reactionTotals: {
+          ...structuredClone(previousReactionTotals),
+          ...Object.fromEntries(
+            active.map((player) => [
+              player.id,
+              structuredClone(previousReactionTotals[player.id] ?? {}),
+            ]),
+          ),
+        },
         whiteDeck,
         blackDeck,
         whiteDiscard: [],

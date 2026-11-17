@@ -84,13 +84,20 @@ export type RoundSettings = {
   anonymousSubmissions: boolean;
   allowJudgeToSubmit: boolean;
   allowBlankCards: boolean;
+  useAllPacks: boolean;
   packIds: string[];
+  allowReactionsAfterReveal: boolean;
+  maxReactionsPerPlayer: ReactionLimit;
+  maxReactionsPerTarget: ReactionLimit;
+  reactionPoints: Record<ReactionId, number>;
 };
 export type GameSettings = {
   schemaVersion: 1;
   id: string;
   name: string;
   maxPlayers: number;
+  maxSpectators: number;
+  allowSpectatorReactions: boolean;
   allowSpectators: boolean;
   lateJoin: boolean;
   takeoverDisconnectedPlayers: boolean;
@@ -98,10 +105,6 @@ export type GameSettings = {
   winCondition: WinCondition;
   scoreboardTimeSeconds: number;
   showScoreboardAfterEachHand: boolean;
-  allowReactionsAfterReveal: boolean;
-  maxReactionsPerPlayer: ReactionLimit;
-  maxReactionsPerTarget: ReactionLimit;
-  reactionPoints: Record<ReactionId, number>;
   rounds: RoundSettings[];
 };
 export type Player = {

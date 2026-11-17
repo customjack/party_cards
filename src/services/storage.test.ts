@@ -35,15 +35,72 @@ describe("reaction timing settings compatibility", () => {
     const legacy = JSON.parse(JSON.stringify(defaultGameTemplate));
     legacy.id = "legacy";
     delete legacy.allowReactionsAfterReveal;
-    expect(normalizeSettings(legacy).allowReactionsAfterReveal).toBe(false);
+    expect(normalizeSettings(legacy).rounds[0].allowReactionsAfterReveal).toBe(
+      false,
+    );
   });
 
   it.each([false, true])("preserves an explicit setting of %s", (enabled) => {
     const settings = {
       ...structuredClone(defaultGameTemplate),
       id: "custom",
-      allowReactionsAfterReveal: enabled,
+      rounds: defaultGameTemplate.rounds.map((round) => ({
+        ...round,
+        allowReactionsAfterReveal: enabled,
+      })),
     };
-    expect(normalizeSettings(settings).allowReactionsAfterReveal).toBe(enabled);
+    expect(
+      normalizeSettings(settings).rounds[0].allowReactionsAfterReveal,
+    ).toBe(enabled);
+  });
+});
+
+describe("stage reaction migration and pack selection", () => {
+  it("migrates old global reaction settings to every stage without overwriting stage overrides", () => {
+    const legacy = JSON.parse(JSON.stringify(defaultGameTemplate));
+    legacy.id = "legacy-scoring";
+    legacy.reactionPoints = { brilliant: 5, blunder: -2 };
+    legacy.maxReactionsPerPlayer = 3;
+    legacy.maxReactionsPerTarget = 2;
+    legacy.allowReactionsAfterReveal = true;
+    for (const key of [
+      "reactionPoints",
+      "maxReactionsPerPlayer",
+      "maxReactionsPerTarget",
+      "allowReactionsAfterReveal",
+      "useAllPacks",
+    ])
+      delete legacy.rounds[0][key];
+    legacy.rounds.push({
+      ...legacy.rounds[0],
+      id: "second",
+      reactionPoints: { brilliant: 0 },
+      allowReactionsAfterReveal: false,
+    });
+    const migrated = normalizeSettings(legacy);
+    expect(migrated.rounds[0].reactionPoints.brilliant).toBe(5);
+    expect(migrated.rounds[0].reactionPoints.blunder).toBe(-2);
+    expect(migrated.rounds[1].reactionPoints.brilliant).toBe(0);
+    expect(migrated.rounds[0].allowReactionsAfterReveal).toBe(true);
+    expect(migrated.rounds[1].allowReactionsAfterReveal).toBe(false);
+    expect(migrated.rounds[1].maxReactionsPerPlayer).toBe(3);
+    expect(migrated).not.toHaveProperty("reactionPoints");
+    expect(migrated.rounds[0].useAllPacks).toBe(true);
+    expect(migrated.maxSpectators).toBe(64);
+    expect(migrated.allowSpectatorReactions).toBe(true);
+  });
+
+  it("preserves an explicitly empty pack pool and a zero spectator limit", () => {
+    const settings = structuredClone(defaultGameTemplate);
+    settings.id = "no-packs";
+    settings.maxSpectators = 0;
+    settings.allowSpectatorReactions = false;
+    settings.rounds[0].useAllPacks = false;
+    settings.rounds[0].packIds = [];
+    const normalized = normalizeSettings(settings);
+    expect(normalized.maxSpectators).toBe(0);
+    expect(normalized.allowSpectatorReactions).toBe(false);
+    expect(normalized.rounds[0].useAllPacks).toBe(false);
+    expect(normalized.rounds[0].packIds).toEqual([]);
   });
 });

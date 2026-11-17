@@ -13,21 +13,6 @@
   },
   "scoreboardTimeSeconds": 8,
   "showScoreboardAfterEachHand": true,
-  "allowReactionsAfterReveal": false,
-  "maxReactionsPerPlayer": "unlimited",
-  "maxReactionsPerTarget": 1,
-  "reactionPoints": {
-    "brilliant": 0,
-    "great-move": 0,
-    "best-move": 0,
-    "excellent": 0,
-    "good": 0,
-    "book": 0,
-    "inaccuracy": 0,
-    "mistake": 0,
-    "miss": 0,
-    "blunder": 0
-  },
   "rounds": [
     {
       "id": "standard-rounds",
@@ -47,7 +32,25 @@
       "anonymousSubmissions": true,
       "allowJudgeToSubmit": false,
       "allowBlankCards": true,
-      "packIds": []
+      "packIds": [],
+      "allowReactionsAfterReveal": false,
+      "maxReactionsPerPlayer": "unlimited",
+      "maxReactionsPerTarget": 1,
+      "reactionPoints": {
+        "brilliant": 0,
+        "great-move": 0,
+        "best-move": 0,
+        "excellent": 0,
+        "good": 0,
+        "book": 0,
+        "inaccuracy": 0,
+        "mistake": 0,
+        "miss": 0,
+        "blunder": 0
+      },
+      "useAllPacks": true
     }
-  ]
+  ],
+  "maxSpectators": 64,
+  "allowSpectatorReactions": true
 }

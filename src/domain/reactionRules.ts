@@ -1,8 +1,8 @@
-import type { GameSettings, LobbySnapshot } from "./types";
+import type { RoundSettings, LobbySnapshot } from "./types";
 
 export function canReactDuringPhase(
   phase: LobbySnapshot["phase"],
-  settings: Pick<GameSettings, "allowReactionsAfterReveal">,
+  settings: Pick<RoundSettings, "allowReactionsAfterReveal">,
 ) {
   return (
     phase === "reveal" ||

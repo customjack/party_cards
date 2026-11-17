@@ -1,3 +1,5 @@
+import { SettingsValidator } from "../domain/validation";
+import { roleChangeError } from "../domain/seating";
 import Peer, { type DataConnection } from "peerjs";
 import { canReactDuringPhase } from "../domain/reactionRules";
 import { CardGameEngine } from "../domain/gameEngine";
@@ -99,7 +101,10 @@ export class HostSession extends GameSession {
         {
           ...host,
           id: "host",
-          spectator: false,
+          spectator:
+            host.spectator &&
+            settings.allowSpectators &&
+            settings.maxSpectators > 0,
           connected: true,
           isHost: true,
         },
@@ -115,17 +120,74 @@ export class HostSession extends GameSession {
   }
   updateSettings(settings: GameSettings, selectedPackIds: string[]) {
     if (this.state.phase !== "lobby") return;
+    if (
+      settings.maxPlayers <
+        this.state.players.filter((p) => !p.spectator || p.waitingForNextHand)
+          .length ||
+      settings.maxSpectators <
+        this.state.players.filter((p) => p.spectator).length
+    ) {
+      this.fail(
+        "Seat limits cannot be lower than the number of occupied seats.",
+      );
+      return;
+    }
     this.state.settings = structuredClone(settings);
     this.state.selectedPackIds = [...selectedPackIds];
     this.broadcast();
   }
   updateHost(profile: ProfilePayload) {
-    this.state.players[0] = {
-      ...this.state.players[0],
-      ...this.cleanProfile(profile),
-      spectator: false,
-    };
+    if (this.state.phase !== "lobby") return;
+    const error = roleChangeError(this.state, "host", profile.spectator);
+    if (error) {
+      this.fail(error);
+      return;
+    }
+    Object.assign(
+      this.state.players.find((p) => p.id === "host")!,
+      this.cleanProfile(profile),
+    );
     this.broadcast();
+  }
+  setPlayerSpectator(playerId: string, spectator: boolean) {
+    const player = this.state.players.find((item) => item.id === playerId);
+    if (!player?.connected || this.state.phase === "finished") return false;
+    const error = roleChangeError(this.state, playerId, spectator);
+    if (error) {
+      this.fail(error);
+      return false;
+    }
+    if (!spectator && player.spectator && this.state.phase !== "lobby") {
+      player.waitingForNextHand = true;
+    } else {
+      player.spectator = spectator;
+      player.waitingForNextHand = false;
+      const game = this.state.game;
+      if (spectator && game) {
+        if (["answering", "reveal", "judging"].includes(this.state.phase)) {
+          delete game.submissions[playerId];
+          game.lockedPlayerIds = game.lockedPlayerIds.filter(
+            (id) => id !== playerId,
+          );
+          game.revealOrder = game.revealOrder.filter((id) => id !== playerId);
+        }
+        if (game.judgeId === playerId) {
+          const replacement = this.state.players.find(
+            (p) => !p.spectator && p.connected,
+          );
+          if (replacement) {
+            game.judgeId = replacement.id;
+            if (
+              this.state.phase === "answering" &&
+              !this.currentRound().allowJudgeToSubmit
+            )
+              CardGameEngine.unlock(game, replacement.id);
+          }
+        }
+      }
+    }
+    this.broadcast();
+    return true;
   }
   kickPlayer(playerId: string) {
     const player = this.state.players.find((item) => item.id === playerId);
@@ -156,6 +218,15 @@ export class HostSession extends GameSession {
       return;
     const round = this.state.settings.rounds[0],
       packs = this.activePacks();
+    if (
+      !this.state.players.some((player) => !player.spectator) ||
+      SettingsValidator.validateGame(
+        this.state.settings,
+        this.state.players.filter((player) => !player.spectator).length,
+        packs,
+      ).some((issue) => issue.level === "error")
+    )
+      return;
     this.state.game = CardGameEngine.createStage(
       round,
       this.state.players,
@@ -231,17 +302,22 @@ export class HostSession extends GameSession {
     const game = this.state.game;
     if (
       !game ||
-      !canReactDuringPhase(this.state.phase, this.state.settings) ||
+      !canReactDuringPhase(this.state.phase, this.currentRound()) ||
       !REACTIONS.some((item) => item.id === reaction) ||
-      !this.state.players.some((player) => player.id === playerId) ||
+      !this.state.players.some(
+        (player) =>
+          player.id === playerId &&
+          player.connected &&
+          (!player.spectator || this.state.settings.allowSpectatorReactions),
+      ) ||
       !CardGameEngine.react(
         game,
         playerId,
         targetPlayerId,
         reaction,
-        this.state.settings.reactionPoints[reaction] ?? 0,
-        this.state.settings.maxReactionsPerPlayer,
-        this.state.settings.maxReactionsPerTarget,
+        this.currentRound().reactionPoints[reaction] ?? 0,
+        this.currentRound().maxReactionsPerPlayer,
+        this.currentRound().maxReactionsPerTarget,
       )
     )
       return;
@@ -479,7 +555,8 @@ export class HostSession extends GameSession {
       if (existing) {
         const profile = this.cleanProfile(command.payload.profile),
           spectator =
-            this.state.phase === "lobby"
+            this.state.phase === "lobby" &&
+            !roleChangeError(this.state, id, profile.spectator)
               ? profile.spectator
               : existing.spectator;
         Object.assign(existing, profile, { spectator, connected: true });
@@ -500,17 +577,24 @@ export class HostSession extends GameSession {
         spectator = requestedSpectator || gameActive || !openSeat;
       if (
         spectator &&
-        !waitingForNextHand &&
-        !this.state.settings.allowSpectators
+        (this.state.players.filter((p) => p.spectator).length >=
+          this.state.settings.maxSpectators ||
+          (!waitingForNextHand && !this.state.settings.allowSpectators))
       ) {
         connection.send({
           type: "REJECTED",
-          payload: { reason: "This room is full or not accepting spectators." },
+          payload: {
+            reason:
+              this.state.players.filter((p) => p.spectator).length >=
+              this.state.settings.maxSpectators
+                ? `The spectator limit (${this.state.settings.maxSpectators}) has been reached.`
+                : "This room is not accepting spectators.",
+          },
         } satisfies HostEvent);
         return;
       }
       if (
-        gameActive &&
+        spectator &&
         !requestedSpectator &&
         !waitingForNextHand &&
         this.state.settings.fullRoomFallback === "reject"
@@ -555,8 +639,16 @@ export class HostSession extends GameSession {
     }
     if (command.type === "UPDATE_PROFILE") {
       const player = this.state.players.find((item) => item.id === id);
-      if (player && this.state.phase === "lobby")
-        Object.assign(player, this.cleanProfile(command.payload));
+      if (player && this.state.phase === "lobby") {
+        const profile = this.cleanProfile(command.payload);
+        const error = roleChangeError(this.state, id, profile.spectator);
+        if (error)
+          connection.send({
+            type: "REJECTED",
+            payload: { reason: error },
+          } satisfies HostEvent);
+        else Object.assign(player, profile);
+      }
       this.broadcast();
     } else if (command.type === "SUBMIT_CARDS")
       this.submitCards(

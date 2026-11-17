@@ -390,7 +390,7 @@ export function GameView({
     showAuthor = snapshot.phase === "results" || !round.anonymousSubmissions,
     myReactions = me ? (game.reactions[me.id] ?? []) : [];
   const withinReactionLimit = (
-    limit: typeof snapshot.settings.maxReactionsPerPlayer,
+    limit: typeof round.maxReactionsPerPlayer,
     count: number,
   ) => limit === "unlimited" || count < limit;
   const react = (targetPlayerId: string, reaction: ReactionId) => {
@@ -439,15 +439,16 @@ export function GameView({
               (reaction) => reaction.targetPlayerId === submission.id,
             ).length;
             const canReact =
-              canReactDuringPhase(snapshot.phase, snapshot.settings) &&
+              canReactDuringPhase(snapshot.phase, round) &&
               me &&
+              (!me.spectator || snapshot.settings.allowSpectatorReactions) &&
               submission.id !== me.id &&
               withinReactionLimit(
-                snapshot.settings.maxReactionsPerPlayer,
+                round.maxReactionsPerPlayer,
                 myReactions.length,
               ) &&
               withinReactionLimit(
-                snapshot.settings.maxReactionsPerTarget,
+                round.maxReactionsPerTarget,
                 reactionsForCard,
               );
             return (
@@ -525,12 +526,11 @@ export function GameView({
                         aria-label="Choose a reaction"
                       >
                         {REACTIONS.map((reaction) => {
-                          const points =
-                            snapshot.settings.reactionPoints[reaction.id];
+                          const points = round.reactionPoints[reaction.id];
                           const pointLabel = `${points > 0 ? "+" : ""}${points} ${Math.abs(points) === 1 ? "point" : "points"}`;
                           const label = `${reaction.label}: ${pointLabel} for this player`;
                           const scoringEnabled = Object.values(
-                            snapshot.settings.reactionPoints,
+                            round.reactionPoints,
                           ).some((value) => value !== 0);
                           return (
                             <button

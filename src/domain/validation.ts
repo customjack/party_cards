@@ -49,6 +49,11 @@ export class SettingsValidator {
         message: `Stage ${index + 1}: ${issue.message}`,
       })),
     );
+    if (!Number.isInteger(settings.maxSpectators) || settings.maxSpectators < 0)
+      issues.push({
+        level: "error",
+        message: "Spectator limit must be a non-negative whole number.",
+      });
     if (!settings.rounds.length)
       issues.push({ level: "error", message: "Add at least one stage." });
     if (
@@ -62,7 +67,9 @@ export class SettingsValidator {
     if (
       settings.winCondition.type === "score-target" &&
       !settings.rounds.some((round) => round.winnerPoints > 0) &&
-      !Object.values(settings.reactionPoints).some((points) => points > 0)
+      !settings.rounds.some((round) =>
+        Object.values(round.reactionPoints).some((points) => points > 0),
+      )
     )
       issues.push({
         level: "error",
@@ -88,18 +95,14 @@ export class SettingsValidator {
         level: "error",
         message: "The lobby exceeds the player limit.",
       });
-    const available = new Set(packs.map((pack) => pack.id));
     settings.rounds.forEach((round, index) => {
       const roundPacks = packs.filter(
-        (pack) => !round.packIds.length || round.packIds.includes(pack.id),
+        (pack) => round.useAllPacks || round.packIds.includes(pack.id),
       );
-      if (
-        round.packIds.length &&
-        !round.packIds.some((id) => available.has(id))
-      )
+      if (!roundPacks.length)
         issues.push({
           level: "error",
-          message: `Stage ${index + 1} has no available pack.`,
+          message: `Stage ${index + 1} (${round.name}) has no enabled pack pool. Enable a pack in both the room and this stage before starting.`,
         });
       else if (
         !roundPacks.some((pack) =>
