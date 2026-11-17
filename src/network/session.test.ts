@@ -1,11 +1,20 @@
+import { pack, unpack } from "peerjs-js-binarypack";
+import { isTimerPaused, timerSeconds } from "../domain/timer";
+import type { LobbySnapshot } from "../domain/types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultGameTemplate, starterPack } from "../domain/defaults";
 import { SettingsRepository } from "../services/storage";
 import { HostSession } from "./session";
 
+const { peerEvents } = vi.hoisted(() => ({
+  peerEvents: new Map<string, (...args: any[]) => void>(),
+}));
+
 vi.mock("peerjs", () => ({
   default: class {
-    on() {}
+    on(event: string, callback: (...args: any[]) => void) {
+      peerEvents.set(event, callback);
+    }
     destroy() {}
   },
 }));
@@ -14,6 +23,7 @@ vi.mock("./peerConfig", () => ({ getPeerOptions: () => ({}) }));
 let session: HostSession | undefined;
 
 beforeEach(() => {
+  peerEvents.clear();
   vi.useFakeTimers();
   vi.stubGlobal("window", globalThis);
   const saved = new Map<string, string>();
@@ -149,4 +159,192 @@ describe("stopping a game", () => {
       expect(host.snapshot.game!.totalHandIndex).toBe(0);
     },
   );
+});
+
+function connectPlayer(token: string, requestedId?: string, spectator = false) {
+  const events = new Map<string, (...args: any[]) => void>();
+  const connection = {
+    peer: `party-cards-connection-${crypto.randomUUID()}`,
+    open: true,
+    on: (event: string, callback: (...args: any[]) => void) =>
+      events.set(event, callback),
+    send: vi.fn(),
+    close: () => {
+      connection.open = false;
+      events.get("close")?.();
+    },
+  };
+  peerEvents.get("connection")!(connection);
+  events.get("open")!();
+  const command = (data: unknown) => events.get("data")!(data);
+  command({
+    type: "JOIN",
+    payload: {
+      resumeToken: token,
+      playerId: requestedId,
+      profile: { name: token, avatar: "✦", avatarColor: "#ffc83d", spectator },
+    },
+  });
+  const assigned = () =>
+    connection.send.mock.calls
+      .filter(([event]) => event.type === "ASSIGNED_PLAYER")
+      .at(-1)![0].payload.playerId as string;
+  const snapshot = () =>
+    connection.send.mock.calls
+      .filter(([event]) => event.type === "SNAPSHOT")
+      .at(-1)![0].payload;
+  return { connection, command, assigned, snapshot };
+}
+
+describe("host admin controls", () => {
+  it("pauses the shared deadline, extends it, and resumes without losing remaining time", () => {
+    const host = startGame(false);
+    vi.advanceTimersByTime(5000);
+    const remaining = host.snapshot.phaseEndsAt! - Date.now();
+    host.pauseTimer();
+    expect(host.snapshot.pausedTimeRemainingMs).toBe(remaining);
+    expect(host.snapshot.phaseEndsAt).toBeUndefined();
+    vi.advanceTimersByTime(120_000);
+    expect(host.snapshot.phase).toBe("answering");
+    host.addTime();
+    expect(host.snapshot.pausedTimeRemainingMs).toBe(remaining + 30_000);
+    host.resumeTimer();
+    expect(host.snapshot.phaseEndsAt).toBe(Date.now() + remaining + 30_000);
+    expect(host.snapshot.pausedTimeRemainingMs).toBeUndefined();
+    vi.advanceTimersByTime(remaining + 30_000);
+    expect(host.snapshot.phase).toBe("reveal");
+  });
+
+  it("holds early auto-reveal while paused and preserves pause through manual advancement", () => {
+    const host = startGame(false);
+    host.pauseTimer();
+    const game = host.snapshot.game!;
+    host.submitCards(
+      "host",
+      game.hands.host.slice(0, game.blackCard.pick).map((card) => card.id),
+    );
+    expect(host.snapshot.phase).toBe("answering");
+    host.advancePhase();
+    expect(host.snapshot.phase).toBe("reveal");
+    expect(host.snapshot.pausedTimeRemainingMs).toBe(1000);
+    vi.advanceTimersByTime(5000);
+    expect(host.snapshot.phase).toBe("reveal");
+    host.advancePhase();
+    host.chooseWinner("host", "host");
+    expect(host.snapshot.phase).toBe("results");
+    expect(host.snapshot.pausedTimeRemainingMs).toBe(1000);
+    host.stopGame();
+    expect(host.snapshot.pausedTimeRemainingMs).toBeUndefined();
+    host.start();
+    expect(host.snapshot.phaseEndsAt).toBeDefined();
+  });
+
+  it("sets scores, validates edits and keeps administrative actions host-only", () => {
+    const host = startGame(false);
+    const peer = connectPlayer("viewer", undefined, true);
+    host.setPlayerScore("host", 12);
+    expect(peer.snapshot().game.scores.host).toBe(12);
+    host.setPlayerScore("host", -2);
+    expect(host.snapshot.game!.scores.host).toBe(-2);
+    for (const invalid of [NaN, Infinity, Number.MAX_VALUE])
+      expect(host.setPlayerScore("host", invalid)).toBe(false);
+    expect(host.setPlayerScore("missing", 5)).toBe(false);
+    peer.command({
+      type: "SET_SCORE",
+      payload: { playerId: "host", score: 999 },
+    });
+    peer.command({ type: "PAUSE_TIMER" });
+    peer.command({ type: "STOP_GAME" });
+    expect(host.snapshot.game!.scores.host).toBe(-2);
+    expect(host.snapshot.pausedTimeRemainingMs).toBeUndefined();
+    expect(host.snapshot.phase).toBe("answering");
+  });
+
+  it("transfers a connection into the existing seat and prevents the old owner reclaiming it", () => {
+    const host = startGame(false);
+    host.stopGame();
+    const original = connectPlayer("original");
+    const replacement = connectPlayer("replacement");
+    const targetId = original.assigned();
+    const sourceId = replacement.assigned();
+    host.start();
+    host.setPlayerScore(targetId, 9);
+    host.setPlayerScore(sourceId, 3);
+    const hand = original.snapshot().game.hands[targetId];
+    original.connection.close();
+    expect(host.reassignPlayer(sourceId, targetId)).toBe(true);
+    expect(replacement.assigned()).toBe(targetId);
+    expect(replacement.snapshot().game.hands[targetId]).toEqual(hand);
+    expect(replacement.snapshot().game.scores[targetId]).toBe(9);
+    expect(replacement.snapshot().game.scores[sourceId]).toBe(3);
+    expect(
+      host.snapshot.players.find((p) => p.id === sourceId)?.connected,
+    ).toBe(false);
+    replacement.command({
+      type: "SUBMIT_CARDS",
+      payload: {
+        cardIds: hand
+          .slice(0, host.snapshot.game!.blackCard.pick)
+          .map((card: { id: string }) => card.id),
+        blankAnswers: {},
+      },
+    });
+    expect(host.snapshot.game!.lockedPlayerIds).toContain(targetId);
+    replacement.connection.close();
+    const oldOwner = connectPlayer("original", targetId);
+    expect(oldOwner.assigned()).not.toBe(targetId);
+    const reconnected = connectPlayer("replacement");
+    expect(reconnected.assigned()).toBe(targetId);
+    expect(reconnected.snapshot().game.scores[targetId]).toBe(9);
+    expect(host.reassignPlayer("host", sourceId)).toBe(false);
+    expect(host.reassignPlayer(targetId, "host")).toBe(false);
+    expect(host.reassignPlayer(sourceId, targetId)).toBe(false);
+  });
+
+  it("allows a spectator to take over a disconnected judge without replacing their role", () => {
+    const host = startGame(false);
+    host.stopGame();
+    const original = connectPlayer("judge");
+    const targetId = original.assigned();
+    host.start();
+    // Finish the first hand; rotation makes the disconnected seat the next judge.
+    host.advancePhase();
+    host.advancePhase();
+    host.advancePhase();
+    host.advancePhase();
+    expect(host.snapshot.game!.judgeId).toBe(targetId);
+    original.connection.close();
+    const spectator = connectPlayer("spectator", undefined, true);
+    const previousId = spectator.assigned();
+    expect(host.reassignPlayer(previousId, targetId)).toBe(true);
+    expect(host.snapshot.game!.judgeId).toBe(targetId);
+    expect(host.snapshot.players.some((p) => p.id === previousId)).toBe(false);
+    expect(spectator.assigned()).toBe(targetId);
+  });
+});
+
+it("resumes the client countdown after PeerJS serializes the cleared pause state as null", async () => {
+  const host = startGame(false);
+  const peer = connectPlayer("timer-viewer", undefined, true);
+  const received = async () =>
+    unpack((await pack(peer.snapshot())) as ArrayBuffer) as LobbySnapshot;
+  host.pauseTimer();
+  const paused = await received();
+  expect(isTimerPaused(paused)).toBe(true);
+  const remaining = timerSeconds(paused, Date.now());
+  vi.advanceTimersByTime(5000);
+  expect(timerSeconds(paused, Date.now())).toBe(remaining);
+  host.resumeTimer();
+  const resumed = await received();
+  expect(resumed.pausedTimeRemainingMs).toBeNull();
+  expect(isTimerPaused(resumed)).toBe(false);
+  expect(timerSeconds(resumed, Date.now())).toBe(remaining);
+  vi.advanceTimersByTime(2000);
+  expect(timerSeconds(resumed, Date.now())).toBe(remaining! - 2);
+  host.pauseTimer();
+  expect(isTimerPaused(await received())).toBe(true);
+  host.stopGame();
+  const stopped = await received();
+  expect(isTimerPaused(stopped)).toBe(false);
+  expect(timerSeconds(stopped, Date.now())).toBeNull();
 });

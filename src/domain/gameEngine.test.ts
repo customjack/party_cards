@@ -70,10 +70,11 @@ describe("CardGameEngine", () => {
   it("locks one reaction per player and optionally scores it", () => {
     const roster = players(3);
     const game = CardGameEngine.createStage(
-      defaultGameTemplate.rounds[0],
+      { ...defaultGameTemplate.rounds[0], allowBlankCards: false },
       roster,
       [starterPack],
     );
+    game.blackCard = { id: "single", text: "____", pick: 1 };
     const targets = roster.filter((player) => player.id !== game.judgeId);
     for (const target of targets)
       CardGameEngine.submit(game, target.id, [game.hands[target.id][0].id]);

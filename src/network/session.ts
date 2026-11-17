@@ -77,6 +77,8 @@ export abstract class GameSession {
 export class HostSession extends GameSession {
   private connections = new Map<string, DataConnection>();
   private connectionPlayers = new Map<string, string>();
+  private connectionTokens = new Map<string, string>();
+  private tokenSeats = new Map<string, string>();
   private dropTimers = new Map<string, number>();
   private state: LobbySnapshot;
   private packs: CardPack[];
@@ -141,6 +143,7 @@ export class HostSession extends GameSession {
         } satisfies HostEvent);
       this.connections.delete(connectionId);
       this.connectionPlayers.delete(connectionId);
+      this.connectionTokens.delete(connectionId);
       const timer = this.dropTimers.get(connectionId);
       if (timer) clearTimeout(timer);
       this.dropTimers.delete(connectionId);
@@ -180,6 +183,7 @@ export class HostSession extends GameSession {
     )
       return;
     if (
+      this.state.pausedTimeRemainingMs == null &&
       round.endAnsweringWhenAllPlayed &&
       eligible.every((id) => this.state.game!.lockedPlayerIds.includes(id))
     )
@@ -253,7 +257,106 @@ export class HostSession extends GameSession {
     this.state.game = undefined;
     this.state.phase = "lobby";
     this.state.phaseEndsAt = undefined;
+    this.state.pausedTimeRemainingMs = undefined;
     this.broadcast();
+  }
+  pauseTimer() {
+    if (!this.state.game || this.state.phaseEndsAt === undefined) return;
+    this.state.pausedTimeRemainingMs = Math.max(
+      0,
+      this.state.phaseEndsAt - Date.now(),
+    );
+    this.state.phaseEndsAt = undefined;
+    this.broadcast();
+  }
+  resumeTimer() {
+    if (this.state.pausedTimeRemainingMs == null) return;
+    this.state.phaseEndsAt = Date.now() + this.state.pausedTimeRemainingMs;
+    this.state.pausedTimeRemainingMs = undefined;
+    this.broadcast();
+  }
+  addTime(seconds = 30) {
+    if (!Number.isFinite(seconds) || seconds <= 0 || seconds > 3600) return;
+    if (this.state.pausedTimeRemainingMs != null)
+      this.state.pausedTimeRemainingMs += seconds * 1000;
+    else if (this.state.phaseEndsAt !== undefined)
+      this.state.phaseEndsAt =
+        Math.max(Date.now(), this.state.phaseEndsAt) + seconds * 1000;
+    else return;
+    this.broadcast();
+  }
+  setPlayerScore(playerId: string, score: number) {
+    const game = this.state.game;
+    if (
+      !game ||
+      !Number.isFinite(score) ||
+      Math.abs(score) > Number.MAX_SAFE_INTEGER ||
+      !Object.hasOwn(game.scores, playerId)
+    )
+      return false;
+    game.scores[playerId] = score;
+    this.broadcast();
+    return true;
+  }
+  advancePhase() {
+    if (!this.state.game) return;
+    if (this.state.phase === "answering") this.beginReveal();
+    else if (this.state.phase === "reveal") this.beginJudging();
+    else if (this.state.phase === "judging") this.chooseRandomWinner();
+    else if (this.state.phase === "results") this.advance();
+    else if (this.state.phase === "scoreboard") this.continueAfterScoreboard();
+    else return;
+    this.broadcast();
+  }
+  reassignPlayer(sourceId: string, targetId: string) {
+    const source = this.state.players.find((player) => player.id === sourceId);
+    const target = this.state.players.find((player) => player.id === targetId);
+    if (
+      !this.state.game ||
+      !source?.connected ||
+      source.isHost ||
+      !target ||
+      target.connected ||
+      target.isHost ||
+      target.spectator ||
+      sourceId === targetId
+    )
+      return false;
+    const connections = [...this.connections.entries()].filter(
+      ([id, connection]) =>
+        connection.open && this.connectionPlayers.get(id) === sourceId,
+    );
+    if (!connections.length) return false;
+    // Retire the previous owner's resume token so they cannot reclaim the occupied seat.
+    for (const [token, seat] of this.tokenSeats)
+      if (seat === targetId)
+        this.tokenSeats.set(token, `${PREFIX}seat-${crypto.randomUUID()}`);
+    for (const [id, connection] of this.connections) {
+      if (this.connectionPlayers.get(id) !== targetId) continue;
+      this.connectionPlayers.delete(id);
+      this.connections.delete(id);
+      this.connectionTokens.delete(id);
+      connection.close();
+    }
+    for (const [id, connection] of connections) {
+      this.connectionPlayers.set(id, targetId);
+      const token = this.connectionTokens.get(id);
+      if (token) this.tokenSeats.set(token, targetId);
+      connection.send({
+        type: "ASSIGNED_PLAYER",
+        payload: { playerId: targetId },
+      } satisfies HostEvent);
+    }
+    source.connected = false;
+    source.waitingForNextHand = false;
+    if (source.spectator)
+      this.state.players = this.state.players.filter(
+        (player) => player.id !== sourceId,
+      );
+    target.connected = true;
+    target.waitingForNextHand = false;
+    this.broadcast();
+    return true;
   }
   override destroy() {
     clearInterval(this.clock);
@@ -329,8 +432,17 @@ export class HostSession extends GameSession {
     );
   }
   private handle(connection: DataConnection, command: ClientCommand) {
+    if (this.connections.get(connection.peer) !== connection) return;
     let id = this.connectionPlayers.get(connection.peer) ?? connection.peer;
     if (command.type === "JOIN") {
+      if (this.connectionPlayers.has(connection.peer)) {
+        connection.send({
+          type: "ASSIGNED_PLAYER",
+          payload: { playerId: id },
+        } satisfies HostEvent);
+        this.broadcast();
+        return;
+      }
       const token = String(command.payload.resumeToken || "")
         .replace(/[^a-zA-Z0-9-]/g, "")
         .slice(0, 80);
@@ -338,12 +450,13 @@ export class HostSession extends GameSession {
         .replace(/[^a-zA-Z0-9-]/g, "")
         .slice(0, 140);
       const resumeId =
-        requestedId.startsWith(PREFIX) &&
+        this.tokenSeats.get(token) ??
+        (requestedId.startsWith(PREFIX) &&
         this.state.players.some((player) => player.id === requestedId)
           ? requestedId
           : token
             ? `${PREFIX}seat-${token}`
-            : connection.peer;
+            : connection.peer);
       const resumable = this.state.players.find(
         (player) => player.id === resumeId,
       );
@@ -354,6 +467,10 @@ export class HostSession extends GameSession {
           ? connection.peer
           : resumeId;
       this.connectionPlayers.set(connection.peer, id);
+      if (token) {
+        this.connectionTokens.set(connection.peer, token);
+        this.tokenSeats.set(token, id);
+      }
       connection.send({
         type: "ASSIGNED_PLAYER",
         payload: { playerId: id },
@@ -460,6 +577,7 @@ export class HostSession extends GameSession {
     this.connections.delete(id);
     const playerId = this.connectionPlayers.get(id) ?? id;
     this.connectionPlayers.delete(id);
+    this.connectionTokens.delete(id);
     const stillConnected = [...this.connections.keys()].some(
       (peerId) => this.connectionPlayers.get(peerId) === playerId,
     );
@@ -528,6 +646,7 @@ export class HostSession extends GameSession {
     if (isGameComplete(this.state.settings, game)) {
       this.state.phase = "finished";
       this.state.phaseEndsAt = undefined;
+      this.state.pausedTimeRemainingMs = undefined;
     } else if (game.handIndex + 1 < round.hands) {
       if (this.state.settings.showScoreboardAfterEachHand) {
         this.state.phase = "scoreboard";
@@ -620,7 +739,10 @@ export class HostSession extends GameSession {
     );
   }
   private setDeadline(seconds: number) {
-    this.state.phaseEndsAt = Date.now() + seconds * 1000;
+    if (this.state.pausedTimeRemainingMs != null) {
+      this.state.pausedTimeRemainingMs = seconds * 1000;
+      this.state.phaseEndsAt = undefined;
+    } else this.state.phaseEndsAt = Date.now() + seconds * 1000;
   }
   private cleanProfile(profile: ProfilePayload): ProfilePayload {
     return {

@@ -4,10 +4,9 @@ import {
   Lock,
   Trash2,
   Trophy,
-  Square,
+  Pause,
   SmilePlus,
   Unlock,
-  Users,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -25,6 +24,8 @@ import {
 } from "../network/session";
 import { canReactDuringPhase } from "../domain/reactionRules";
 import { CardGameEngine } from "../domain/gameEngine";
+import { isTimerPaused, timerSeconds } from "../domain/timer";
+import { AdminControls } from "./AdminControls";
 import { Avatar } from "./Avatar";
 import { ReactionIcon } from "../resources/ReactionIcon";
 
@@ -40,9 +41,7 @@ function useCountdown(snapshot: LobbySnapshot) {
     const timer = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(timer);
   }, []);
-  return snapshot.phaseEndsAt
-    ? Math.max(0, Math.ceil((snapshot.phaseEndsAt - now - offset) / 1000))
-    : null;
+  return timerSeconds(snapshot, now + offset);
 }
 const renderPrompt = (value: string) =>
   value.split("____").map((part, index, all) => (
@@ -79,7 +78,7 @@ export function GameView({
     setSelected([]);
     setBlankAnswers({});
     setReactionMenuTarget(null);
-  }, [game.totalHandIndex]);
+  }, [game.totalHandIndex, me?.id]);
   const ranking = Object.entries(game.scores).sort(
     (left, right) => right[1] - left[1],
   );
@@ -142,6 +141,7 @@ export function GameView({
           connectionState={connectionState}
           onKick={isHost ? kickPlayer : undefined}
           onStop={isHost ? stopGame : undefined}
+          adminSession={isHost ? (session as HostSession) : undefined}
         />
         <section className="play-card scoreboard-card">
           <span className="eyebrow">
@@ -198,6 +198,7 @@ export function GameView({
           connectionState={connectionState}
           onKick={isHost ? kickPlayer : undefined}
           onStop={isHost ? stopGame : undefined}
+          adminSession={isHost ? (session as HostSession) : undefined}
         />
         <PlayerProgress snapshot={snapshot} />
         <section className="table-stage">
@@ -407,6 +408,7 @@ export function GameView({
         connectionState={connectionState}
         onKick={isHost ? kickPlayer : undefined}
         onStop={isHost ? stopGame : undefined}
+        adminSession={isHost ? (session as HostSession) : undefined}
       />
       <section className="table-stage">
         <BlackCardView
@@ -587,14 +589,17 @@ function Header({
   connectionState,
   onKick,
   onStop,
+  adminSession,
 }: {
   snapshot: LobbySnapshot;
   seconds: number | null;
   connectionState: ConnectionState;
   onKick?: (playerId: string) => void;
   onStop?: () => void;
+  adminSession?: HostSession;
 }) {
   const scoreboard = useRef<HTMLDialogElement>(null);
+  const paused = isTimerPaused(snapshot);
   return (
     <header className="game-header">
       <b>PARTY CARDS</b>
@@ -604,7 +609,17 @@ function Header({
         {connectionState.toUpperCase()}
       </span>
       {seconds !== null && (
-        <strong className={seconds <= 10 ? "timer urgent" : "timer"}>
+        <strong
+          className={
+            paused ? "timer paused" : seconds <= 10 ? "timer urgent" : "timer"
+          }
+          aria-label={`${paused ? "Timer paused, " : ""}${seconds} seconds remaining`}
+        >
+          {paused && (
+            <>
+              <Pause size={16} aria-hidden="true" /> Paused ·{" "}
+            </>
+          )}
           {seconds}
         </strong>
       )}
@@ -617,14 +632,13 @@ function Header({
       >
         <Trophy aria-hidden="true" /> Scoreboard
       </button>
-      {onStop && (
-        <button
-          className="scoreboard-trigger stop-game-trigger"
-          type="button"
-          onClick={onStop}
-        >
-          <Square aria-hidden="true" /> Stop game
-        </button>
+      {adminSession && onStop && onKick && (
+        <AdminControls
+          snapshot={snapshot}
+          session={adminSession}
+          onStop={onStop}
+          onKick={onKick}
+        />
       )}
       <dialog
         ref={scoreboard}
@@ -651,28 +665,6 @@ function Header({
           reactionTotals={snapshot.game!.reactionTotals}
         />
       </dialog>
-      {onKick && (
-        <details className="host-player-menu">
-          <summary title="Manage players" aria-label="Manage players">
-            <Users />
-          </summary>
-          <div className="host-player-menu-popover">
-            <b>Manage players</b>
-            {snapshot.players
-              .filter((player) => !player.isHost)
-              .map((player) => (
-                <button
-                  type="button"
-                  onClick={() => onKick(player.id)}
-                  key={player.id}
-                >
-                  <span>{player.name}</span>
-                  <X />
-                </button>
-              ))}
-          </div>
-        </details>
-      )}
     </header>
   );
 }

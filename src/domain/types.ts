@@ -151,6 +151,7 @@ export type LobbySnapshot = {
     | "finished";
   game?: GameRuntime;
   phaseEndsAt?: number;
+  pausedTimeRemainingMs?: number | null;
   serverTime: number;
 };
 export type ProfilePayload = {

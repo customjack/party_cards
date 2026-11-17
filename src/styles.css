@@ -2706,7 +2706,9 @@ button.white-card:hover:not(:disabled) {
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
-  transition: background 150ms, border-color 150ms;
+  transition:
+    background 150ms,
+    border-color 150ms;
 }
 .scoreboard-trigger svg {
   width: 18px;
@@ -2786,4 +2788,107 @@ button.white-card:hover:not(:disabled) {
   font-size: 11px;
   font-weight: 800;
   line-height: 1.2;
+}
+
+.admin-dialog {
+  width: min(700px, calc(100vw - 32px));
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+.admin-dialog section {
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.admin-dialog h3 {
+  margin: 0 0 8px;
+}
+.admin-dialog p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.admin-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+.admin-player > div {
+  flex: 1;
+  min-width: 120px;
+  overflow-wrap: anywhere;
+}
+.admin-player small {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.admin-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-score input {
+  width: 85px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.admin-dialog .settings-grid {
+  margin-bottom: 14px;
+}
+.admin-stop {
+  border-color: var(--coral);
+  color: #8b2f2f;
+}
+
+.timer {
+  flex-shrink: 0;
+}
+.timer.paused {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: auto;
+  min-width: 48px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.admin-dialog .button {
+  transition:
+    background-color 120ms,
+    border-color 120ms,
+    box-shadow 120ms,
+    transform 120ms;
+}
+.admin-dialog .button:hover:not(:disabled) {
+  background: #eee8ff;
+  border-color: var(--purple);
+  transform: translateY(-1px);
+  box-shadow: 2px 4px 0 var(--ink);
+}
+.admin-dialog .button:active:not(:disabled) {
+  background: #ded3ff;
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+.admin-dialog .button:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
+}
+.admin-dialog .admin-stop:hover:not(:disabled) {
+  background: #ffe9e6;
+  border-color: var(--coral);
+}
+.admin-dialog .admin-stop:active:not(:disabled) {
+  background: #ffd3cb;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-dialog .button {
+    transition: none;
+  }
 }
