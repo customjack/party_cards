@@ -1,4 +1,5 @@
 import { Copy, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { createRound } from "../domain/defaults";
 import {
   REACTIONS,
@@ -8,6 +9,53 @@ import {
   type RoundSettings,
 } from "../domain/types";
 import { ReactionIcon } from "../resources/ReactionIcon";
+
+// Keep unfinished edits local so clearing a field doesn't insert 0 or its minimum.
+function NumberInput({
+  value,
+  min = 0,
+  placeholder,
+  allowEmpty = false,
+  onChange,
+}: {
+  value: number | "";
+  min?: number;
+  placeholder?: string;
+  allowEmpty?: boolean;
+  onChange: (value: number | "") => void;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  return (
+    <input
+      type="number"
+      min={min}
+      placeholder={placeholder}
+      value={draft ?? value}
+      onChange={(event) => {
+        const text = event.target.value;
+        setDraft(text);
+        const next = Number(text);
+        if (text !== "" && Number.isFinite(next) && next >= min) onChange(next);
+      }}
+      onBlur={(event) => {
+        const text = event.target.value;
+        if (text === "") {
+          if (allowEmpty && !event.target.validity.badInput) onChange("");
+        } else {
+          const next = Number(text);
+          if (Number.isFinite(next)) onChange(Math.max(min, next));
+        }
+        setDraft(null);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.currentTarget.blur();
+        }
+      }}
+    />
+  );
+}
 
 const NumberField = ({
   label,
@@ -22,11 +70,12 @@ const NumberField = ({
 }) => (
   <label className="mini-field">
     <span>{label}</span>
-    <input
-      type="number"
+    <NumberInput
       min={min}
       value={value}
-      onChange={(event) => onChange(Number(event.target.value))}
+      onChange={(next) => {
+        if (next !== "") onChange(next);
+      }}
     />
   </label>
 );
@@ -66,12 +115,11 @@ const ReactionLimitField = ({
     <span>
       {label} <small>0 = unlimited</small>
     </span>
-    <input
-      type="number"
-      min="0"
+    <NumberInput
+      min={0}
       value={value === "unlimited" ? 0 : value}
-      onChange={(event) => {
-        const next = Math.max(0, Number(event.target.value) || 0);
+      onChange={(next) => {
+        if (next === "") return;
         onChange(next === 0 ? "unlimited" : next);
       }}
     />
@@ -397,22 +445,19 @@ function RoundForm({
             />
             <label className="mini-field">
               <span>Discards per player per stage</span>
-              <input
-                type="number"
+              <NumberInput
                 min={0}
-                step={1}
+                allowEmpty
                 placeholder="Unlimited"
                 value={
                   round.maxDiscardsPerStage === "unlimited"
                     ? ""
                     : round.maxDiscardsPerStage
                 }
-                onChange={(event) =>
+                onChange={(next) =>
                   set(
                     "maxDiscardsPerStage",
-                    event.target.value === ""
-                      ? "unlimited"
-                      : Math.max(0, Math.floor(Number(event.target.value))),
+                    next === "" ? "unlimited" : Math.max(0, Math.floor(next)),
                   )
                 }
               />
