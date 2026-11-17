@@ -104,3 +104,16 @@ describe("stage reaction migration and pack selection", () => {
     expect(normalized.rounds[0].packIds).toEqual([]);
   });
 });
+
+it("defaults older stages to keeping hands and preserves an explicit fresh-hand setting", () => {
+  const legacy = JSON.parse(JSON.stringify(defaultGameTemplate));
+  legacy.id = "legacy-hands";
+  delete legacy.rounds[0].keepHandFromPreviousStage;
+  expect(normalizeSettings(legacy).rounds[0].keepHandFromPreviousStage).toBe(
+    true,
+  );
+  legacy.rounds[0].keepHandFromPreviousStage = false;
+  expect(normalizeSettings(legacy).rounds[0].keepHandFromPreviousStage).toBe(
+    false,
+  );
+});

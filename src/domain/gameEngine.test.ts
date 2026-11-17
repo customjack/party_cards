@@ -248,12 +248,20 @@ describe("CardGameEngine", () => {
 
   it("awards the configured score only to a valid submission", () => {
     const game = CardGameEngine.createStage(
-        defaultGameTemplate.rounds[0],
+        { ...defaultGameTemplate.rounds[0], allowBlankCards: false },
         players(3),
         [starterPack],
       ),
       winner = players(3).find((player) => player.id !== game.judgeId)!;
-    CardGameEngine.submit(game, winner.id, [game.hands[winner.id][0].id]);
+    expect(
+      CardGameEngine.submit(
+        game,
+        winner.id,
+        game.hands[winner.id]
+          .slice(0, game.blackCard.pick)
+          .map((card) => card.id),
+      ),
+    ).toBe(true);
     expect(CardGameEngine.chooseWinner(game, "missing", 2)).toBe(false);
     expect(CardGameEngine.chooseWinner(game, winner.id, 2)).toBe(true);
     expect(game.scores[winner.id]).toBe(2);
@@ -368,5 +376,96 @@ describe("discards", () => {
     ).toBe(false);
     expect(CardGameEngine.discard(game, round, "p1", ids.slice(2))).toBe(true);
     expect(game.hands.p1).toHaveLength(2);
+  });
+});
+
+describe("hands between stages", () => {
+  const pack = (id: string): CardPack => ({
+    ...structuredClone(starterPack),
+    id,
+    blackCards: [{ id: "prompt", text: "____", pick: 1 }],
+    whiteCards: Array.from({ length: 40 }, (_, index) => ({
+      id: `card-${index}`,
+      text: `${id} response ${index}`,
+    })),
+  });
+  const roster = players(3);
+  const round = {
+    ...defaultGameTemplate.rounds[0],
+    handSize: 5,
+    maxDiscardsPerTurn: 2,
+  };
+  const transition = (
+    previous: ReturnType<typeof CardGameEngine.createStage>,
+    nextRound = round,
+    packs = [pack("next")],
+  ) =>
+    CardGameEngine.createStage(
+      nextRound,
+      roster,
+      packs,
+      previous.scores,
+      previous.totalHandIndex + 1,
+      previous.reactionTotals,
+      previous.scoreHistory,
+      previous,
+    );
+
+  it("keeps unplayed cards, replaces played/discarded cards from the new pool, and does not mutate the old state", () => {
+    const previous = CardGameEngine.createStage(round, roster, [pack("old")]);
+    const [played, discarded, ...retained] = previous.hands.p1;
+    expect(CardGameEngine.discard(previous, round, "p1", [discarded.id])).toBe(
+      true,
+    );
+    expect(CardGameEngine.submit(previous, "p1", [played.id])).toBe(true);
+    const original = structuredClone(previous);
+    const next = transition(previous);
+    expect(previous).toEqual(original);
+    expect(next.hands.p1).toHaveLength(5);
+    expect(next.hands.p1.slice(0, 3)).toEqual(retained);
+    expect(
+      next.hands.p1.slice(3).every((card) => card.id.startsWith("next:")),
+    ).toBe(true);
+    expect(
+      next.hands.p1.some((card) => [played.id, discarded.id].includes(card.id)),
+    ).toBe(false);
+    expect(next.discardsThisStage).toEqual({});
+  });
+
+  it("deals a fresh hand when disabled and preserves excess cards when the next hand size shrinks", () => {
+    const previous = CardGameEngine.createStage(round, roster, [pack("old")]);
+    const fresh = transition(previous, {
+      ...round,
+      keepHandFromPreviousStage: false,
+    });
+    expect(
+      Object.values(fresh.hands)
+        .flat()
+        .every((card) => card.id.startsWith("next:")),
+    ).toBe(true);
+    const smaller = transition(previous, { ...round, handSize: 2 });
+    expect(smaller.hands.p1).toEqual(previous.hands.p1);
+  });
+
+  it("never duplicates retained cards in the new deck or recycles cards outside the new pool", () => {
+    const previous = CardGameEngine.createStage(round, roster, [pack("old")]);
+    const samePool = transition(previous, round, [pack("old")]);
+    const cards = [
+      ...samePool.whiteDeck,
+      ...Object.values(samePool.hands).flat(),
+    ];
+    expect(new Set(cards.map((card) => card.id)).size).toBe(cards.length);
+    const differentPool = transition(previous);
+    const foreignCard = differentPool.hands.p1[0];
+    expect(
+      CardGameEngine.discard(differentPool, round, "p1", [foreignCard.id]),
+    ).toBe(true);
+    // Exhaust the new pool: its discard pile must not reintroduce the old pool.
+    differentPool.whiteDeck = [];
+    CardGameEngine.prepareNextHand(differentPool, round, roster);
+    expect(
+      differentPool.hands.p1.some((card) => card.id === foreignCard.id),
+    ).toBe(false);
+    expect(differentPool.hands.p1).toHaveLength(4);
   });
 });

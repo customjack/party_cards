@@ -460,6 +460,12 @@ function RoundForm({
           </div>
           <div className="toggles">
             <Toggle
+              label="Keep hand from previous stage"
+              hint="Keep unplayed cards and top up from this stage’s pack pool. Also applies when stages cycle."
+              checked={round.keepHandFromPreviousStage}
+              onChange={(value) => set("keepHandFromPreviousStage", value)}
+            />
+            <Toggle
               label="Hide authors until result"
               checked={round.anonymousSubmissions}
               onChange={(value) => set("anonymousSubmissions", value)}

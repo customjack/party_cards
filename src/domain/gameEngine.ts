@@ -17,6 +17,9 @@ export class CardGameEngine {
     previousScores: Record<string, number> = {},
     totalHandIndex = 0,
     previousReactionTotals: GameRuntime["reactionTotals"] = {},
+    previousScoreHistory: GameRuntime["scoreHistory"] = [],
+    previousGame?: GameRuntime,
+    cycleIndex = 0,
   ): GameRuntime {
     const active = players.filter((player) => !player.spectator),
       allowedPacks = packs.filter(
@@ -29,23 +32,52 @@ export class CardGameEngine {
       ),
       whitePool = this.mergePackCards(
         allowedPacks,
-        (pack) =>
-          pack.whiteCards.filter(
-            (card) => round.allowBlankCards || !card.blank,
-          ),
+        (pack) => pack.whiteCards,
         (card) =>
           card.blank ? "__blank_response__" : this.cardTextKey(card.text),
       ),
+      retainedHands =
+        round.keepHandFromPreviousStage && previousGame
+          ? Object.fromEntries(
+              players.map((player) => [
+                player.id,
+                structuredClone(
+                  (previousGame.hands[player.id] ?? []).filter(
+                    (card) =>
+                      !(previousGame.submissions[player.id] ?? []).some(
+                        (played) => played.id === card.id,
+                      ),
+                  ),
+                ),
+              ]),
+            )
+          : {},
+      retainedIds = new Set(
+        Object.values(retainedHands)
+          .flat()
+          .map((card) => card.id),
+      ),
+      allowedWhiteCards = whitePool.filter(
+        (card) => round.allowBlankCards || !card.blank,
+      ),
       blackDeck = this.shuffle(blackPool),
-      whiteDeck = this.shuffle(whitePool),
+      whiteDeck = this.shuffle(
+        allowedWhiteCards.filter((card) => !retainedIds.has(card.id)),
+      ),
       game: GameRuntime = {
+        scoreHistory: structuredClone(previousScoreHistory),
+        cycleIndex,
+        allowedWhiteCardIds: allowedWhiteCards.map((card) => card.id),
         roundIndex: 0,
         handIndex: 0,
         totalHandIndex,
         judgeId:
           active[totalHandIndex % Math.max(1, active.length)]?.id ?? "host",
         blackCard: blackDeck.pop() ?? this.fallbackBlack(),
-        hands: Object.fromEntries(active.map((player) => [player.id, []])),
+        hands: {
+          ...Object.fromEntries(active.map((player) => [player.id, []])),
+          ...retainedHands,
+        },
         submissions: {},
         lockedPlayerIds: [],
         discardsThisTurn: {},
@@ -79,6 +111,15 @@ export class CardGameEngine {
         Math.max(round.handSize, game.blackCard.pick),
       );
     });
+    if (!game.scoreHistory.length)
+      game.scoreHistory.push({
+        turn: totalHandIndex,
+        cycleIndex,
+        roundIndex: 0,
+        roundStartTurn: totalHandIndex + 1,
+        scores: { ...game.scores },
+        names: Object.fromEntries(players.map((p) => [p.id, p.name])),
+      });
     return game;
   }
 
@@ -296,7 +337,11 @@ export class CardGameEngine {
     const hand = (game.hands[playerId] ??= []);
     while (hand.length < size) {
       if (!game.whiteDeck.length) {
-        game.whiteDeck = this.shuffle(game.whiteDiscard);
+        game.whiteDeck = this.shuffle(
+          game.whiteDiscard.filter((card) =>
+            game.allowedWhiteCardIds.includes(card.id),
+          ),
+        );
         game.whiteDiscard = [];
       }
       const card = game.whiteDeck.pop();
@@ -325,14 +370,15 @@ export class CardGameEngine {
     const priorPackKeys = new Set<string>();
     return packs.flatMap((pack) => {
       const keysBeforeThisPack = new Set(priorPackKeys);
-      const cards = cardsForPack(pack).filter(
-        (card) => !keysBeforeThisPack.has(duplicateKey(card)),
-      );
+      // Use original pack positions so card identities survive pool/filter changes.
+      const cards = cardsForPack(pack)
+        .map((card, index) => ({
+          ...card,
+          id: `${pack.id}:${card.id}:${index}`,
+        }))
+        .filter((card) => !keysBeforeThisPack.has(duplicateKey(card)));
       cards.forEach((card) => priorPackKeys.add(duplicateKey(card)));
-      return cards.map((card, index) => ({
-        ...card,
-        id: `${pack.id}:${card.id}:${index}`,
-      }));
+      return cards;
     });
   }
 

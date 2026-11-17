@@ -1,5 +1,5 @@
 import { ArrowRight, Gamepad2, PackagePlus, Radio } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Editor } from "./components/Editor";
 import { JoinCard, Lobby } from "./components/Lobby";
 import type { Avatar } from "./domain/types";
@@ -13,7 +13,24 @@ export default function App() {
     [screen, setScreen] = useState<Screen>("home"),
     [session, setSession] = useState<HostSession | ClientSession>(),
     [isHost, setIsHost] = useState(false);
+  useEffect(() => {
+    if (!(session instanceof HostSession)) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      // Older browsers need returnValue; the browser supplies the dialog text.
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
+  }, [session]);
   const leave = () => {
+    if (
+      session instanceof HostSession &&
+      !confirm(
+        "Close this room and leave? You are the host, so everyone will lose their connection to this game.",
+      )
+    )
+      return;
     if (session instanceof ClientSession) session.leave();
     else session?.destroy();
     setSession(undefined);

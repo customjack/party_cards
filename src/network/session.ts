@@ -1,3 +1,4 @@
+import { recordScores } from "../domain/scoreHistory";
 import { SettingsValidator } from "../domain/validation";
 import { roleChangeError } from "../domain/seating";
 import Peer, { type DataConnection } from "peerjs";
@@ -371,6 +372,8 @@ export class HostSession extends GameSession {
     )
       return false;
     game.scores[playerId] = score;
+    if (["scoreboard", "finished"].includes(this.state.phase))
+      recordScores(game, this.state.players);
     this.broadcast();
     return true;
   }
@@ -733,6 +736,7 @@ export class HostSession extends GameSession {
     this.setDeadline(this.currentRound().resultsTimeSeconds);
   }
   private advance() {
+    recordScores(this.state.game!, this.state.players);
     const game = this.state.game!,
       round = this.currentRound();
     if (isGameComplete(this.state.settings, game)) {
@@ -773,6 +777,9 @@ export class HostSession extends GameSession {
       previous.scores,
       previous.totalHandIndex + 1,
       previous.reactionTotals,
+      previous.scoreHistory,
+      previous,
+      previous.cycleIndex + (index === 0 ? 1 : 0),
     );
     this.state.game.roundIndex = index;
     this.state.phase = "answering";

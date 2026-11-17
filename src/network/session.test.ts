@@ -534,3 +534,81 @@ describe("stage reaction scoring and spectator permissions", () => {
     expect(host.snapshot.phase).toBe("answering");
   });
 });
+
+it("records final hand totals through stage transitions and includes result reactions", () => {
+  const host = startGame(false);
+  host.stopGame();
+  const settings = host.snapshot.settings;
+  settings.winCondition = { type: "all-stages" };
+  settings.rounds = [0, 1].map((index) => ({
+    ...structuredClone(settings.rounds[0]),
+    id: `history-${index}`,
+    hands: 1,
+    allowReactionsAfterReveal: true,
+    reactionPoints: { ...settings.rounds[0].reactionPoints, brilliant: 3 },
+  }));
+  host.updateSettings(settings, [starterPack.id]);
+  const watcher = connectPlayer("history-watcher", undefined, true);
+  host.start();
+  host.advancePhase();
+  host.advancePhase();
+  host.chooseWinner("host", "host");
+  watcher.command({
+    type: "REACT",
+    payload: { targetPlayerId: "host", reaction: "brilliant" },
+  });
+  host.advancePhase();
+  expect(host.snapshot.game!.scoreHistory[1].scores.host).toBe(5);
+  host.setPlayerScore("host", 6);
+  expect(host.snapshot.game!.scoreHistory[1].scores.host).toBe(6);
+  host.advancePhase();
+  expect(host.snapshot.game!.roundIndex).toBe(1);
+  host.advancePhase();
+  host.advancePhase();
+  host.chooseWinner("host", "host");
+  host.advancePhase();
+  expect(host.snapshot.phase).toBe("finished");
+  expect(
+    host.snapshot.game!.scoreHistory.map((point) => point.scores.host),
+  ).toEqual([0, 6, 8]);
+  expect(watcher.snapshot().game.scoreHistory).toEqual(
+    host.snapshot.game!.scoreHistory,
+  );
+  host.stopGame();
+  host.start();
+  expect(host.snapshot.game!.scoreHistory).toHaveLength(1);
+});
+
+it("retains hands when cycling into stage one and records the cycle on the scoreboard and graph", () => {
+  const host = startGame(false);
+  host.stopGame();
+  const settings = host.snapshot.settings;
+  settings.winCondition = { type: "round-count", target: 3 };
+  settings.rounds = [0, 1].map((index) => ({
+    ...structuredClone(settings.rounds[0]),
+    id: `cycle-stage-${index}`,
+    hands: 1,
+  }));
+  host.updateSettings(settings, [starterPack.id]);
+  host.start();
+  for (let stage = 0; stage < 2; stage++) {
+    const before = host.snapshot.game!;
+    const kept = before.hands.host
+      .slice(before.blackCard.pick)
+      .map((card) => card.id);
+    for (let phase = 0; phase < 5; phase++) host.advancePhase();
+    expect(host.snapshot.phase).toBe("answering");
+    expect(
+      kept.every((id) =>
+        host.snapshot.game!.hands.host.some((card) => card.id === id),
+      ),
+    ).toBe(true);
+  }
+  expect(host.snapshot.game!.roundIndex).toBe(0);
+  expect(host.snapshot.game!.cycleIndex).toBe(1);
+  for (let phase = 0; phase < 4; phase++) host.advancePhase();
+  expect(host.snapshot.phase).toBe("finished");
+  expect(
+    host.snapshot.game!.scoreHistory.map((point) => point.cycleIndex),
+  ).toEqual([0, 0, 0, 1]);
+});

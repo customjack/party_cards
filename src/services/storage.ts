@@ -137,6 +137,7 @@ export const normalizeSettings = (
           ...round,
           id: round.id || crypto.randomUUID(),
           allowBlankCards: round.allowBlankCards ?? true,
+          keepHandFromPreviousStage: round.keepHandFromPreviousStage ?? true,
           useAllPacks: round.useAllPacks ?? !round.packIds?.length,
           allowReactionsAfterReveal:
             round.allowReactionsAfterReveal ??

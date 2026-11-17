@@ -25,6 +25,8 @@ import {
 import { canReactDuringPhase } from "../domain/reactionRules";
 import { CardGameEngine } from "../domain/gameEngine";
 import { isTimerPaused, timerSeconds } from "../domain/timer";
+import { ScoreProgress } from "./ScoreProgress";
+import { ScoreHistoryChart } from "./ScoreHistoryChart";
 import { AdminControls } from "./AdminControls";
 import { Avatar } from "./Avatar";
 import { ReactionIcon } from "../resources/ReactionIcon";
@@ -71,6 +73,7 @@ export function GameView({
     seconds = useCountdown(snapshot),
     [discardMode, setDiscardMode] = useState(false),
     [selected, setSelected] = useState<string[]>([]),
+    [selectedWinnerId, setSelectedWinnerId] = useState<string | null>(null),
     [blankAnswers, setBlankAnswers] = useState<Record<string, string>>({}),
     [reactionMenuTarget, setReactionMenuTarget] = useState<string | null>(null);
   useEffect(() => {
@@ -79,6 +82,9 @@ export function GameView({
     setBlankAnswers({});
     setReactionMenuTarget(null);
   }, [game.totalHandIndex, me?.id]);
+  useEffect(() => {
+    setSelectedWinnerId(null);
+  }, [game.totalHandIndex, game.judgeId, me?.id, snapshot.phase]);
   const ranking = Object.entries(game.scores).sort(
     (left, right) => right[1] - left[1],
   );
@@ -111,11 +117,13 @@ export function GameView({
             ?.name ?? "Nobody"}{" "}
           wins
         </h1>
+        <ScoreProgress snapshot={snapshot} />
         <Leaderboard
           ranking={ranking}
           players={snapshot.players}
           reactionTotals={game.reactionTotals}
         />
+        <ScoreHistoryChart game={game} players={snapshot.players} />
         <div className="button-row">
           <button className="button secondary" onClick={onLeave}>
             Back home
@@ -150,6 +158,7 @@ export function GameView({
               : `HAND ${game.handIndex + 1} COMPLETE`}
           </span>
           <h1>Score update</h1>
+          <ScoreProgress snapshot={snapshot} />
           <Leaderboard
             ranking={ranking}
             players={snapshot.players}
@@ -389,6 +398,9 @@ export function GameView({
     isJudge = me?.id === game.judgeId,
     showAuthor = snapshot.phase === "results" || !round.anonymousSubmissions,
     myReactions = me ? (game.reactions[me.id] ?? []) : [];
+  const selectedWinner = submissions.find(
+    (submission) => submission.id === selectedWinnerId,
+  );
   const withinReactionLimit = (
     limit: typeof round.maxReactionsPerPlayer,
     count: number,
@@ -453,7 +465,7 @@ export function GameView({
               );
             return (
               <article
-                className={`submission-stack ${game.winnerId === submission.id ? "winner" : ""}`}
+                className={`submission-stack ${game.winnerId === submission.id ? "winner" : ""} ${snapshot.phase === "judging" && isJudge && selectedWinnerId === submission.id ? "winner-selected" : ""}`}
                 style={{
                   animationDelay:
                     snapshot.phase === "reveal" &&
@@ -466,13 +478,15 @@ export function GameView({
                 <button
                   className="submission-choice"
                   disabled={snapshot.phase !== "judging" || !isJudge}
+                  aria-pressed={
+                    snapshot.phase === "judging" && isJudge
+                      ? selectedWinnerId === submission.id
+                      : undefined
+                  }
                   onClick={() =>
-                    isHost
-                      ? (session as HostSession).chooseWinner(
-                          "host",
-                          submission.id,
-                        )
-                      : (session as ClientSession).chooseWinner(submission.id)
+                    setSelectedWinnerId((id) =>
+                      id === submission.id ? null : submission.id,
+                    )
                   }
                 >
                   {submission.cards.map(
@@ -496,7 +510,11 @@ export function GameView({
                     </b>
                   )}
                   {snapshot.phase === "judging" && isJudge && (
-                    <em>Choose winner</em>
+                    <em>
+                      {selectedWinnerId === submission.id
+                        ? "Selected · not locked in"
+                        : "Select this answer"}
+                    </em>
                   )}
                   {game.winnerId === submission.id && (
                     <strong>
@@ -572,6 +590,30 @@ export function GameView({
         </div>
         {snapshot.phase === "reveal" && (
           <p className="wait-message">Read the cards. Judging opens next.</p>
+        )}
+        {snapshot.phase === "judging" && isJudge && (
+          <div className="judge-confirmation">
+            <p role="status">
+              {selectedWinner
+                ? `Answer ${submissions.indexOf(selectedWinner) + 1} selected. Lock it in to award the win.`
+                : "Select an answer, then lock in your winner."}
+            </p>
+            <button
+              className="button primary"
+              disabled={!selectedWinner}
+              onClick={() => {
+                if (!selectedWinner) return;
+                isHost
+                  ? (session as HostSession).chooseWinner(
+                      "host",
+                      selectedWinner.id,
+                    )
+                  : (session as ClientSession).chooseWinner(selectedWinner.id);
+              }}
+            >
+              <Lock aria-hidden="true" /> Lock in winner
+            </button>
+          </div>
         )}
         {snapshot.phase === "judging" && !isJudge && (
           <p className="wait-message">The judge is choosing a winner.</p>
@@ -656,7 +698,7 @@ function Header({
             <X />
           </button>
         </div>
-        <p>Live scores · Play continues while this is open.</p>
+        <ScoreProgress snapshot={snapshot} />
         <Leaderboard
           ranking={Object.entries(snapshot.game!.scores).sort(
             (left, right) => right[1] - left[1],

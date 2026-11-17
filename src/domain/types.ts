@@ -71,6 +71,7 @@ export type RoundSettings = {
   name: string;
   hands: number;
   handSize: number;
+  keepHandFromPreviousStage: boolean;
   maxDiscardsPerTurn: number;
   maxDiscardsPerStage: number | "unlimited";
   winnerPoints: number;
@@ -118,7 +119,18 @@ export type Player = {
   waitingForNextHand?: boolean;
 };
 export type Submission = { playerId: string; cards: WhiteCard[] };
+export type ScoreHistoryPoint = {
+  turn: number;
+  cycleIndex: number;
+  roundIndex: number;
+  roundStartTurn: number;
+  scores: Record<string, number>;
+  names: Record<string, string>;
+};
 export type GameRuntime = {
+  scoreHistory: ScoreHistoryPoint[];
+  cycleIndex: number;
+  allowedWhiteCardIds: string[];
   roundIndex: number;
   handIndex: number;
   totalHandIndex: number;
