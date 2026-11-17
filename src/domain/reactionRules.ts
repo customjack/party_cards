@@ -6,7 +6,7 @@ export function canReactDuringPhase(
 ) {
   return (
     phase === "reveal" ||
-    (settings.allowReactionsAfterReveal === true &&
-      (phase === "judging" || phase === "results"))
+    phase === "judging" ||
+    (settings.allowReactionsAfterReveal === true && phase === "results")
   );
 }

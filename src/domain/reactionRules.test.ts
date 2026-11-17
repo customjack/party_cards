@@ -14,15 +14,15 @@ const phases: LobbySnapshot["phase"][] = [
 ];
 
 describe("reaction timing", () => {
-  it.each(phases)("only allows reveal by default (phase: %s)", (phase) => {
+  it.each(phases)("allows reveal and judging by default (phase: %s)", (phase) => {
     expect(defaultGameTemplate.allowReactionsAfterReveal).toBe(false);
     expect(canReactDuringPhase(phase, defaultGameTemplate)).toBe(
-      phase === "reveal",
+      phase === "reveal" || phase === "judging",
     );
   });
 
   it.each(phases)(
-    "optionally allows judging and results (phase: %s)",
+    "optionally also allows results (phase: %s)",
     (phase) => {
       expect(
         canReactDuringPhase(phase, { allowReactionsAfterReveal: true }),

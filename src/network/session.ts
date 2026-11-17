@@ -245,6 +245,10 @@ export class HostSession extends GameSession {
   }
   playAgain() {
     if (this.state.phase !== "finished") return;
+    this.stopGame();
+  }
+  stopGame() {
+    if (this.state.phase === "lobby") return;
     this.activateWaitingPlayers();
     this.state.game = undefined;
     this.state.phase = "lobby";

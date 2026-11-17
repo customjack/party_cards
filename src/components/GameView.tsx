@@ -4,6 +4,7 @@ import {
   Lock,
   Trash2,
   Trophy,
+  Square,
   SmilePlus,
   Unlock,
   Users,
@@ -82,6 +83,15 @@ export function GameView({
   const ranking = Object.entries(game.scores).sort(
     (left, right) => right[1] - left[1],
   );
+  const stopGame = () => {
+    if (
+      isHost &&
+      confirm(
+        "Stop this game and return everyone to the lobby? Current scores and hands will be cleared. Room settings and players will be kept.",
+      )
+    )
+      (session as HostSession).stopGame();
+  };
   const kickPlayer = (playerId: string) => {
     const player = snapshot.players.find((item) => item.id === playerId);
     if (
@@ -131,6 +141,7 @@ export function GameView({
           seconds={seconds}
           connectionState={connectionState}
           onKick={isHost ? kickPlayer : undefined}
+          onStop={isHost ? stopGame : undefined}
         />
         <section className="play-card scoreboard-card">
           <span className="eyebrow">
@@ -186,6 +197,7 @@ export function GameView({
           seconds={seconds}
           connectionState={connectionState}
           onKick={isHost ? kickPlayer : undefined}
+          onStop={isHost ? stopGame : undefined}
         />
         <PlayerProgress snapshot={snapshot} />
         <section className="table-stage">
@@ -394,6 +406,7 @@ export function GameView({
         seconds={seconds}
         connectionState={connectionState}
         onKick={isHost ? kickPlayer : undefined}
+        onStop={isHost ? stopGame : undefined}
       />
       <section className="table-stage">
         <BlackCardView
@@ -509,16 +522,34 @@ export function GameView({
                         className="reaction-menu"
                         aria-label="Choose a reaction"
                       >
-                        {REACTIONS.map((reaction) => (
-                          <button
-                            title={reaction.label}
-                            aria-label={reaction.label}
-                            key={reaction.id}
-                            onClick={() => react(submission.id, reaction.id)}
-                          >
-                            <ReactionIcon reaction={reaction.id} />
-                          </button>
-                        ))}
+                        {REACTIONS.map((reaction) => {
+                          const points =
+                            snapshot.settings.reactionPoints[reaction.id];
+                          const pointLabel = `${points > 0 ? "+" : ""}${points} ${Math.abs(points) === 1 ? "point" : "points"}`;
+                          const label = `${reaction.label}: ${pointLabel} for this player`;
+                          const scoringEnabled = Object.values(
+                            snapshot.settings.reactionPoints,
+                          ).some((value) => value !== 0);
+                          return (
+                            <button
+                              className={
+                                scoringEnabled ? "scored-reaction" : undefined
+                              }
+                              title={label}
+                              aria-label={label}
+                              key={reaction.id}
+                              onClick={() => react(submission.id, reaction.id)}
+                            >
+                              <ReactionIcon reaction={reaction.id} />
+                              {scoringEnabled && (
+                                <small className="reaction-points">
+                                  {points > 0 ? "+" : ""}
+                                  {points}
+                                </small>
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </>
@@ -555,11 +586,13 @@ function Header({
   seconds,
   connectionState,
   onKick,
+  onStop,
 }: {
   snapshot: LobbySnapshot;
   seconds: number | null;
   connectionState: ConnectionState;
   onKick?: (playerId: string) => void;
+  onStop?: () => void;
 }) {
   const scoreboard = useRef<HTMLDialogElement>(null);
   return (
@@ -584,6 +617,15 @@ function Header({
       >
         <Trophy aria-hidden="true" /> Scoreboard
       </button>
+      {onStop && (
+        <button
+          className="scoreboard-trigger stop-game-trigger"
+          type="button"
+          onClick={onStop}
+        >
+          <Square aria-hidden="true" /> Stop game
+        </button>
+      )}
       <dialog
         ref={scoreboard}
         className="scoreboard-dialog"

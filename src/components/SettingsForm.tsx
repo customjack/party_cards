@@ -219,8 +219,8 @@ export function SettingsForm({
         <details className="settings-subsection">
           <summary>Reaction scoring</summary>
           <Toggle
-            label="Allow reactions after reveal"
-            hint="Off: react only during reveal. On: also react during judging and results."
+            label="Allow reactions after the winner is revealed"
+            hint="Reactions stay open while cards are revealed and the judge chooses. Turn on to also allow reactions during results."
             checked={settings.allowReactionsAfterReveal}
             onChange={(value) => set("allowReactionsAfterReveal", value)}
           />

@@ -109,3 +109,44 @@ describe("host scoring with a 15-point target and 2 points per win", () => {
     expect(host.snapshot.game!.scores.host).toBe(2);
   });
 });
+
+describe("stopping a game", () => {
+  it.each(["answering", "reveal", "judging", "results"])(
+    "returns to the lobby from %s and allows a fresh game",
+    (phase) => {
+      const host = startGame(false);
+      if (phase !== "answering") {
+        const game = host.snapshot.game!;
+        host.submitCards(
+          "host",
+          game.hands.host.slice(0, game.blackCard.pick).map((card) => card.id),
+        );
+      }
+      if (phase === "judging" || phase === "results")
+        vi.advanceTimersByTime(1000);
+      if (phase === "results") host.chooseWinner("host", "host");
+      expect(host.snapshot.phase).toBe(phase);
+      const before = host.snapshot;
+      const listener = vi.fn();
+      host.onSnapshot(listener);
+      host.stopGame();
+      expect(listener).toHaveBeenCalledWith(
+        expect.objectContaining({
+          phase: "lobby",
+          game: undefined,
+          phaseEndsAt: undefined,
+        }),
+      );
+      expect(host.snapshot.players).toEqual(before.players);
+      expect(host.snapshot.settings).toEqual(before.settings);
+      expect(host.snapshot.roomCode).toBe(before.roomCode);
+      expect(host.snapshot.selectedPackIds).toEqual(before.selectedPackIds);
+      vi.advanceTimersByTime(120_000);
+      expect(host.snapshot.phase).toBe("lobby");
+      host.start();
+      expect(host.snapshot.phase).toBe("answering");
+      expect(host.snapshot.game!.scores.host).toBe(0);
+      expect(host.snapshot.game!.totalHandIndex).toBe(0);
+    },
+  );
+});
