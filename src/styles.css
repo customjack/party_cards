@@ -2262,8 +2262,10 @@ section.panel > select {
     transform 0.15s,
     background 0.15s;
 }
+@media (hover: hover) and (pointer: fine) {
 .card-hand .white-card:has(.card-select-hit:not(:disabled)):hover {
   transform: translateY(-8px) rotate(-1deg);
+}
 }
 .white-card.selected {
   color: white;
@@ -2325,10 +2327,12 @@ section.panel > select {
 .submission-choice:has(.submission-select-hit:not(:disabled)) {
   cursor: pointer;
 }
+@media (hover: hover) and (pointer: fine) {
 .submission-choice:has(.submission-select-hit:not(:disabled)):hover
   .white-card {
   outline: 5px solid var(--yellow);
   transform: translateY(-5px);
+}
 }
 .submission-choice > b,
 .submission-choice > em,
@@ -3119,7 +3123,7 @@ section.panel > select {
 .black-card:has(.card-image),
 .prompt-editor-card > div:has(.card-image) {
   position: relative;
-  padding-bottom: 52px;
+  padding-bottom: 60px;
 }
 .card-image img {
   display: block;
@@ -3142,8 +3146,9 @@ section.panel > select {
   pointer-events: auto;
   display: grid;
   place-items: center;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
   padding: 6px;
   border: 1px solid var(--ink);
   border-radius: 7px;
@@ -3270,7 +3275,7 @@ section.panel > select {
   }
 }
 .card-hand .white-card:has(.card-image) {
-  padding-bottom: 52px;
+  padding-bottom: 60px;
 }
 
 .card-preview-button {
@@ -3341,7 +3346,7 @@ section.panel > select {
   font-size: 20px;
 }
 .submission-grid .white-card:has(.card-image) {
-  padding-bottom: 52px;
+  padding-bottom: 60px;
 }
 @media (max-width: 560px) {
   .submission-grid.density-compact {
@@ -3359,6 +3364,12 @@ section.panel > select {
     padding: 8px;
   }
   .submission-grid.density-compact .white-card:has(.card-image) {
-    padding-bottom: 52px;
+    padding-bottom: 60px;
   }
+}
+
+/* Keep zoom above answer selection even when cards animate or transform. */
+.submission-choice .white-card {
+  z-index: 2;
+  pointer-events: none;
 }
