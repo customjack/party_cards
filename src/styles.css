@@ -3338,8 +3338,10 @@ section.panel > select {
   font-size: 13px;
   overflow-wrap: anywhere;
 }
-.submission-grid.density-compact .card-image img {
-  max-height: 100px;
+.submission-grid .card-image img {
+  width: 100%;
+  height: auto;
+  max-height: none;
 }
 .submission-grid.density-large .white-card {
   min-height: 230px;
@@ -3382,20 +3384,7 @@ section.panel > select {
   position: static;
   margin-bottom: 8px;
 }
-/* Bound thumbnails independently of the source image's aspect ratio. */
-.submission-grid .card-image img {
-  height: 90px;
-  max-height: 90px;
-  object-fit: contain;
-}
-.submission-grid.density-compact .card-image img {
-  height: 60px;
-  max-height: 60px;
-}
-.submission-grid.density-large .card-image img {
-  height: 120px;
-  max-height: 120px;
-}
-.submission-grid .image-placeholder {
-  min-height: 60px;
+.submission-grid .submission-stack .white-card:has(.card-image) {
+  padding-left: 6px;
+  padding-right: 6px;
 }
