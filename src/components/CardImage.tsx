@@ -9,10 +9,12 @@ export function CardImage({
   imageId,
   data,
   alt,
+  expandable = true,
 }: {
   imageId?: string;
   data?: string;
   alt: string;
+  expandable?: boolean;
 }) {
   const source = useContext(CardImageSource);
   const wrapper = useRef<HTMLSpanElement>(null);
@@ -84,7 +86,7 @@ export function CardImage({
         >
           Retry image
         </button>
-      ) : (
+      ) : expandable ? (
         <button
           type="button"
           className="image-zoom"
@@ -97,7 +99,7 @@ export function CardImage({
         >
           <Expand size={16} aria-hidden="true" />
         </button>
-      )}
+      ) : null}
       {createPortal(
         <dialog
           ref={dialog}

@@ -21,6 +21,7 @@ import {
 } from "../services/storage";
 import { compressImage } from "../services/images";
 import { CardImage } from "./CardImage";
+import { CardPreview } from "./CardPreview";
 import { ImageUpload } from "./ImageUpload";
 import { SettingsForm } from "./SettingsForm";
 import { cardsToPick } from "../domain/cardRules";
@@ -231,13 +232,14 @@ function PackEditor({
             </div>
           ))}
         </aside>
-        <fieldset disabled={locked} className="panel pack-form">
+        <div className="panel pack-form">
           {locked && (
             <div className="validation warning">
               <b>Built-in pack.</b> Export it or use + to create an editable
               pack.
             </div>
           )}
+          <fieldset disabled={locked} className="pack-metadata">
           <div className="settings-grid">
             <label className="field">
               <span>Pack name</span>
@@ -267,7 +269,9 @@ function PackEditor({
               }
             />
           </label>
+          </fieldset>
           <CardList
+            readOnly={locked}
             title="Black prompt cards"
             cards={draft.blackCards}
             kind="black"
@@ -276,6 +280,7 @@ function PackEditor({
             onChange={(cards) => update({ blackCards: cards as BlackCard[] })}
           />
           <CardList
+            readOnly={locked}
             title="White response cards"
             cards={draft.whiteCards}
             kind="white"
@@ -283,13 +288,14 @@ function PackEditor({
             onImage={(id, file) => uploadImage("white", id, file)}
             onChange={(cards) => update({ whiteCards: cards as WhiteCard[] })}
           />
-        </fieldset>
+        </div>
       </div>
     </>
   );
 }
 
 function CardList({
+  readOnly = false,
   title,
   cards,
   kind,
@@ -297,6 +303,7 @@ function CardList({
   onImage,
   onChange,
 }: {
+  readOnly?: boolean;
   images: Record<string, string>;
   onImage: (id: string, file: File) => Promise<void>;
   title: string;
@@ -326,6 +333,7 @@ function CardList({
               type="button"
               className="button secondary compact"
               onClick={addBlank}
+              disabled={readOnly}
             >
               <Plus /> Add blank card
             </button>
@@ -334,6 +342,7 @@ function CardList({
             type="button"
             className="button primary compact"
             onClick={add}
+            disabled={readOnly}
           >
             <Plus /> Add card
           </button>
@@ -346,7 +355,7 @@ function CardList({
             key={card.id}
             ref={(element) => {
               if (element && !element.dataset.initialized) {
-                element.open = !card.text;
+                element.open = false;
                 element.dataset.initialized = "true";
               }
             }}
@@ -362,6 +371,7 @@ function CardList({
               <button
                 type="button"
                 aria-label={`Delete card ${index + 1}`}
+                disabled={readOnly}
                 onClick={(event) => {
                   event.preventDefault();
                   onChange(cards.filter((_, itemIndex) => itemIndex !== index));
@@ -371,6 +381,8 @@ function CardList({
               </button>
             </summary>
             <div>
+              <CardPreview card={card} kind={kind} images={images} />
+              <fieldset disabled={readOnly} className="card-edit-fields">
               {(card as WhiteCard).blank ? (
                 <div className="blank-card-note">
                   The player who draws this card can type any response before
@@ -416,6 +428,7 @@ function CardList({
                 <>
                   {card.imageId && (
                     <CardImage
+                      expandable={false}
                       data={images[card.imageId]}
                       alt={card.imageAlt || card.text || "Card image"}
                     />
@@ -499,6 +512,7 @@ function CardList({
                   {cardsToPick(card.text) === 1 ? "" : "s"} will be played
                 </small>
               )}
+              </fieldset>
             </div>
           </details>
         ))}

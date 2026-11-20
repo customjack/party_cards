@@ -3272,3 +3272,44 @@ section.panel > select {
 .card-hand .white-card:has(.card-image) {
   padding-bottom: 52px;
 }
+
+.card-preview-button {
+  margin-bottom: 16px;
+}
+.card-preview-dialog {
+  width: min(600px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 24px;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.card-preview-dialog::backdrop {
+  background: #17162acc;
+}
+.card-preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.card-preview-heading h2 {
+  margin: 0;
+}
+.card-preview-dialog .black-card {
+  margin-bottom: 12px;
+}
+.card-preview-dialog > .white-card {
+  width: min(260px, 100%);
+  margin: 0 auto 12px;
+}
+
+.pack-metadata,
+.card-edit-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
