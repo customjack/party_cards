@@ -489,7 +489,18 @@ export function GameView({
               ? `${judge?.name ?? "The judge"} IS CHOOSING`
               : "WINNER"}
         </span>
-        <div className="submission-grid">
+        <label className="hand-density">
+                <span>Card size</span>
+                <select
+                  value={handDensity}
+                  onChange={(event) => changeDensity(event.target.value)}
+                >
+                  <option value="compact">Compact</option>
+                  <option value="standard">Standard</option>
+                  <option value="large">Large</option>
+                </select>
+              </label>
+        <div className={`submission-grid density-${handDensity}`}>
           {submissions.map((submission, index) => {
             const reactionCounts = REACTIONS.map((reaction) => ({
               ...reaction,

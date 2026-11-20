@@ -3313,3 +3313,52 @@ section.panel > select {
   padding: 0;
   min-width: 0;
 }
+
+.submission-grid.density-compact {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+.submission-grid.density-standard {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.submission-grid.density-large {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.submission-grid.density-compact .submission-choice {
+  padding: 5px 5px 0;
+}
+.submission-grid.density-compact .white-card {
+  min-height: 120px;
+  padding: 10px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.submission-grid.density-compact .card-image img {
+  max-height: 100px;
+}
+.submission-grid.density-large .white-card {
+  min-height: 230px;
+  font-size: 20px;
+}
+.submission-grid .white-card:has(.card-image) {
+  padding-bottom: 52px;
+}
+@media (max-width: 560px) {
+  .submission-grid.density-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .submission-grid.density-standard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .submission-grid.density-large {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .submission-grid.density-compact .white-card {
+    font-size: 12px;
+    padding: 8px;
+  }
+  .submission-grid.density-compact .white-card:has(.card-image) {
+    padding-bottom: 52px;
+  }
+}
