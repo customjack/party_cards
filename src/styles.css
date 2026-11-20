@@ -3373,3 +3373,29 @@ section.panel > select {
   z-index: 2;
   pointer-events: none;
 }
+
+/* Keep number badges in normal flow so density padding cannot overlap them. */
+.submission-grid .submission-stack .ordered-played-card {
+  padding-top: 10px;
+}
+.submission-grid .played-order {
+  position: static;
+  margin-bottom: 8px;
+}
+/* Bound thumbnails independently of the source image's aspect ratio. */
+.submission-grid .card-image img {
+  height: 90px;
+  max-height: 90px;
+  object-fit: contain;
+}
+.submission-grid.density-compact .card-image img {
+  height: 60px;
+  max-height: 60px;
+}
+.submission-grid.density-large .card-image img {
+  height: 120px;
+  max-height: 120px;
+}
+.submission-grid .image-placeholder {
+  min-height: 60px;
+}
