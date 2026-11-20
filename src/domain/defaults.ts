@@ -10,7 +10,9 @@ const prepareBuiltInPack = (resource: unknown): CardPack => {
     ...pack,
     blackCards: (pack.blackCards ?? []).map((card) => ({
       ...card,
-      pick: cardsToPick(card.text),
+      pick: card.imageId
+        ? Math.max(1, Math.min(10, Number(card.pick) || 1))
+        : cardsToPick(card.text),
     })),
     whiteCards: pack.whiteCards ?? [],
   };

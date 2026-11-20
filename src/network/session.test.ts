@@ -612,3 +612,43 @@ it("retains hands when cycling into stage one and records the cycle on the score
     host.snapshot.game!.scoreHistory.map((point) => point.cycleIndex),
   ).toEqual([0, 0, 0, 1]);
 });
+
+it("serves visible images on demand without placing their bytes or hidden decks in snapshots", () => {
+  const host = startGame(false);
+  host.destroy();
+  const png =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=";
+  const pack = {
+    ...structuredClone(starterPack),
+    id: "image-pack",
+    images: { prompt: png, answer: png },
+    blackCards: [{ id: "black", text: "", imageId: "prompt", pick: 1 }],
+    whiteCards: [{ id: "white", text: "", imageId: "answer" }],
+  };
+  session = new HostSession(
+    { name: "Host", avatar: "✦", avatarColor: "#ffc83d", spectator: false },
+    defaultGameTemplate,
+    [pack],
+  );
+  const viewer = connectPlayer("image-viewer", undefined, true);
+  session.start();
+  expect(viewer.snapshot().game.blackCard.imageId).toBe("image-pack:prompt");
+  expect(viewer.snapshot().game.whiteDeck).toEqual([]);
+  expect(JSON.stringify(viewer.snapshot())).not.toContain("data:image/");
+  viewer.command({
+    type: "REQUEST_IMAGE",
+    payload: { imageId: "image-pack:prompt" },
+  });
+  expect(viewer.connection.send).toHaveBeenLastCalledWith({
+    type: "IMAGE",
+    payload: { imageId: "image-pack:prompt", data: png },
+  });
+  viewer.command({
+    type: "REQUEST_IMAGE",
+    payload: { imageId: "image-pack:answer" },
+  });
+  expect(viewer.connection.send).toHaveBeenLastCalledWith({
+    type: "IMAGE",
+    payload: { imageId: "image-pack:answer", data: null },
+  });
+});

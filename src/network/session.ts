@@ -1,3 +1,4 @@
+import { cachedImage, cacheImage, validImageData } from "../services/images";
 import { recordScores } from "../domain/scoreHistory";
 import { SettingsValidator } from "../domain/validation";
 import { roleChangeError } from "../domain/seating";
@@ -72,6 +73,9 @@ export abstract class GameSession {
   get localPlayerId(): string | undefined {
     return this instanceof HostSession ? "host" : this.peer?.id;
   }
+  async getImage(_imageId: string): Promise<string | undefined> {
+    return undefined;
+  }
   destroy() {
     this.peer?.destroy();
   }
@@ -85,6 +89,7 @@ export class HostSession extends GameSession {
   private dropTimers = new Map<string, number>();
   private state: LobbySnapshot;
   private packs: CardPack[];
+  private images = new Map<string, string>();
   private clock: number;
   private signalingRetry?: number;
   private readonly peerId: string;
@@ -112,9 +117,15 @@ export class HostSession extends GameSession {
       ],
     };
     this.packs = structuredClone(packs);
+    for (const pack of packs)
+      for (const [id, data] of Object.entries(pack.images ?? {}))
+        this.images.set(`${pack.id}:${id}`, data);
     this.peerId = `${PREFIX}${code}`;
     this.createPeer();
     this.clock = window.setInterval(() => this.tick(), 500);
+  }
+  override async getImage(imageId: string) {
+    return this.images.get(imageId);
   }
   get snapshot() {
     return this.viewFor("host");
@@ -621,6 +632,34 @@ export class HostSession extends GameSession {
       this.broadcast();
       return;
     }
+    if (command.type === "REQUEST_IMAGE") {
+      const game = this.state.game;
+      const imageId = command.payload.imageId;
+      if (
+        typeof imageId !== "string" ||
+        !this.state.players.some(
+          (player) => player.id === id && player.connected,
+        )
+      )
+        return;
+      const visible = game
+        ? [
+            game.blackCard,
+            ...(game.hands[id] ?? []),
+            ...(this.state.phase === "answering"
+              ? (game.submissions[id] ?? [])
+              : Object.values(game.submissions).flat()),
+          ]
+        : [];
+      const data = visible.some((card) => card.imageId === imageId)
+        ? this.images.get(imageId)
+        : undefined;
+      connection.send({
+        type: "IMAGE",
+        payload: { imageId, data: data ?? null },
+      } satisfies HostEvent);
+      return;
+    }
     if (command.type === "REQUEST_SNAPSHOT") {
       connection.send({
         type: "SNAPSHOT",
@@ -860,6 +899,12 @@ export class HostSession extends GameSession {
     const snapshot = structuredClone(this.state);
     snapshot.serverTime = Date.now();
     if (snapshot.game) {
+      // Only the host's engine needs deck/discard contents; clients request visible images.
+      snapshot.game.whiteDeck = [];
+      snapshot.game.blackDeck = [];
+      snapshot.game.whiteDiscard = [];
+      snapshot.game.blackDiscard = [];
+      snapshot.game.allowedWhiteCardIds = [];
       snapshot.game.hands = Object.fromEntries(
         Object.entries(snapshot.game.hands).map(([id, cards]) => [
           id,
@@ -893,6 +938,34 @@ export class HostSession extends GameSession {
 }
 
 export class ClientSession extends GameSession {
+  private imageLoads = new Map<string, Promise<string | undefined>>();
+  private pendingImages = new Map<
+    string,
+    {
+      resolve: (data: string) => void;
+      reject: (error: Error) => void;
+      timer: ReturnType<typeof setTimeout>;
+    }
+  >();
+  override getImage(imageId: string): Promise<string | undefined> {
+    const existing = this.imageLoads.get(imageId);
+    if (existing) return existing;
+    const load = (async () => {
+      const cached = await cachedImage(imageId);
+      if (cached) return cached;
+      return new Promise<string>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          this.pendingImages.delete(imageId);
+          reject(new Error("Image download timed out. Try again."));
+        }, 20_000);
+        this.pendingImages.set(imageId, { resolve, reject, timer });
+        this.send({ type: "REQUEST_IMAGE", payload: { imageId } });
+      });
+    })();
+    this.imageLoads.set(imageId, load);
+    void load.catch(() => this.imageLoads.delete(imageId));
+    return load;
+  }
   private connection?: DataConnection;
   private readonly roomPeerId: string;
   private readonly profile: ProfilePayload;
@@ -977,7 +1050,16 @@ export class ClientSession extends GameSession {
     });
     connection.on("data", (data) => {
       const event = data as HostEvent;
-      if (event.type === "SNAPSHOT") this.emit(event.payload);
+      if (event.type === "IMAGE") {
+        const pending = this.pendingImages.get(event.payload.imageId);
+        if (!pending) return;
+        clearTimeout(pending.timer);
+        this.pendingImages.delete(event.payload.imageId);
+        if (validImageData(event.payload.data)) {
+          pending.resolve(event.payload.data);
+          void cacheImage(event.payload.imageId, event.payload.data);
+        } else pending.reject(new Error("Image unavailable. Try again."));
+      } else if (event.type === "SNAPSHOT") this.emit(event.payload);
       else if (event.type === "ASSIGNED_PLAYER")
         this.playerId = event.payload.playerId;
       else if (event.type === "KICKED") {
@@ -1017,6 +1099,12 @@ export class ClientSession extends GameSession {
     if (this.connection?.open) this.connection.send(command);
   }
   override destroy() {
+    for (const pending of this.pendingImages.values()) {
+      clearTimeout(pending.timer);
+      pending.reject(new Error("Room closed."));
+    }
+    this.pendingImages.clear();
+    this.imageLoads.clear();
     if (this.retry) clearTimeout(this.retry);
     super.destroy();
   }

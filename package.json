@@ -23,6 +23,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "concurrently": "latest",
+    "fake-indexeddb": "^6.2.8",
     "peer": "latest",
     "typescript": "latest",
     "vite": "latest",

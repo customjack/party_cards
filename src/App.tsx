@@ -12,7 +12,26 @@ export default function App() {
     settings = useMemo(() => new SettingsRepository(), []),
     [screen, setScreen] = useState<Screen>("home"),
     [session, setSession] = useState<HostSession | ClientSession>(),
-    [isHost, setIsHost] = useState(false);
+    [isHost, setIsHost] = useState(false),
+    [packsReady, setPacksReady] = useState(false),
+    [storageError, setStorageError] = useState("");
+  useEffect(() => {
+    let active = true;
+    packs
+      .load()
+      .then(() => {
+        if (active) setPacksReady(true);
+      })
+      .catch(() => {
+        if (active)
+          setStorageError(
+            "Card storage could not be opened. Allow browser storage for this site, then reload.",
+          );
+      });
+    return () => {
+      active = false;
+    };
+  }, [packs]);
   useEffect(() => {
     if (!(session instanceof HostSession)) return;
     const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
@@ -63,6 +82,20 @@ export default function App() {
     setIsHost(false);
     setScreen("lobby");
   };
+  if (!packsReady)
+    return (
+      <main className="center-page">
+        <p>{storageError || "Loading card packs…"}</p>
+        {storageError && (
+          <button
+            className="button secondary"
+            onClick={() => location.reload()}
+          >
+            Reload
+          </button>
+        )}
+      </main>
+    );
   if (screen === "editor")
     return (
       <Editor

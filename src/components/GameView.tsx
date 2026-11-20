@@ -1,3 +1,5 @@
+import { CardImage } from "./CardImage";
+import { AvatarGlyph } from "./AvatarGlyph";
 import {
   Check,
   Crown,
@@ -66,6 +68,27 @@ export function GameView({
   connectionState: ConnectionState;
   onLeave: () => void;
 }) {
+  const [handDensity, setHandDensity] = useState(() => {
+    const defaultDensity = window.matchMedia("(max-width: 560px)").matches
+      ? "compact"
+      : "standard";
+    try {
+      const saved = localStorage.getItem("party-cards-hand-density");
+      return ["compact", "standard", "large"].includes(saved ?? "")
+        ? saved!
+        : defaultDensity;
+    } catch {
+      return defaultDensity;
+    }
+  });
+  const changeDensity = (value: string) => {
+    setHandDensity(value);
+    try {
+      localStorage.setItem("party-cards-hand-density", value);
+    } catch {
+      /* Keep the in-session preference. */
+    }
+  };
   const game = snapshot.game!,
     round = snapshot.settings.rounds[game.roundIndex],
     me = snapshot.players.find((player) => player.id === session.localPlayerId),
@@ -110,7 +133,11 @@ export function GameView({
   if (snapshot.phase === "finished")
     return (
       <main className="center-page finish-page">
-        <div className="winner-burst">♣ ♦ ♠ ♥</div>
+        <div className="winner-burst">
+          {["♣", "♦", "♠", "♥"].map((name) => (
+            <AvatarGlyph key={name} name={name} />
+          ))}
+        </div>
         <span className="eyebrow">FINAL SCORES</span>
         <h1>
           {snapshot.players.find((player) => player.id === ranking[0]?.[0])
@@ -212,6 +239,8 @@ export function GameView({
         <PlayerProgress snapshot={snapshot} />
         <section className="table-stage">
           <BlackCardView
+            imageId={game.blackCard.imageId}
+            imageAlt={game.blackCard.imageAlt}
             text={game.blackCard.text}
             pick={game.blackCard.pick}
             judge={judge?.name}
@@ -270,7 +299,20 @@ export function GameView({
                 {game.blackCard.pick} card{game.blackCard.pick === 1 ? "" : "s"}
                 .
               </p>
-              <div className={`card-hand ${locked ? "locked" : ""}`}>
+              <label className="hand-density">
+                <span>Card size</span>
+                <select
+                  value={handDensity}
+                  onChange={(event) => changeDensity(event.target.value)}
+                >
+                  <option value="compact">Compact</option>
+                  <option value="standard">Standard</option>
+                  <option value="large">Large</option>
+                </select>
+              </label>
+              <div
+                className={`card-hand density-${handDensity} ${locked ? "locked" : ""}`}
+              >
                 {hand.map((card) =>
                   (() => {
                     const submitted = (game.submissions[me!.id] ?? []).map(
@@ -322,17 +364,27 @@ export function GameView({
                       );
                     }
                     return (
-                      <button
+                      <div
                         className={`white-card ${order >= 0 ? "selected" : ""}`}
-                        disabled={locked || (!eligible && !discardMode)}
                         key={card.id}
-                        onClick={() => toggleCard(card.id)}
                       >
+                        <button
+                          type="button"
+                          className="card-select-hit"
+                          aria-label={`${discardMode ? "Discard" : "Select"} ${card.text || card.imageAlt || "image card"}`}
+                          aria-pressed={order >= 0}
+                          disabled={locked || (!eligible && !discardMode)}
+                          onClick={() => toggleCard(card.id)}
+                        />
+                        <CardImage
+                          imageId={card.imageId}
+                          alt={card.imageAlt || card.text || "Response image"}
+                        />
                         {order >= 0 && game.blackCard.pick > 1 && (
                           <span className="selection-order">{order + 1}</span>
                         )}
                         {card.text}
-                      </button>
+                      </div>
                     );
                   })(),
                 )}
@@ -424,6 +476,8 @@ export function GameView({
       />
       <section className="table-stage">
         <BlackCardView
+          imageId={game.blackCard.imageId}
+          imageAlt={game.blackCard.imageAlt}
           text={game.blackCard.text}
           pick={game.blackCard.pick}
           judge={judge?.name}
@@ -475,20 +529,23 @@ export function GameView({
                 }}
                 key={submission.id}
               >
-                <button
-                  className="submission-choice"
-                  disabled={snapshot.phase !== "judging" || !isJudge}
-                  aria-pressed={
-                    snapshot.phase === "judging" && isJudge
-                      ? selectedWinnerId === submission.id
-                      : undefined
-                  }
-                  onClick={() =>
-                    setSelectedWinnerId((id) =>
-                      id === submission.id ? null : submission.id,
-                    )
-                  }
-                >
+                <div className="submission-choice">
+                  <button
+                    type="button"
+                    className="submission-select-hit"
+                    aria-label={`Select answer ${index + 1}`}
+                    disabled={snapshot.phase !== "judging" || !isJudge}
+                    aria-pressed={
+                      snapshot.phase === "judging" && isJudge
+                        ? selectedWinnerId === submission.id
+                        : undefined
+                    }
+                    onClick={() =>
+                      setSelectedWinnerId((id) =>
+                        id === submission.id ? null : submission.id,
+                      )
+                    }
+                  />
                   {submission.cards.map(
                     (card: WhiteCard, cardIndex: number) => (
                       <span
@@ -498,6 +555,10 @@ export function GameView({
                         {submission.cards.length > 1 && (
                           <span className="played-order">{cardIndex + 1}</span>
                         )}
+                        <CardImage
+                          imageId={card.imageId}
+                          alt={card.imageAlt || card.text || "Response image"}
+                        />
                         {card.text}
                       </span>
                     ),
@@ -522,7 +583,7 @@ export function GameView({
                       {round.winnerPoints === 1 ? "" : "s"}
                     </strong>
                   )}
-                </button>
+                </div>
                 {canReact && (
                   <>
                     <button
@@ -711,10 +772,14 @@ function Header({
   );
 }
 function BlackCardView({
+  imageId,
+  imageAlt,
   text,
   pick,
   judge,
 }: {
+  imageId?: string;
+  imageAlt?: string;
   text: string;
   pick: number;
   judge?: string;
@@ -722,7 +787,8 @@ function BlackCardView({
   return (
     <article className="black-card">
       <small>PARTY CARDS · PICK {pick}</small>
-      <h1>{renderPrompt(text)}</h1>
+      <CardImage imageId={imageId} alt={imageAlt || text || "Prompt image"} />
+      {text && <h1>{renderPrompt(text)}</h1>}
       <footer>
         <Crown /> {judge ?? "Judge"}
       </footer>

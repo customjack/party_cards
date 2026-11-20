@@ -1,3 +1,5 @@
+import { databaseRead, databaseWrite, databaseDelete } from "./database";
+import { validImageData } from "./images";
 import {
   builtInPacks,
   defaultGameTemplate,
@@ -36,7 +38,18 @@ const normalizeBlack = (value: Partial<BlackCard>): BlackCard => {
   return {
     id: text(value.id, 100) || crypto.randomUUID(),
     text: prompt,
-    pick: cardsToPick(prompt),
+    pick: value.imageId
+      ? Math.max(
+          1,
+          Math.min(10, Math.floor(Number(value.pick)) || cardsToPick(prompt)),
+        )
+      : cardsToPick(prompt),
+    ...(value.imageId
+      ? {
+          imageId: text(value.imageId, 200),
+          imageAlt: text(value.imageAlt, 300),
+        }
+      : {}),
   };
 };
 const normalizeWhite = (value: Partial<WhiteCard> | string): WhiteCard => ({
@@ -46,11 +59,44 @@ const normalizeWhite = (value: Partial<WhiteCard> | string): WhiteCard => ({
       : text(value.id, 100) || crypto.randomUUID(),
   text: text(typeof value === "string" ? value : value.text, 180),
   blank: typeof value === "string" ? false : Boolean(value.blank),
+  ...(typeof value !== "string" && value.imageId && !value.blank
+    ? { imageId: text(value.imageId, 200), imageAlt: text(value.imageAlt, 300) }
+    : {}),
 });
 export const normalizePack = (value: Partial<CardPack>): CardPack => {
   const builtIn = value.id ? getBuiltInPack(value.id) : undefined;
   if (builtIn) return builtIn;
   const now = new Date().toISOString();
+  const images: Record<string, string> = {};
+  const canonical = new Map<string, string>();
+  const normalizeImage = <T extends BlackCard | WhiteCard>(card: T): T => {
+    if (!card.imageId) return card;
+    const data = value.images?.[card.imageId];
+    if (!validImageData(data))
+      throw new Error(
+        `Missing or unsupported image for card: ${card.text || card.id}`,
+      );
+    const id = canonical.get(data) ?? card.imageId;
+    canonical.set(data, id);
+    Object.defineProperty(images, id, {
+      value: data,
+      enumerable: true,
+      configurable: true,
+    });
+    return { ...card, imageId: id };
+  };
+  const blackCards = Array.isArray(value.blackCards)
+    ? value.blackCards
+        .map(normalizeBlack)
+        .map(normalizeImage)
+        .filter((card) => card.text || card.imageId)
+    : [];
+  const whiteCards = Array.isArray(value.whiteCards)
+    ? value.whiteCards
+        .map(normalizeWhite)
+        .map(normalizeImage)
+        .filter((card) => card.blank || card.text || card.imageId)
+    : [];
   return {
     schemaVersion: 1,
     id: text(value.id, 100) || crypto.randomUUID(),
@@ -63,14 +109,9 @@ export const normalizePack = (value: Partial<CardPack>): CardPack => {
           .filter(Boolean)
           .slice(0, 12)
       : [],
-    blackCards: Array.isArray(value.blackCards)
-      ? value.blackCards.map(normalizeBlack).filter((card) => card.text)
-      : [],
-    whiteCards: Array.isArray(value.whiteCards)
-      ? value.whiteCards
-          .map(normalizeWhite)
-          .filter((card) => card.blank || card.text)
-      : [],
+    blackCards,
+    whiteCards,
+    ...(Object.keys(images).length ? { images } : {}),
     createdAt: value.createdAt || now,
     updatedAt: now,
   };
@@ -169,36 +210,57 @@ export const normalizeSettings = (
   };
 };
 export class PackRepository {
+  private packs: CardPack[] = [];
+  private loading?: Promise<void>;
+  load() {
+    return (this.loading ??= this.initialize().catch((error) => {
+      this.loading = undefined;
+      throw error;
+    }));
+  }
+  private async initialize() {
+    const stored = await databaseRead<CardPack[]>("packs");
+    const legacy = read<CardPack>(PACK_KEY).filter(
+      (pack) => !isBuiltInPack(pack.id),
+    );
+    for (const pack of legacy) {
+      if (!stored.some((item) => item.id === pack.id)) {
+        const normalized = normalizePack(pack);
+        await databaseWrite("packs", normalized);
+        stored.push(normalized);
+      }
+    }
+    // Remove the old copy only after every migration write has committed.
+    if (legacy.length) localStorage.removeItem(PACK_KEY);
+    this.packs = stored
+      .filter((pack) => !isBuiltInPack(pack.id))
+      .map(normalizePack);
+  }
   all() {
-    return [
-      ...structuredClone(builtInPacks),
-      ...read<CardPack>(PACK_KEY)
-        .filter((pack) => !isBuiltInPack(pack.id))
-        .map(normalizePack),
+    return [...structuredClone(builtInPacks), ...structuredClone(this.packs)];
+  }
+  async save(pack: CardPack) {
+    if (isBuiltInPack(pack.id)) return;
+    await this.load();
+    const normalized = normalizePack(pack);
+    await databaseWrite("packs", normalized);
+    this.packs = [
+      ...this.packs.filter((item) => item.id !== pack.id),
+      normalized,
     ];
   }
-  save(pack: CardPack) {
-    if (isBuiltInPack(pack.id)) return;
-    const packs = read<CardPack>(PACK_KEY),
-      normalized = normalizePack(pack),
-      index = packs.findIndex((item) => item.id === pack.id);
-    if (index >= 0) packs[index] = normalized;
-    else packs.push(normalized);
-    write(PACK_KEY, packs);
+  async remove(id: string) {
+    if (isBuiltInPack(id)) return;
+    await this.load();
+    await databaseDelete("packs", id);
+    this.packs = this.packs.filter((pack) => pack.id !== id);
   }
-  remove(id: string) {
-    if (!isBuiltInPack(id))
-      write(
-        PACK_KEY,
-        read<CardPack>(PACK_KEY).filter((pack) => pack.id !== id),
-      );
-  }
-  import(value: unknown) {
+  async import(value: unknown) {
     const pack = normalizePack({
       ...(value as CardPack),
       id: crypto.randomUUID(),
     });
-    this.save(pack);
+    await this.save(pack);
     return pack;
   }
 }
@@ -241,8 +303,10 @@ export function downloadJson(filename: string, value: unknown) {
     });
   link.href = URL.createObjectURL(blob);
   link.download = filename;
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(link.href);
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 export async function readJson(file: File) {
   return JSON.parse(await file.text()) as unknown;

@@ -49,8 +49,20 @@ export type WinCondition =
   | { type: "round-count"; target: number }
   | { type: "score-target"; target: number };
 
-export type BlackCard = { id: string; text: string; pick: number };
-export type WhiteCard = { id: string; text: string; blank?: boolean };
+export type BlackCard = {
+  id: string;
+  text: string;
+  pick: number;
+  imageId?: string;
+  imageAlt?: string;
+};
+export type WhiteCard = {
+  id: string;
+  text: string;
+  blank?: boolean;
+  imageId?: string;
+  imageAlt?: string;
+};
 export type CardPack = {
   schemaVersion: 1;
   id: string;
@@ -58,6 +70,7 @@ export type CardPack = {
   description: string;
   author: string;
   tags: string[];
+  images?: Record<string, string>;
   blackCards: BlackCard[];
   whiteCards: WhiteCard[];
   createdAt: string;
@@ -197,8 +210,10 @@ export type ClientCommand =
       type: "REACT";
       payload: { targetPlayerId: string; reaction: ReactionId };
     }
+  | { type: "REQUEST_IMAGE"; payload: { imageId: string } }
   | { type: "REQUEST_SNAPSHOT" };
 export type HostEvent =
+  | { type: "IMAGE"; payload: { imageId: string; data: string | null } }
   | { type: "SNAPSHOT"; payload: LobbySnapshot }
   | { type: "ASSIGNED_PLAYER"; payload: { playerId: string } }
   | { type: "KICKED"; payload: { reason: string } }

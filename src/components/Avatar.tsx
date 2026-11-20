@@ -1,3 +1,4 @@
+import { AvatarGlyph } from "./AvatarGlyph";
 import type { Avatar as AvatarName } from "../domain/types";
 export function Avatar({
   name,
@@ -14,7 +15,7 @@ export function Avatar({
       style={{ backgroundColor: color }}
       aria-hidden
     >
-      <span className="avatar-glyph">{name}</span>
+      <AvatarGlyph name={name} />
     </span>
   );
 }

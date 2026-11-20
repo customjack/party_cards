@@ -1,3 +1,5 @@
+import { AvatarGlyph } from "./AvatarGlyph";
+import { CardImageSource } from "./CardImage";
 import { roleChangeError } from "../domain/seating";
 import { PackSelector } from "./PackSelector";
 import { useEffect, useState } from "react";
@@ -94,7 +96,7 @@ export function JoinCard({
                 onClick={() => setProfile({ ...profile, avatar })}
                 key={avatar}
               >
-                <span className="avatar-glyph">{avatar}</span>
+                <AvatarGlyph name={avatar} />
               </button>
             ))}
           </div>
@@ -201,13 +203,15 @@ export function Lobby({
     );
   if (snapshot.phase !== "lobby")
     return (
-      <GameView
-        snapshot={snapshot}
-        session={session}
-        isHost={isHost}
-        connectionState={connectionState}
-        onLeave={onLeave}
-      />
+      <CardImageSource.Provider value={session}>
+        <GameView
+          snapshot={snapshot}
+          session={session}
+          isHost={isHost}
+          connectionState={connectionState}
+          onLeave={onLeave}
+        />
+      </CardImageSource.Provider>
     );
 
   const me = snapshot.players.find(
@@ -368,7 +372,7 @@ export function Lobby({
               <div className="spectator-list">
                 {spectators.map((player) => (
                   <span key={player.id}>
-                    {player.avatar} {player.name}
+                    <AvatarGlyph name={player.avatar} /> {player.name}
                     {isHost && (
                       <button
                         type="button"
@@ -564,7 +568,7 @@ function LobbyProfileEditor({
             onClick={() => onChange({ name: normalizedName(), avatar })}
             key={avatar}
           >
-            <span className="avatar-glyph">{avatar}</span>
+            <AvatarGlyph name={avatar} />
           </button>
         ))}
       </div>

@@ -14,10 +14,14 @@ import type {
 } from "../domain/types";
 import {
   downloadJson,
+  normalizePack,
   PackRepository,
   readJson,
   SettingsRepository,
 } from "../services/storage";
+import { compressImage } from "../services/images";
+import { CardImage } from "./CardImage";
+import { ImageUpload } from "./ImageUpload";
 import { SettingsForm } from "./SettingsForm";
 import { cardsToPick } from "../domain/cardRules";
 
@@ -94,6 +98,26 @@ function PackEditor({
     setDraft({ ...draft, ...changes, updatedAt: new Date().toISOString() });
     setDirty(true);
   };
+  const uploadImage = async (
+    kind: "black" | "white",
+    cardId: string,
+    file: File,
+  ) => {
+    const image = await compressImage(file);
+    setDraft((current) => {
+      const field = kind === "black" ? "blackCards" : "whiteCards";
+      if (!current[field].some((card) => card.id === cardId)) return current;
+      return {
+        ...current,
+        images: { ...current.images, [image.id]: image.data },
+        [field]: current[field].map((card) =>
+          card.id === cardId ? { ...card, imageId: image.id } : card,
+        ),
+        updatedAt: new Date().toISOString(),
+      };
+    });
+    setDirty(true);
+  };
   const fresh = () => {
     const now = new Date().toISOString();
     select({
@@ -123,39 +147,41 @@ function PackEditor({
           file={file}
           multiple
           onImport={async (selectedFiles) => {
-            const loaded = await Promise.all(
-              selectedFiles.map(async (selected) => {
-                try {
-                  return { value: await readJson(selected) };
-                } catch {
-                  return { error: selected.name };
-                }
-              }),
-            );
-            const imported = loaded
-              .filter(
-                (result): result is { value: unknown } => "value" in result,
-              )
-              .map(({ value }) => repository.import(value));
-            const failed = loaded
-              .filter(
-                (result): result is { error: string } => "error" in result,
-              )
-              .map(({ error }) => error);
-            const latest = imported.at(-1);
+            const failed: string[] = [];
+            let latest: CardPack | undefined;
+            for (const selected of selectedFiles) {
+              try {
+                latest = await repository.import(await readJson(selected));
+              } catch (error) {
+                failed.push(
+                  `${selected.name}: ${error instanceof Error ? error.message : "Could not import"}`,
+                );
+              }
+            }
             if (latest) {
               setDraft(latest);
               setDirty(false);
               onSaved();
             }
-            if (failed.length)
-              alert(`Could not read: ${failed.join(", ")}`);
+            if (failed.length) alert(failed.join("\n"));
           }}
-          onExport={() => downloadJson(`${draft.name}.cards.json`, draft)}
-          onSave={() => {
-            repository.save(draft);
-            setDirty(false);
-            onSaved();
+          onExport={() => {
+            try {
+              downloadJson(`${draft.name}.cards.json`, normalizePack(draft));
+            } catch (error) {
+              alert(String(error));
+            }
+          }}
+          onSave={async () => {
+            try {
+              await repository.save(draft);
+              setDirty(false);
+              onSaved();
+            } catch {
+              alert(
+                "Could not save this pack. Browser storage may be full. Export your pack to keep a backup.",
+              );
+            }
           }}
         />
       </section>
@@ -184,9 +210,14 @@ function PackEditor({
                 <button
                   className="library-delete"
                   aria-label={`Delete ${pack.name}`}
-                  onClick={() => {
+                  onClick={async () => {
                     if (!confirm(`Delete “${pack.name}”?`)) return;
-                    repository.remove(pack.id);
+                    try {
+                      await repository.remove(pack.id);
+                    } catch {
+                      alert("Could not delete this pack from browser storage.");
+                      return;
+                    }
                     if (draft.id === pack.id) {
                       setDraft(structuredClone(starterPack));
                       setDirty(false);
@@ -240,12 +271,16 @@ function PackEditor({
             title="Black prompt cards"
             cards={draft.blackCards}
             kind="black"
+            images={draft.images ?? {}}
+            onImage={(id, file) => uploadImage("black", id, file)}
             onChange={(cards) => update({ blackCards: cards as BlackCard[] })}
           />
           <CardList
             title="White response cards"
             cards={draft.whiteCards}
             kind="white"
+            images={draft.images ?? {}}
+            onImage={(id, file) => uploadImage("white", id, file)}
             onChange={(cards) => update({ whiteCards: cards as WhiteCard[] })}
           />
         </fieldset>
@@ -258,8 +293,12 @@ function CardList({
   title,
   cards,
   kind,
+  images,
+  onImage,
   onChange,
 }: {
+  images: Record<string, string>;
+  onImage: (id: string, file: File) => Promise<void>;
   title: string;
   cards: (BlackCard | WhiteCard)[];
   kind: "black" | "white";
@@ -317,7 +356,8 @@ function CardList({
               <b>
                 {(card as WhiteCard).blank
                   ? "Blank card · player writes the response"
-                  : card.text || `New ${kind} card`}
+                  : card.text ||
+                    (card.imageId ? "Image card" : `New ${kind} card`)}
               </b>
               <button
                 type="button"
@@ -356,7 +396,13 @@ function CardList({
                                   kind === "black" ? 300 : 180,
                                 );
                                 return kind === "black"
-                                  ? { ...item, text, pick: cardsToPick(text) }
+                                  ? {
+                                      ...item,
+                                      text,
+                                      pick: item.imageId
+                                        ? (item as BlackCard).pick
+                                        : cardsToPick(text),
+                                    }
                                   : { ...item, text };
                               })()
                             : item,
@@ -366,7 +412,88 @@ function CardList({
                   />
                 </label>
               )}
-              {kind === "black" && (
+              {!(card as WhiteCard).blank && (
+                <>
+                  {card.imageId && (
+                    <CardImage
+                      data={images[card.imageId]}
+                      alt={card.imageAlt || card.text || "Card image"}
+                    />
+                  )}
+                  <ImageUpload onUpload={(file) => onImage(card.id, file)} />
+                  {card.imageId && (
+                    <>
+                      <label className="field">
+                        <span>Image description</span>
+                        <input
+                          value={card.imageAlt ?? ""}
+                          maxLength={300}
+                          onChange={(event) =>
+                            onChange(
+                              cards.map((item) =>
+                                item.id === card.id
+                                  ? { ...item, imageAlt: event.target.value }
+                                  : item,
+                              ),
+                            )
+                          }
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="button secondary compact remove-card-image"
+                        onClick={() =>
+                          onChange(
+                            cards.map((item) =>
+                              item.id === card.id
+                                ? {
+                                    ...item,
+                                    imageId: undefined,
+                                    imageAlt: undefined,
+                                    ...(kind === "black"
+                                      ? { pick: cardsToPick(item.text) }
+                                      : {}),
+                                  }
+                                : item,
+                            ),
+                          )
+                        }
+                      >
+                        Remove image
+                      </button>
+                      {kind === "black" && (
+                        <label className="field">
+                          <span>Cards to pick</span>
+                          <input
+                            type="number"
+                            min={1}
+                            max={10}
+                            defaultValue={(card as BlackCard).pick}
+                            onBlur={(event) => {
+                              const pick = Math.max(
+                                1,
+                                Math.min(
+                                  10,
+                                  Math.floor(Number(event.target.value)) || 1,
+                                ),
+                              );
+                              event.target.value = String(pick);
+                              onChange(
+                                cards.map((item) =>
+                                  item.id === card.id
+                                    ? { ...item, pick }
+                                    : item,
+                                ),
+                              );
+                            }}
+                          />
+                        </label>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+              {kind === "black" && !card.imageId && (
                 <small className="inferred-pick">
                   {cardsToPick(card.text)} card
                   {cardsToPick(card.text) === 1 ? "" : "s"} will be played

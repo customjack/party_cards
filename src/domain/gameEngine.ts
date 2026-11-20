@@ -28,13 +28,15 @@ export class CardGameEngine {
       blackPool = this.mergePackCards(
         allowedPacks,
         (pack) => pack.blackCards,
-        (card) => this.cardTextKey(card.text),
+        (card) => `${this.cardTextKey(card.text)}|${card.imageId ?? ""}`,
       ),
       whitePool = this.mergePackCards(
         allowedPacks,
         (pack) => pack.whiteCards,
         (card) =>
-          card.blank ? "__blank_response__" : this.cardTextKey(card.text),
+          card.blank
+            ? "__blank_response__"
+            : `${this.cardTextKey(card.text)}|${card.imageId ?? ""}`,
       ),
       retainedHands =
         round.keepHandFromPreviousStage && previousGame
@@ -145,7 +147,7 @@ export class CardGameEngine {
           }
         : card,
     );
-    if (resolved.some((card) => !card.text)) return false;
+    if (resolved.some((card) => !card.text && !card.imageId)) return false;
     game.submissions[playerId] = resolved;
     if (!game.lockedPlayerIds.includes(playerId))
       game.lockedPlayerIds.push(playerId);
@@ -362,7 +364,7 @@ export class CardGameEngine {
     return { id: crypto.randomUUID(), text: "The answer is ____.", pick: 1 };
   }
 
-  private static mergePackCards<T extends { id: string }>(
+  private static mergePackCards<T extends { id: string; imageId?: string }>(
     packs: CardPack[],
     cardsForPack: (pack: CardPack) => T[],
     duplicateKey: (card: T) => string,
@@ -375,6 +377,7 @@ export class CardGameEngine {
         .map((card, index) => ({
           ...card,
           id: `${pack.id}:${card.id}:${index}`,
+          ...(card.imageId ? { imageId: `${pack.id}:${card.imageId}` } : {}),
         }))
         .filter((card) => !keysBeforeThisPack.has(duplicateKey(card)));
       cards.forEach((card) => priorPackKeys.add(duplicateKey(card)));
