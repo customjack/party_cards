@@ -3341,7 +3341,14 @@ section.panel > select {
 .submission-grid .card-image img {
   width: 100%;
   height: auto;
-  max-height: none;
+  max-height: 240px;
+  object-fit: contain;
+}
+.submission-grid.density-compact .card-image img {
+  max-height: 160px;
+}
+.submission-grid.density-large .card-image img {
+  max-height: 320px;
 }
 .submission-grid.density-large .white-card {
   min-height: 230px;
